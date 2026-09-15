@@ -1,0 +1,3469 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>آوینا | فروشگاه محصولات مراقبت پوست و زیبایی</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block" rel="stylesheet">
+<style>
+/* ============================================================================
+ * style.css — آوینا
+ * ----------------------------------------------------------------------------
+ * ساختار فایل:
+ *   ۱. توکن‌ها (رنگ، تایپوگرافی، فاصله‌ها)
+ *   ۲. پایه و ریست
+ *   ۳. عناصر پایه (دکمه، فرم، عنوان بخش)
+ *   ۴. هدر و ناوبری
+ *   ۵. بخش‌های صفحه اصلی
+ *   ۶. اجزای تعاملی (سبد خرید، مودال، توست)
+ *   ۷. فوتر
+ *
+ * واکنش‌گرایی در فایل responsive.css است.
+ * ==========================================================================*/
+
+/* ---------------------------------------------------------------- ۱. توکن‌ها */
+:root {
+  /* پالت: کرم و نود گرم با لهجه قهوه‌ای، سبز زیتونی به‌عنوان رنگ دوم */
+  --ivory: #faf7f2;
+  --paper: #ffffff;
+  --sand: #efe6d9;
+  --nude: #dfcdba;
+  --clay: #a8795a;
+  --clay-deep: #8d6244;
+  --cocoa: #6b4e3a;
+  --olive: #7d8770;
+  --olive-soft: #e7ebe4;
+  --ink: #26221e;
+  --muted: #7a736b;
+  --line: #e6ddd1;
+  --gold: #c9a227;
+  --sale: #b3543f;
+
+  /* تایپوگرافی */
+  --font: 'Vazirmatn', 'Tahoma', sans-serif;
+  --font-latin: 'Cormorant Garamond', 'Georgia', serif;
+
+  --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
+  --step-0: clamp(0.92rem, 0.9rem + 0.12vw, 1rem);
+  --step-1: clamp(1.08rem, 1.02rem + 0.3vw, 1.25rem);
+  --step-2: clamp(1.3rem, 1.18rem + 0.6vw, 1.7rem);
+  --step-3: clamp(1.65rem, 1.4rem + 1.2vw, 2.4rem);
+  --step-4: clamp(2.1rem, 1.6rem + 2.4vw, 3.6rem);
+
+  /* فاصله‌گذاری — ریتم عمودی سخاوتمندانه، شبیه نشریات چاپی */
+  --gap-xs: 0.5rem;
+  --gap-sm: 0.85rem;
+  --gap: 1.35rem;
+  --gap-lg: 2.2rem;
+  --gap-xl: 3.4rem;
+  --section: clamp(3.6rem, 2.4rem + 5vw, 6.5rem);
+
+  --container: 1280px;
+  --radius: 4px;
+  --radius-lg: 10px;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --shadow-soft: 0 12px 32px rgba(38, 34, 30, 0.07);
+  --shadow-lift: 0 18px 44px rgba(38, 34, 30, 0.12);
+
+  --header-h: 74px;
+}
+
+/* ------------------------------------------------------------- ۲. پایه */
+*, *::before, *::after { box-sizing: border-box; }
+
+* { margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  /* هدر چسبان نباید روی تیتر بخشی که به آن پرش می‌کنیم بیفتد */
+  scroll-padding-top: calc(var(--header-h) + 2rem);
+}
+
+body {
+  background-color: var(--ivory);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--step-0);
+  font-weight: 400;
+  line-height: 1.9;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img, svg { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+input, select, textarea { font: inherit; color: inherit; }
+ul, ol { list-style: none; }
+
+/* تمرکز صفحه‌کلید همیشه دیده شود */
+:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* فقط برای صفحه‌خوان‌ها */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.container {
+  width: min(var(--container), 100% - 2.5rem);
+  margin-inline: auto;
+}
+
+.section { padding-block: var(--section); }
+.section--tight { padding-block: calc(var(--section) * 0.62); }
+
+/* اعداد در ستون‌ها هم‌عرض بمانند */
+.num { font-variant-numeric: tabular-nums; }
+
+/* -------------------------------------------------- ۳. عناصر پایه */
+
+/* عنوان بخش: نشانه کوچک بالا، تیتر بزرگ، لینک اختیاری در انتها */
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--gap);
+  margin-bottom: var(--gap-xl);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--clay);
+  margin-bottom: 0.7rem;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 28px; height: 1px;
+  background-color: var(--clay);
+}
+
+.section-title {
+  font-size: var(--step-3);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.section-sub {
+  margin-top: 0.6rem;
+  color: var(--muted);
+  max-width: 52ch;
+}
+
+.link-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--step--1);
+  font-weight: 500;
+  color: var(--cocoa);
+  white-space: nowrap;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--nude);
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.link-more:hover { color: var(--clay); border-color: var(--clay); }
+.link-more .material-symbols-rounded { font-size: 1.1em; }
+
+/* دکمه‌ها */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.95rem 1.9rem;
+  border-radius: var(--radius);
+  font-size: var(--step-0);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background-color 0.22s var(--ease), color 0.22s var(--ease),
+              border-color 0.22s var(--ease), transform 0.22s var(--ease);
+}
+.btn:active { transform: translateY(1px); }
+
+.btn--primary { background-color: var(--cocoa); color: var(--ivory); }
+.btn--primary:hover { background-color: var(--ink); }
+
+.btn--ghost {
+  border: 1px solid var(--cocoa);
+  color: var(--cocoa);
+  background-color: transparent;
+}
+.btn--ghost:hover { background-color: var(--cocoa); color: var(--ivory); }
+
+.btn--light { background-color: var(--ivory); color: var(--ink); }
+.btn--light:hover { background-color: var(--nude); }
+
+.btn--block { width: 100%; }
+.btn--sm { padding: 0.62rem 1.1rem; font-size: var(--step--1); }
+
+/* دکمه‌های آیکونی هدر */
+.icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  color: var(--ink);
+  transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+.icon-btn:hover { background-color: var(--sand); }
+
+.icon-btn__count {
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-start: 2px;
+  min-width: 19px; height: 19px;
+  display: grid; place-items: center;
+  padding-inline: 4px;
+  border-radius: 999px;
+  background-color: var(--clay);
+  color: #fff;
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1;
+  transform: scale(0);
+  transition: transform 0.25s var(--ease);
+}
+.icon-btn__count.is-visible { transform: scale(1); }
+
+/* ستاره‌های امتیاز */
+.rating { display: inline-flex; align-items: center; gap: 0.3rem; }
+.rating__stars { display: inline-flex; color: var(--gold); font-size: 0.95rem; letter-spacing: -1px; }
+.rating__value { font-size: var(--step--1); color: var(--muted); }
+
+/* قیمت */
+.price { display: flex; align-items: baseline; gap: 0.55rem; flex-wrap: wrap; }
+.price__now { font-size: var(--step-1); font-weight: 700; color: var(--ink); }
+.price__unit { font-size: var(--step--1); font-weight: 400; color: var(--muted); }
+.price__old { font-size: var(--step--1); color: var(--muted); text-decoration: line-through; }
+
+.badge {
+  display: inline-block;
+  padding: 0.28rem 0.6rem;
+  border-radius: var(--radius);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+.badge--sale { background-color: var(--sale); color: #fff; }
+.badge--new { background-color: var(--olive); color: #fff; }
+
+/* ------------------------------------------------------- ۴. هدر */
+
+/* نوار اعلان */
+.announce {
+  background-color: var(--cocoa);
+  color: var(--sand);
+  font-size: var(--step--1);
+}
+.announce__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap);
+  min-height: 42px;
+  text-align: center;
+}
+.announce__track { position: relative; flex: 1; height: 1.7em; overflow: hidden; }
+.announce__item {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  opacity: 0;
+  transform: translateY(70%);
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+}
+.announce__item.is-active { opacity: 1; transform: none; }
+.announce__close { color: inherit; opacity: 0.7; }
+.announce__close:hover { opacity: 1; }
+
+/* هدر اصلی */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background-color: rgba(250, 247, 242, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.header.is-stuck {
+  border-bottom-color: var(--line);
+  box-shadow: 0 6px 24px rgba(38, 34, 30, 0.05);
+}
+
+.header__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  min-height: var(--header-h);
+}
+
+.brand { display: inline-flex; flex-direction: column; line-height: 1.05; }
+.brand__name { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
+.brand__latin {
+  font-family: var(--font-latin);
+  font-size: 0.72rem;
+  letter-spacing: 0.42em;
+  color: var(--clay);
+  padding-inline-start: 0.2em;
+}
+
+/* جستجوی هدر */
+.search {
+  position: relative;
+  flex: 1;
+  max-width: 520px;
+  margin-inline: auto;
+}
+.search__field {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.62rem 1rem;
+  background-color: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.search__field:focus-within {
+  border-color: var(--nude);
+  box-shadow: 0 0 0 4px rgba(168, 121, 90, 0.1);
+}
+.search__input { flex: 1; border: 0; background: none; outline: none; min-width: 0; }
+.search__input::placeholder { color: var(--muted); }
+.search__icon { color: var(--muted); font-size: 1.25rem; }
+.search__clear { display: none; color: var(--muted); }
+.search__clear.is-visible { display: inline-flex; }
+
+/* نتایج زنده جستجو */
+.search__results {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(100% + 0.6rem);
+  background-color: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lift);
+  overflow: hidden;
+  max-height: 60vh;
+  overflow-y: auto;
+  z-index: 10;
+}
+.search__results[hidden] { display: none; }
+.search-result {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  text-align: start;
+  transition: background-color 0.18s var(--ease);
+}
+.search-result:hover, .search-result:focus-visible { background-color: var(--ivory); }
+.search-result img { width: 46px; height: 46px; border-radius: var(--radius); background-color: var(--sand); }
+.search-result__name { font-size: var(--step--1); font-weight: 500; }
+.search-result__brand { font-size: 0.74rem; color: var(--muted); }
+.search-result__price { margin-inline-start: auto; font-size: var(--step--1); font-weight: 700; white-space: nowrap; }
+.search__empty { padding: 1.6rem 1rem; text-align: center; color: var(--muted); font-size: var(--step--1); }
+
+.header__actions { display: flex; align-items: center; gap: 0.2rem; }
+
+.menu-toggle { display: none; }
+
+/* ناوبری اصلی */
+.nav { border-top: 1px solid var(--line); }
+.nav__list { display: flex; align-items: center; gap: 0.4rem; }
+.nav__item { position: relative; }
+.nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.9rem 0.95rem;
+  font-size: var(--step-0);
+  font-weight: 500;
+  color: var(--ink);
+  transition: color 0.2s var(--ease);
+}
+.nav__link:hover, .nav__item:focus-within > .nav__link { color: var(--clay); }
+.nav__link--highlight { color: var(--sale); }
+.nav__link .material-symbols-rounded { font-size: 1.05rem; opacity: 0.6; }
+
+/* زیرمنو */
+.nav__panel {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 100%;
+  min-width: 210px;
+  padding: 0.6rem;
+  background-color: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lift);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease), visibility 0.2s;
+  z-index: 20;
+}
+.nav__item:hover > .nav__panel,
+.nav__item:focus-within > .nav__panel { opacity: 1; visibility: visible; transform: none; }
+.nav__panel a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
+  font-size: var(--step--1);
+  color: var(--muted);
+  transition: background-color 0.16s var(--ease), color 0.16s var(--ease);
+}
+.nav__panel a:hover { background-color: var(--ivory); color: var(--ink); }
+
+/* ------------------------------------------------ ۵. بخش‌های صفحه */
+
+/* قهرمان صفحه — ترکیب نامتقارن متن و تصویر */
+.hero { background-color: var(--sand); overflow: hidden; }
+.hero__inner {
+  display: grid;
+  grid-template-columns: 1fr 0.82fr;
+  align-items: center;
+  gap: var(--gap-xl);
+  min-height: min(78vh, 680px);
+  padding-block: var(--gap-xl);
+}
+.hero__title {
+  font-size: var(--step-4);
+  font-weight: 700;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.hero__title em {
+  font-style: normal;
+  color: var(--clay);
+  /* خط ظریف زیر کلمه کلیدی به جای رنگ پررنگ */
+  box-shadow: inset 0 -0.36em 0 rgba(168, 121, 90, 0.16);
+}
+.hero__text {
+  margin-top: var(--gap);
+  max-width: 46ch;
+  color: var(--muted);
+  font-size: var(--step-1);
+  line-height: 1.95;
+}
+.hero__actions { display: flex; flex-wrap: wrap; gap: var(--gap-sm); margin-top: var(--gap-lg); }
+
+.hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-lg);
+  margin-top: var(--gap-xl);
+  padding-top: var(--gap-lg);
+  border-top: 1px solid var(--nude);
+}
+.hero__stat strong { display: block; font-size: var(--step-2); font-weight: 700; line-height: 1.3; }
+.hero__stat span { font-size: var(--step--1); color: var(--muted); }
+
+.hero__figure { position: relative; }
+.hero__figure img { border-radius: var(--radius-lg); }
+/* کارت شناور روی تصویر — یک لمس تحریریه */
+.hero__tag {
+  position: absolute;
+  inset-block-end: 1.8rem;
+  inset-inline-start: -1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.85rem 1.15rem;
+  background-color: var(--ivory);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+.hero__tag .material-symbols-rounded { color: var(--olive); }
+.hero__tag strong { display: block; font-size: var(--step--1); }
+.hero__tag span { font-size: 0.74rem; color: var(--muted); }
+
+/* دسته‌بندی‌ها */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--gap);
+}
+.category-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background-color: var(--sand);
+}
+.category-card img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease);
+}
+.category-card:hover img { transform: scale(1.05); }
+.category-card__body {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  padding: 1.1rem 1rem;
+  background: linear-gradient(to top, rgba(38, 34, 30, 0.62), transparent);
+  color: #fff;
+}
+.category-card__title { font-size: var(--step-1); font-weight: 700; }
+.category-card__caption { font-size: 0.74rem; opacity: 0.85; }
+
+/* نوار فیلتر و مرتب‌سازی */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  margin-bottom: var(--gap-lg);
+}
+.filters { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.filter {
+  padding: 0.5rem 1.05rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: var(--step--1);
+  color: var(--muted);
+  background-color: var(--paper);
+  transition: all 0.2s var(--ease);
+}
+.filter:hover { border-color: var(--nude); color: var(--ink); }
+.filter.is-active { background-color: var(--cocoa); border-color: var(--cocoa); color: var(--ivory); }
+
+.sort { display: flex; align-items: center; gap: 0.55rem; font-size: var(--step--1); color: var(--muted); }
+.sort select {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background-color: var(--paper);
+  cursor: pointer;
+}
+
+/* شبکه محصولات */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--gap-lg) var(--gap);
+}
+
+.product-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease), transform 0.25s var(--ease);
+}
+.product-card:hover {
+  border-color: var(--nude);
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-3px);
+}
+
+.product-card__media { position: relative; background-color: var(--ivory); }
+.product-card__media img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease);
+}
+.product-card:hover .product-card__media img { transform: scale(1.04); }
+
+.product-card__badges {
+  position: absolute;
+  inset-block-start: 0.75rem;
+  inset-inline-start: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: flex-start;
+}
+
+.product-card__wish {
+  position: absolute;
+  inset-block-start: 0.6rem;
+  inset-inline-end: 0.6rem;
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: var(--muted);
+  transition: color 0.2s var(--ease), background-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.product-card__wish:hover { color: var(--sale); transform: scale(1.08); }
+.product-card__wish.is-active { color: var(--sale); }
+.product-card__wish.is-active .material-symbols-rounded { font-variation-settings: 'FILL' 1; }
+
+/* دکمه نگاه سریع — از پایین تصویر بالا می‌آید */
+.product-card__quick {
+  position: absolute;
+  inset-inline: 0.75rem;
+  inset-block-end: 0.75rem;
+  padding: 0.6rem;
+  border-radius: var(--radius);
+  background-color: rgba(38, 34, 30, 0.9);
+  color: var(--ivory);
+  font-size: var(--step--1);
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(0.8rem);
+  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+}
+.product-card:hover .product-card__quick,
+.product-card:focus-within .product-card__quick { opacity: 1; transform: none; }
+
+.product-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1.1rem 1.15rem 1.3rem;
+  flex: 1;
+}
+.product-card__brand {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--clay);
+  font-weight: 500;
+}
+.product-card__name {
+  font-size: var(--step-0);
+  font-weight: 500;
+  line-height: 1.75;
+  /* دو خط، بدون شکستن ارتفاع کارت‌ها */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 3.5em;
+}
+.product-card__name:hover { color: var(--clay); }
+.product-card__volume { font-size: 0.74rem; color: var(--muted); }
+.product-card__foot { margin-top: auto; padding-top: 0.85rem; }
+.product-card__actions { display: flex; gap: 0.5rem; margin-top: 0.9rem; }
+.product-card__actions .btn { flex: 1; }
+
+/* بنر پیشنهاد ویژه */
+.offer { background-color: var(--cocoa); color: var(--sand); border-radius: var(--radius-lg); overflow: hidden; }
+.offer__inner {
+  display: grid;
+  grid-template-columns: 1fr 0.9fr;
+  align-items: center;
+  gap: var(--gap-xl);
+}
+.offer__body { padding: var(--gap-xl); }
+.offer__title { font-size: var(--step-3); font-weight: 700; color: #fff; line-height: 1.35; }
+.offer__sub { margin-top: 0.5rem; color: var(--nude); font-size: var(--step-1); }
+.offer__text { margin-top: var(--gap); color: rgba(239, 230, 217, 0.75); max-width: 44ch; }
+.offer .eyebrow { color: var(--nude); }
+.offer .eyebrow::before { background-color: var(--nude); }
+
+.countdown { display: flex; gap: 0.7rem; margin-top: var(--gap-lg); }
+.countdown__unit {
+  min-width: 66px;
+  padding: 0.7rem 0.5rem;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.09);
+  border-radius: var(--radius);
+}
+.countdown__value { display: block; font-size: var(--step-2); font-weight: 700; color: #fff; line-height: 1.25; }
+.countdown__label { font-size: 0.7rem; color: var(--nude); }
+
+.offer__figure { align-self: stretch; }
+.offer__figure img { width: 100%; height: 100%; object-fit: cover; }
+
+/* برندها */
+.brand-strip {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--gap);
+  align-items: center;
+}
+.brand-chip {
+  display: grid;
+  place-items: center;
+  padding: 1.5rem 1rem;
+  background-color: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  transition: border-color 0.22s var(--ease), transform 0.22s var(--ease);
+}
+.brand-chip:hover { border-color: var(--nude); transform: translateY(-2px); }
+.brand-chip img { opacity: 0.72; transition: opacity 0.22s var(--ease); }
+.brand-chip:hover img { opacity: 1; }
+
+/* روتین پوست — اینجا شماره‌گذاری معنا دارد چون ترتیب مراحل مهم است */
+.routine { background-color: var(--olive-soft); }
+.routine__grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: var(--gap-xl);
+  align-items: center;
+}
+.routine__steps { display: grid; gap: var(--gap); }
+.routine__step {
+  display: flex;
+  gap: var(--gap);
+  padding-bottom: var(--gap);
+  border-bottom: 1px solid rgba(125, 135, 112, 0.28);
+}
+.routine__step:last-child { border-bottom: 0; padding-bottom: 0; }
+.routine__num {
+  font-family: var(--font-latin);
+  font-size: 1.5rem;
+  color: var(--olive);
+  min-width: 2.2rem;
+  line-height: 1.5;
+}
+.routine__step h3 { font-size: var(--step-1); font-weight: 700; }
+.routine__step p { color: var(--muted); font-size: var(--step--1); margin-top: 0.2rem; }
+
+.concern-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.7rem; }
+.concern-card {
+  padding: 1.15rem 1.25rem;
+  background-color: var(--ivory);
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  text-align: start;
+  transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.concern-card:hover { border-color: var(--olive); transform: translateY(-2px); }
+.concern-card.is-active { border-color: var(--olive); background-color: #fff; }
+.concern-card strong { display: block; font-size: var(--step-0); }
+.concern-card span { font-size: 0.74rem; color: var(--muted); }
+.concern-card__count { display: block; margin-top: 0.45rem; font-size: 0.72rem; color: var(--olive); font-weight: 500; }
+
+/* مجله */
+.post-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap-lg); }
+.post-card { display: flex; flex-direction: column; }
+.post-card__media { overflow: hidden; border-radius: var(--radius-lg); }
+.post-card__media img { aspect-ratio: 10 / 7; object-fit: cover; width: 100%; transition: transform 0.6s var(--ease); }
+.post-card:hover .post-card__media img { transform: scale(1.04); }
+.post-card__meta {
+  display: flex; align-items: center; gap: 0.6rem;
+  margin-top: var(--gap); font-size: 0.74rem; color: var(--muted);
+}
+.post-card__cat { color: var(--clay); font-weight: 500; }
+.post-card__title { margin-top: 0.5rem; font-size: var(--step-1); font-weight: 700; line-height: 1.65; }
+.post-card:hover .post-card__title { color: var(--clay); }
+.post-card__excerpt { margin-top: 0.5rem; color: var(--muted); font-size: var(--step--1); }
+
+/* اعتماد مشتری */
+.trust { border-block: 1px solid var(--line); background-color: var(--paper); }
+.trust__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gap-lg); }
+.trust__item { display: flex; gap: var(--gap); align-items: flex-start; }
+.trust__icon {
+  display: grid; place-items: center;
+  width: 48px; height: 48px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: var(--sand);
+  color: var(--cocoa);
+}
+.trust__item h3 { font-size: var(--step-0); font-weight: 700; }
+.trust__item p { font-size: var(--step--1); color: var(--muted); margin-top: 0.15rem; }
+
+/* خبرنامه */
+.newsletter { background-color: var(--nude); }
+.newsletter__inner {
+  display: grid;
+  grid-template-columns: 1fr 0.95fr;
+  align-items: center;
+  gap: var(--gap-xl);
+}
+.newsletter__form { display: flex; gap: 0.6rem; }
+.newsletter__control { flex: 1; }
+.newsletter__input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background-color: var(--ivory);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color 0.2s var(--ease);
+}
+.newsletter__input:focus { border-color: var(--cocoa); }
+.newsletter__input.has-error { border-color: var(--sale); }
+.form-error { display: block; margin-top: 0.45rem; font-size: var(--step--1); color: var(--sale); min-height: 1.2em; }
+.newsletter__note { margin-top: 0.8rem; font-size: 0.74rem; color: var(--cocoa); }
+
+/* ------------------------------------------- ۶. اجزای تعاملی */
+
+/* پوشش تیره پشت کشو و مودال */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(38, 34, 30, 0.45);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s var(--ease), visibility 0.3s;
+  z-index: 90;
+}
+.overlay.is-open { opacity: 1; visibility: visible; }
+
+/* کشوی سبد خرید */
+.drawer {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: min(420px, 100%);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ivory);
+  box-shadow: var(--shadow-lift);
+  transform: translateX(-100%);
+  transition: transform 0.36s var(--ease);
+  z-index: 100;
+}
+/* در چیدمان راست‌به‌چپ کشو از سمت چپ می‌آید */
+[dir='rtl'] .drawer { transform: translateX(-100%); }
+.drawer.is-open { transform: none !important; }
+
+.drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding: 1.2rem 1.4rem;
+  border-bottom: 1px solid var(--line);
+}
+.drawer__title { font-size: var(--step-1); font-weight: 700; }
+.drawer__body { flex: 1; overflow-y: auto; padding: 1.1rem 1.4rem; }
+.drawer__foot { padding: 1.2rem 1.4rem; border-top: 1px solid var(--line); background-color: var(--paper); }
+
+.cart-line {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: var(--gap);
+  padding-block: 1.1rem;
+  border-bottom: 1px solid var(--line);
+}
+.cart-line:last-child { border-bottom: 0; }
+.cart-line__media { border-radius: var(--radius); overflow: hidden; background-color: var(--sand); }
+.cart-line__name { font-size: var(--step--1); font-weight: 500; line-height: 1.7; }
+.cart-line__brand { font-size: 0.72rem; color: var(--clay); }
+.cart-line__row { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-top: 0.7rem; }
+
+.qty { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; background-color: var(--paper); }
+.qty button {
+  width: 30px; height: 30px;
+  display: grid; place-items: center;
+  color: var(--muted);
+  border-radius: 50%;
+  transition: color 0.18s var(--ease), background-color 0.18s var(--ease);
+}
+.qty button:hover { color: var(--ink); background-color: var(--sand); }
+.qty button:disabled { opacity: 0.35; cursor: not-allowed; }
+.qty__value { min-width: 2ch; text-align: center; font-size: var(--step--1); font-weight: 600; }
+
+.cart-line__remove { font-size: 0.74rem; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+.cart-line__remove:hover { color: var(--sale); }
+.cart-line__price { font-size: var(--step-0); font-weight: 700; white-space: nowrap; }
+
+.cart-summary { display: grid; gap: 0.5rem; margin-bottom: var(--gap); }
+.cart-summary__row { display: flex; justify-content: space-between; font-size: var(--step--1); color: var(--muted); }
+.cart-summary__row--total { font-size: var(--step-1); font-weight: 700; color: var(--ink); padding-top: 0.6rem; border-top: 1px solid var(--line); }
+
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+.empty-state .material-symbols-rounded { font-size: 3rem; color: var(--nude); }
+.empty-state p { margin-top: 0.8rem; }
+
+/* مودال */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+}
+.modal[hidden] { display: none; }
+.modal__window {
+  position: relative;
+  width: min(900px, 100%);
+  max-height: 88vh;
+  overflow-y: auto;
+  background-color: var(--ivory);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lift);
+}
+.modal__close {
+  position: absolute;
+  inset-block-start: 0.9rem;
+  inset-inline-end: 0.9rem;
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background-color: var(--ivory);
+  color: var(--muted);
+  z-index: 2;
+}
+.modal__close:hover { color: var(--ink); background-color: var(--sand); }
+
+.quick { display: grid; grid-template-columns: 0.95fr 1.05fr; }
+.quick__media { background-color: var(--sand); }
+.quick__media img { width: 100%; height: 100%; object-fit: cover; }
+.quick__body { padding: var(--gap-xl) var(--gap-lg); display: flex; flex-direction: column; gap: 0.7rem; }
+.quick__brand { font-size: 0.74rem; letter-spacing: 0.12em; color: var(--clay); font-weight: 500; }
+.quick__name { font-size: var(--step-2); font-weight: 700; line-height: 1.5; }
+.quick__short { color: var(--muted); }
+.quick__meta { display: flex; flex-wrap: wrap; gap: var(--gap); margin-top: 0.4rem; font-size: var(--step--1); color: var(--muted); }
+.quick__actions { display: flex; gap: 0.6rem; margin-top: var(--gap); }
+
+/* توست */
+.toasts {
+  position: fixed;
+  inset-block-end: 1.5rem;
+  inset-inline-end: 1.5rem;
+  z-index: 140;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-width: min(360px, calc(100vw - 3rem));
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem;
+  background-color: var(--ink);
+  color: var(--ivory);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lift);
+  font-size: var(--step--1);
+  opacity: 0;
+  transform: translateY(0.8rem);
+  transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
+}
+.toast.is-visible { opacity: 1; transform: none; }
+.toast--success .material-symbols-rounded { color: #9bc49b; }
+.toast--info .material-symbols-rounded { color: var(--nude); }
+.toast--error .material-symbols-rounded { color: #e79a8b; }
+.toast__text { flex: 1; }
+
+/* دکمه بازگشت به بالا */
+.to-top {
+  position: fixed;
+  inset-block-end: 1.5rem;
+  inset-inline-start: 1.5rem;
+  width: 46px; height: 46px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background-color: var(--cocoa);
+  color: var(--ivory);
+  box-shadow: var(--shadow-soft);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s var(--ease), visibility 0.25s, background-color 0.2s var(--ease);
+  z-index: 70;
+}
+.to-top.is-visible { opacity: 1; visibility: visible; }
+.to-top:hover { background-color: var(--ink); }
+
+/* منوی موبایل */
+.mobile-nav {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-end: 0;
+  width: min(320px, 88%);
+  background-color: var(--ivory);
+  transform: translateX(100%);
+  transition: transform 0.34s var(--ease);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+.mobile-nav.is-open { transform: none; }
+.mobile-nav__head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.1rem 1.3rem; border-bottom: 1px solid var(--line);
+}
+.mobile-nav__body { flex: 1; overflow-y: auto; padding: 0.6rem 0.8rem 2rem; }
+.mobile-nav__group { border-bottom: 1px solid var(--line); }
+.mobile-nav__toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 0.95rem 0.6rem; font-weight: 500; text-align: start;
+}
+.mobile-nav__toggle .material-symbols-rounded { color: var(--muted); transition: transform 0.25s var(--ease); }
+.mobile-nav__group.is-open .mobile-nav__toggle .material-symbols-rounded { transform: rotate(180deg); }
+.mobile-nav__panel { display: none; padding: 0 0.6rem 0.9rem; }
+.mobile-nav__group.is-open .mobile-nav__panel { display: block; }
+.mobile-nav__panel a { display: block; padding: 0.45rem 0.6rem; font-size: var(--step--1); color: var(--muted); }
+.mobile-nav__panel a:hover { color: var(--clay); }
+
+/* قفل اسکرول وقتی کشو/مودال باز است */
+body.is-locked { overflow: hidden; }
+
+/* ------------------------------------------------------- ۷. فوتر */
+.footer { background-color: var(--ink); color: var(--sand); }
+.footer__top {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: var(--gap-xl);
+  padding-block: var(--section) var(--gap-xl);
+}
+.footer__brand .brand__name { color: #fff; }
+.footer__about { margin-top: var(--gap); color: rgba(239, 230, 217, 0.62); max-width: 38ch; font-size: var(--step--1); }
+.footer__contact { display: grid; gap: 0.55rem; margin-top: var(--gap-lg); font-size: var(--step--1); }
+.footer__contact li { display: flex; align-items: center; gap: 0.6rem; color: rgba(239, 230, 217, 0.75); }
+.footer__contact .material-symbols-rounded { color: var(--clay); font-size: 1.15rem; }
+
+.footer__col h3 { font-size: var(--step-0); font-weight: 700; color: #fff; margin-bottom: var(--gap); }
+.footer__col a { display: block; padding-block: 0.36rem; font-size: var(--step--1); color: rgba(239, 230, 217, 0.66); transition: color 0.18s var(--ease); }
+.footer__col a:hover { color: #fff; }
+
+.footer__bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: var(--gap);
+  padding-block: var(--gap-lg);
+  border-top: 1px solid rgba(239, 230, 217, 0.14);
+  font-size: var(--step--1);
+  color: rgba(239, 230, 217, 0.55);
+}
+.footer__badges { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.footer__badge {
+  padding: 0.35rem 0.8rem;
+  border: 1px solid rgba(239, 230, 217, 0.2);
+  border-radius: var(--radius);
+  font-size: 0.72rem;
+}
+.footer__social { display: flex; gap: 0.5rem; }
+.footer__social a {
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background-color: rgba(239, 230, 217, 0.08);
+  transition: background-color 0.2s var(--ease);
+}
+.footer__social a:hover { background-color: var(--clay); color: #fff; }
+
+/* احترام به تنظیم کاهش حرکت سیستم کاربر */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================================
+ * responsive.css — چیدمان در اندازه‌های مختلف صفحه
+ * ----------------------------------------------------------------------------
+ * نقاط شکست از بزرگ به کوچک چیده شده‌اند تا خواندنشان ساده باشد:
+ *   ۱۲۰۰px  لپ‌تاپ کوچک
+ *   ۹۹۲px   تبلت افقی
+ *   ۷۶۸px   تبلت عمودی و موبایل بزرگ  ← اینجا منوی موبایل فعال می‌شود
+ *   ۵۲۰px   موبایل
+ * ==========================================================================*/
+
+@media (max-width: 1200px) {
+  .product-grid { grid-template-columns: repeat(3, 1fr); }
+  .category-grid { grid-template-columns: repeat(3, 1fr); }
+  .brand-strip { grid-template-columns: repeat(3, 1fr); }
+  .hero__inner { gap: var(--gap-lg); }
+}
+
+@media (max-width: 992px) {
+  :root { --header-h: 66px; }
+
+  /* قهرمان صفحه از دو ستون به یک ستون می‌رود و تصویر پایین می‌نشیند */
+  .hero__inner {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: var(--gap-xl);
+  }
+  .hero__figure { max-width: 480px; margin-inline: auto; }
+  .hero__tag { inset-inline-start: 1rem; }
+
+  .offer__inner { grid-template-columns: 1fr; }
+  .offer__figure { order: -1; }
+  .offer__figure img { max-height: 260px; }
+  .offer__body { padding: var(--gap-lg); }
+
+  .routine__grid { grid-template-columns: 1fr; }
+  .newsletter__inner { grid-template-columns: 1fr; gap: var(--gap-lg); }
+  .trust__grid { grid-template-columns: repeat(2, 1fr); }
+  .post-grid { grid-template-columns: 1fr; }
+  .footer__top { grid-template-columns: 1fr 1fr; gap: var(--gap-lg); }
+  .quick { grid-template-columns: 1fr; }
+  .quick__media img { max-height: 320px; }
+}
+
+@media (max-width: 768px) {
+  /* جستجو از نوار بالا حذف و به منوی موبایل منتقل می‌شود */
+  .header__bar .search { display: none; }
+  .nav { display: none; }
+  .menu-toggle { display: inline-flex; }
+
+  .header__bar { gap: 0.5rem; }
+  .brand__name { font-size: 1.35rem; }
+
+  .mobile-search { display: block; margin-bottom: var(--gap); }
+
+  .product-grid { grid-template-columns: repeat(2, 1fr); gap: var(--gap) 0.8rem; }
+  .category-grid { grid-template-columns: repeat(2, 1fr); }
+  .brand-strip { grid-template-columns: repeat(2, 1fr); }
+
+  .section-head { flex-direction: column; align-items: flex-start; gap: var(--gap-sm); }
+
+  .toolbar { flex-direction: column; align-items: stretch; }
+  /* نوار فیلتر افقی اسکرول می‌شود تا صفحه به هم نریزد */
+  .filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.4rem;
+    scrollbar-width: none;
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .filter { white-space: nowrap; }
+
+  .concern-grid { grid-template-columns: 1fr; }
+  .hero__meta { gap: var(--gap); }
+  .countdown__unit { min-width: 58px; }
+
+  .toasts { inset-inline: 1rem; inset-block-end: 1rem; max-width: none; }
+  .to-top { inset-block-end: 1rem; inset-inline-start: 1rem; }
+}
+
+@media (max-width: 520px) {
+  .product-grid { grid-template-columns: 1fr; }
+  .category-grid { grid-template-columns: 1fr; }
+  .trust__grid { grid-template-columns: 1fr; }
+  .footer__top { grid-template-columns: 1fr; }
+
+  .hero__actions .btn { width: 100%; }
+  .newsletter__form { flex-direction: column; }
+  .quick__actions { flex-direction: column; }
+
+  .footer__bottom { flex-direction: column; align-items: flex-start; }
+  .drawer { width: 100%; }
+}
+
+</style>
+</head>
+<body>
+
+    <!-- ==================================================================
+         بیشتر ظرف‌های این صفحه عمدا خالی هستند؛ جاوااسکریپت آن‌ها را پر
+         می‌کند. برای پیدا کردن کد هر بخش، id آن را در پوشه JS جستجو کنید.
+         ================================================================ -->
+
+    <a class="sr-only" href="#catalog">پرش به فهرست محصولات</a>
+
+    <!-- نوار اعلان -->
+    <div class="announce" id="announce">
+      <div class="container announce__inner">
+        <span class="material-symbols-rounded" aria-hidden="true">local_shipping</span>
+        <!-- پیام‌ها از ANNOUNCEMENTS در data.js می‌آیند -->
+        <div class="announce__track" id="announce-track" aria-live="polite"></div>
+        <button class="announce__close" id="announce-close" type="button" aria-label="بستن نوار اعلان">
+          <span class="material-symbols-rounded" aria-hidden="true">close</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- هدر -->
+    <header class="header" id="header">
+      <div class="container header__bar">
+        <a class="brand" href="#" aria-label="آوینا، صفحه اصلی">
+          <span class="brand__name">آوینا</span>
+          <span class="brand__latin">AVINA</span>
+        </a>
+
+        <div class="search">
+          <div class="search__field">
+            <span class="material-symbols-rounded search__icon" aria-hidden="true">search</span>
+            <label class="sr-only" for="search-input">جستجوی محصول</label>
+            <input
+              class="search__input"
+              id="search-input"
+              type="search"
+              autocomplete="off"
+              placeholder="جستجو در محصولات، برندها و دسته‌ها..." />
+            <button class="search__clear" id="search-clear" type="button" aria-label="پاک کردن جستجو">
+              <span class="material-symbols-rounded" aria-hidden="true">close</span>
+            </button>
+          </div>
+          <div class="search__results" id="search-results" role="listbox" hidden></div>
+        </div>
+
+        <div class="header__actions">
+          <button class="icon-btn" id="account-button" type="button" aria-label="حساب کاربری">
+            <span class="material-symbols-rounded" aria-hidden="true">person</span>
+          </button>
+
+          <button class="icon-btn" id="wishlist-button" type="button" aria-label="علاقه‌مندی‌ها">
+            <span class="material-symbols-rounded" aria-hidden="true">favorite_border</span>
+            <span class="icon-btn__count num" id="wishlist-count">۰</span>
+          </button>
+
+          <button class="icon-btn" id="cart-button" type="button" aria-label="سبد خرید" aria-haspopup="dialog">
+            <span class="material-symbols-rounded" aria-hidden="true">shopping_bag</span>
+            <span class="icon-btn__count num" id="cart-count">۰</span>
+          </button>
+
+          <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="منو" aria-haspopup="dialog">
+            <span class="material-symbols-rounded" aria-hidden="true">menu</span>
+          </button>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="ناوبری اصلی">
+        <div class="container">
+          <ul class="nav__list" id="nav-list"></ul>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- قهرمان صفحه -->
+      <section class="hero">
+        <div class="container hero__inner">
+          <div class="hero__body">
+            <p class="eyebrow">مراقبت پوست، اصیل و ساده</p>
+            <h1 class="hero__title">
+              پوست شما لایق <em>مراقبت درست</em> است، نه قفسه‌ای پر از محصول
+            </h1>
+            <p class="hero__text">
+              در آوینا محصولاتی را انتخاب کرده‌ایم که فرمول روشن، اثر اثبات‌شده و
+              اصالت تضمین‌شده دارند. روتین خود را با چند قدم ساده بسازید.
+            </p>
+
+            <div class="hero__actions">
+              <a class="btn btn--primary" href="#catalog">
+                <span class="material-symbols-rounded" aria-hidden="true">shopping_bag</span>
+                مشاهده محصولات
+              </a>
+              <a class="btn btn--ghost" href="#routine">ساخت روتین پوست</a>
+            </div>
+
+            <div class="hero__meta">
+              <div class="hero__stat">
+                <strong class="num">۲۴۰+</strong>
+                <span>محصول اصل</span>
+              </div>
+              <div class="hero__stat">
+                <strong class="num">۱۸</strong>
+                <span>برند منتخب</span>
+              </div>
+              <div class="hero__stat">
+                <strong class="num">۴.۸</strong>
+                <span>رضایت مشتریان</span>
+              </div>
+            </div>
+          </div>
+
+          <figure class="hero__figure">
+            <img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 900 1100%22 width=%22900%22 height=%221100%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22hb%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F3EAE0%22/%3E%3Cstop offset=%221%22 stop-color=%22%23E4D6C6%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22v1%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23D9C6B2%22/%3E%3Cstop offset=%221%22 stop-color=%22%23BFA88F%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22v2%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23A9B6A2%22/%3E%3Cstop offset=%221%22 stop-color=%22%238A9A82%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22900%22 height=%221100%22 fill=%22url(%23hb)%22/%3E%3Ccircle cx=%22470%22 cy=%22430%22 r=%22330%22 fill=%22%23FAF7F2%22 opacity=%220.55%22/%3E%3Ccircle cx=%22700%22 cy=%22820%22 r=%22190%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22450%22 cy=%22880%22 rx=%22250%22 ry=%2226%22 fill=%22%236B4E3A%22 opacity=%220.12%22/%3E%3Crect x=%22300%22 y=%22470%22 width=%22190%22 height=%22400%22 rx=%2234%22 fill=%22url(%23v1)%22/%3E%3Crect x=%22358%22 y=%22392%22 width=%2274%22 height=%2282%22 rx=%2212%22 fill=%22%23A8795A%22/%3E%3Crect x=%22330%22 y=%22358%22 width=%22130%22 height=%2236%22 rx=%2218%22 fill=%22%236B4E3A%22/%3E%3Crect x=%22520%22 y=%22580%22 width=%22150%22 height=%22290%22 rx=%2226%22 fill=%22url(%23v2)%22/%3E%3Crect x=%22566%22 y=%22516%22 width=%2258%22 height=%2266%22 rx=%2210%22 fill=%22%237D8770%22/%3E%3Crect x=%22546%22 y=%22486%22 width=%2298%22 height=%2232%22 rx=%2216%22 fill=%22%236B4E3A%22/%3E%3Crect x=%22170%22 y=%22680%22 width=%22130%22 height=%22190%22 rx=%2228%22 fill=%22%23E3C9C0%22/%3E%3Crect x=%22158%22 y=%22640%22 width=%22154%22 height=%2248%22 rx=%2220%22 fill=%22%23A8795A%22/%3E%3Cpath d=%22M700 600 q-40 -120 10 -230 q50 110 -10 230 z%22 fill=%22%237D8770%22 opacity=%220.7%22/%3E%3Cpath d=%22M710 600 v-210%22 stroke=%22%236B4E3A%22 stroke-width=%224%22 opacity=%220.8%22/%3E%3C/svg%3E" alt="مجموعه‌ای از محصولات مراقبت پوست آوینا" width="900" height="1100" />
+            <figcaption class="hero__tag">
+              <span class="material-symbols-rounded" aria-hidden="true">eco</span>
+              <span>
+                <strong>فرمول بدون آزار</strong>
+                <span>تست‌شده روی پوست حساس</span>
+              </span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- دسته‌بندی‌ها -->
+      <section class="section" id="categories">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">دسته‌بندی‌ها</p>
+              <h2 class="section-title">از کجا شروع می‌کنید؟</h2>
+              <p class="section-sub">هر دسته با دقت چیده شده تا پیدا کردن محصول مناسب ساده باشد.</p>
+            </div>
+            <a class="link-more" href="#catalog">
+              همه محصولات
+              <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span>
+            </a>
+          </div>
+
+          <div class="category-grid" id="category-grid"></div>
+        </div>
+      </section>
+
+      <!-- فهرست محصولات: پرفروش‌ها، فیلتر و مرتب‌سازی -->
+      <section class="section section--tight" id="catalog">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">پرفروش‌ترین‌ها</p>
+              <h2 class="section-title">انتخاب مشتریان آوینا</h2>
+              <p class="section-sub" id="catalog-count">۲۴ محصول</p>
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <div class="filters" id="catalog-filters" role="group" aria-label="فیلتر دسته‌بندی"></div>
+            <div class="sort">
+              <label for="catalog-sort">مرتب‌سازی</label>
+              <select id="catalog-sort"></select>
+            </div>
+          </div>
+
+          <div class="product-grid" id="catalog-grid"></div>
+        </div>
+      </section>
+
+      <!-- پیشنهاد ویژه -->
+      <section class="section section--tight" id="offers">
+        <div class="container">
+          <div class="offer">
+            <div class="offer__inner">
+              <div class="offer__body">
+                <p class="eyebrow">پیشنهاد محدود</p>
+                <h2 class="offer__title" id="offer-title"></h2>
+                <p class="offer__sub" id="offer-sub"></p>
+                <p class="offer__text" id="offer-text"></p>
+
+                <div class="countdown" id="countdown" aria-label="زمان باقی‌مانده تا پایان پیشنهاد"></div>
+
+                <div class="hero__actions">
+                  <a class="btn btn--light" href="#catalog">مشاهده پیشنهادها</a>
+                </div>
+              </div>
+
+              <figure class="offer__figure">
+                <img id="offer-image" src="" alt="" width="1200" height="520" />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- جدیدترین‌ها -->
+      <section class="section" id="new-arrivals">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">تازه رسیده‌ها</p>
+              <h2 class="section-title">جدیدترین محصولات</h2>
+            </div>
+            <a class="link-more" href="#catalog">
+              همه محصولات
+              <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span>
+            </a>
+          </div>
+
+          <div class="product-grid" id="new-grid"></div>
+        </div>
+      </section>
+
+      <!-- برندها -->
+      <section class="section section--tight" id="brands">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">برندهای منتخب</p>
+              <h2 class="section-title">برندهایی که به آن‌ها اعتماد داریم</h2>
+            </div>
+          </div>
+
+          <div class="brand-strip" id="brand-strip"></div>
+        </div>
+      </section>
+
+      <!-- روتین پوست -->
+      <section class="section routine" id="routine">
+        <div class="container routine__grid">
+          <div>
+            <p class="eyebrow">روتین شخصی</p>
+            <h2 class="section-title">چهار قدم تا پوستی که دوستش دارید</h2>
+            <p class="section-sub">
+              لازم نیست ده محصول بخرید. با چهار قدم ساده شروع کنید و بعد بر اساس
+              نیاز پوستتان کامل‌ترش کنید.
+            </p>
+            <div class="routine__steps" id="routine-steps"></div>
+          </div>
+
+          <div>
+            <p class="eyebrow">نیاز پوست شما</p>
+            <h2 class="section-title" style="margin-bottom: 1.4rem">محصول را بر اساس نیاز پیدا کنید</h2>
+            <div class="concern-grid" id="concern-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- مجله -->
+      <section class="section" id="journal">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">مجله زیبایی</p>
+              <h2 class="section-title">دانستنی‌های مراقبت از پوست</h2>
+            </div>
+            <a class="link-more" href="#">
+              همه مقاله‌ها
+              <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span>
+            </a>
+          </div>
+
+          <div class="post-grid" id="post-grid"></div>
+        </div>
+      </section>
+
+      <!-- اعتماد مشتری -->
+      <section class="section section--tight trust">
+        <div class="container trust__grid" id="trust-grid"></div>
+      </section>
+
+      <!-- خبرنامه -->
+      <section class="section newsletter">
+        <div class="container newsletter__inner">
+          <div>
+            <p class="eyebrow">خبرنامه آوینا</p>
+            <h2 class="section-title">اول از همه باخبر شوید</h2>
+            <p class="section-sub">
+              پیشنهادهای ویژه، محصولات تازه و نکته‌های مراقبت از پوست — ماهی دو بار،
+              بدون پیام اضافه.
+            </p>
+          </div>
+
+          <form class="newsletter__form-wrap" id="newsletter-form" novalidate>
+            <div class="newsletter__form">
+              <div class="newsletter__control">
+                <label class="sr-only" for="newsletter-email">نشانی ایمیل</label>
+                <input
+                  class="newsletter__input"
+                  id="newsletter-email"
+                  type="email"
+                  autocomplete="email"
+                  placeholder="نشانی ایمیل شما"
+                  aria-describedby="newsletter-error" />
+              </div>
+              <button class="btn btn--primary" type="submit">عضویت</button>
+            </div>
+            <span class="form-error" id="newsletter-error" role="alert"></span>
+            <p class="newsletter__note">با عضویت، شرایط استفاده و حریم خصوصی آوینا را می‌پذیرید.</p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- فوتر -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__top">
+          <div class="footer__brand">
+            <span class="brand">
+              <span class="brand__name">آوینا</span>
+              <span class="brand__latin">AVINA</span>
+            </span>
+            <p class="footer__about">
+              فروشگاه آنلاین محصولات مراقبت پوست، آرایش و زیبایی با تضمین اصالت کالا
+              و مشاوره تخصصی رایگان.
+            </p>
+            <ul class="footer__contact" id="footer-contact"></ul>
+          </div>
+
+          <!-- سه ستون لینک از FOOTER_MENUS -->
+          <div style="display: contents" id="footer-columns"></div>
+        </div>
+
+        <div class="footer__bottom">
+          <p>© <span id="footer-year" class="num"></span> تمام حقوق برای فروشگاه آوینا محفوظ است.</p>
+          <div class="footer__badges" id="footer-badges"></div>
+          <div class="footer__social">
+            <a href="#" aria-label="اینستاگرام"><span class="material-symbols-rounded" aria-hidden="true">photo_camera</span></a>
+            <a href="#" aria-label="تلگرام"><span class="material-symbols-rounded" aria-hidden="true">send</span></a>
+            <a href="#" aria-label="تماس"><span class="material-symbols-rounded" aria-hidden="true">call</span></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ============ لایه‌های شناور ============ -->
+
+    <div class="overlay" id="overlay" data-close-layer></div>
+
+    <!-- کشوی سبد خرید -->
+    <aside class="drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title" aria-hidden="true">
+      <header class="drawer__head">
+        <h2 class="drawer__title" id="cart-title">سبد خرید</h2>
+        <button class="icon-btn" type="button" data-close-layer aria-label="بستن سبد خرید">
+          <span class="material-symbols-rounded" aria-hidden="true">close</span>
+        </button>
+      </header>
+      <div class="drawer__body" id="cart-body"></div>
+      <div class="drawer__foot" id="cart-foot"></div>
+    </aside>
+
+    <!-- منوی موبایل -->
+    <aside class="mobile-nav" id="mobile-nav" role="dialog" aria-modal="true" aria-label="منوی اصلی" aria-hidden="true">
+      <header class="mobile-nav__head">
+        <span class="brand">
+          <span class="brand__name">آوینا</span>
+          <span class="brand__latin">AVINA</span>
+        </span>
+        <button class="icon-btn" type="button" data-close-layer aria-label="بستن منو">
+          <span class="material-symbols-rounded" aria-hidden="true">close</span>
+        </button>
+      </header>
+
+      <div class="mobile-nav__body">
+        <div class="search mobile-search">
+          <div class="search__field">
+            <span class="material-symbols-rounded search__icon" aria-hidden="true">search</span>
+            <label class="sr-only" for="mobile-search-input">جستجوی محصول</label>
+            <input class="search__input" id="mobile-search-input" type="search" autocomplete="off" placeholder="جستجوی محصول..." />
+          </div>
+          <div class="search__results" id="mobile-search-results" hidden></div>
+        </div>
+
+        <div id="mobile-nav-body"></div>
+      </div>
+    </aside>
+
+    <!-- نگاه سریع محصول -->
+    <div class="modal" id="quick-modal" role="dialog" aria-modal="true" aria-label="مشخصات محصول" hidden>
+      <div class="modal__window">
+        <button class="modal__close" type="button" data-close-layer aria-label="بستن پنجره">
+          <span class="material-symbols-rounded" aria-hidden="true">close</span>
+        </button>
+        <div id="quick-body"></div>
+      </div>
+    </div>
+
+    <!-- پیام‌های کوتاه -->
+    <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+    <button class="to-top" id="to-top" type="button" aria-label="بازگشت به بالای صفحه">
+      <span class="material-symbols-rounded" aria-hidden="true">arrow_upward</span>
+    </button>
+
+    <!-- ==================================================================
+         ترتیب فایل‌ها مهم است: data.js اول چون بقیه از آن می‌خوانند،
+         و main.js آخر چون صفحه را راه می‌اندازد.
+         ================================================================ -->
+  
+<script>
+/* ===== JS/data.js ===== */
+/* ============================================================================
+ * data.js — همه محتوای فروشگاه
+ * ----------------------------------------------------------------------------
+ * تنها فایلی که برای تغییر محصولات، دسته‌ها و متن‌های سایت لازم است ویرایش شود.
+ * هیچ کدی در این فایل چیزی روی صفحه نمی‌کشد؛ فقط داده است.
+ *
+ * قیمت‌ها به تومان و بدون جداکننده نوشته می‌شوند؛ قالب‌بندی در utils.js انجام
+ * می‌شود. برای جایگزینی عکس‌ها کافی است فایل‌های پوشه IMG را عوض کنید و نام
+ * مسیر را همین‌جا به‌روز کنید.
+ * ==========================================================================*/
+
+const STORE = {
+  name: 'آوینا',
+  latin: 'AVINA',
+  tagline: 'زیبایی، ساده و اصیل',
+  phone: '۰۲۱ - ۹۱۰۰ ۲۲۴۴',
+  email: 'hello@avina.example',
+  address: 'تهران، خیابان ولیعصر، برج نگین، طبقه ۹',
+};
+
+/* نوار اعلان بالای صفحه */
+const ANNOUNCEMENTS = [
+  'ارسال رایگان برای سفارش‌های بالای ۱٫۵۰۰٫۰۰۰ تومان',
+  '۷ روز ضمانت بازگشت کالا بدون قید و شرط',
+  'تضمین اصالت کالا با کد رهگیری روی تمام محصولات',
+];
+
+/* منوی اصلی. هر آیتم می‌تواند زیرمنو داشته باشد. */
+const NAV_MENU = [
+  { id: 'skincare', label: 'مراقبت پوست', children: ['پاک‌کننده', 'سرم', 'کرم آبرسان', 'ضدآفتاب', 'دور چشم'] },
+  { id: 'makeup', label: 'آرایش', children: ['کرم پودر', 'کانسیلر', 'ریمل', 'رژ لب', 'رژگونه'] },
+  { id: 'haircare', label: 'مراقبت مو', children: ['شامپو', 'نرم‌کننده', 'ماسک مو', 'روغن مو'] },
+  { id: 'bodycare', label: 'مراقبت بدن', children: ['لوسیون بدن', 'اسکراب', 'عطر'] },
+  { id: 'accessories', label: 'لوازم جانبی', children: ['براش', 'رولر صورت', 'پد آرایشی'] },
+  { id: 'brands', label: 'برندها', children: [] },
+  { id: 'offers', label: 'پیشنهادها', children: [], highlight: true },
+];
+
+/* دسته‌بندی‌ها — هم برای کارت‌های دسته و هم برای فیلتر محصولات */
+const CATEGORIES = [
+  { id: 'skincare', label: 'مراقبت پوست', caption: 'پاک‌سازی تا آبرسانی', image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 600 760%22 width=%22600%22 height=%22760%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22cg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23EFE3D6%22/%3E%3Cstop offset=%221%22 stop-color=%22%23DCC9B4%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22600%22 height=%22760%22 fill=%22url(%23cg)%22/%3E%3Ccircle cx=%22300%22 cy=%22330%22 r=%22190%22 fill=%22%23FAF7F2%22 opacity=%220.4%22/%3E%3Cpath d=%22M300 210 q92 132 92 196 a92 92 0 0 1 -184 0 q0 -64 92 -196 z%22 fill=%22%236B4E3A%22 opacity=%220.85%22/%3E%3C/svg%3E' },
+  { id: 'makeup', label: 'آرایش', caption: 'روزمره و حرفه‌ای', image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 600 760%22 width=%22600%22 height=%22760%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22cg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F0DFDA%22/%3E%3Cstop offset=%221%22 stop-color=%22%23DFC3BB%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22600%22 height=%22760%22 fill=%22url(%23cg)%22/%3E%3Ccircle cx=%22300%22 cy=%22330%22 r=%22190%22 fill=%22%23FAF7F2%22 opacity=%220.4%22/%3E%3Cellipse cx=%22300%22 cy=%22250%22 rx=%2244%22 ry=%22104%22 fill=%22%236B4E3A%22 opacity=%220.55%22 transform=%22rotate(0 300 350)%22/%3E%3Cellipse cx=%22300%22 cy=%22250%22 rx=%2244%22 ry=%22104%22 fill=%22%236B4E3A%22 opacity=%220.55%22 transform=%22rotate(72 300 350)%22/%3E%3Cellipse cx=%22300%22 cy=%22250%22 rx=%2244%22 ry=%22104%22 fill=%22%236B4E3A%22 opacity=%220.55%22 transform=%22rotate(144 300 350)%22/%3E%3Cellipse cx=%22300%22 cy=%22250%22 rx=%2244%22 ry=%22104%22 fill=%22%236B4E3A%22 opacity=%220.55%22 transform=%22rotate(216 300 350)%22/%3E%3Cellipse cx=%22300%22 cy=%22250%22 rx=%2244%22 ry=%22104%22 fill=%22%236B4E3A%22 opacity=%220.55%22 transform=%22rotate(288 300 350)%22/%3E%3C/svg%3E' },
+  { id: 'haircare', label: 'مراقبت مو', caption: 'تقویت و ترمیم', image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 600 760%22 width=%22600%22 height=%22760%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22cg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23E6EBE2%22/%3E%3Cstop offset=%221%22 stop-color=%22%23CBD6C4%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22600%22 height=%22760%22 fill=%22url(%23cg)%22/%3E%3Ccircle cx=%22300%22 cy=%22330%22 r=%22190%22 fill=%22%23FAF7F2%22 opacity=%220.4%22/%3E%3Cpath d=%22M300 470 q-110 -150 0 -250 q110 100 0 250 z%22 fill=%22%236B4E3A%22 opacity=%220.8%22/%3E%3Cpath d=%22M300 470 v-240%22 stroke=%22%23FAF7F2%22 stroke-width=%225%22 opacity=%220.9%22/%3E%3C/svg%3E' },
+  { id: 'bodycare', label: 'مراقبت بدن', caption: 'نرمی و لطافت', image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 600 760%22 width=%22600%22 height=%22760%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22cg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F1E9DC%22/%3E%3Cstop offset=%221%22 stop-color=%22%23DDCDB6%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22600%22 height=%22760%22 fill=%22url(%23cg)%22/%3E%3Ccircle cx=%22300%22 cy=%22330%22 r=%22190%22 fill=%22%23FAF7F2%22 opacity=%220.4%22/%3E%3Cpath d=%22M120 300 q90 -60 180 0 t180 0%22 stroke=%22%236B4E3A%22 stroke-width=%2214%22 fill=%22none%22 opacity=%220.25%22 stroke-linecap=%22round%22/%3E%3Cpath d=%22M120 360 q90 -60 180 0 t180 0%22 stroke=%22%236B4E3A%22 stroke-width=%2214%22 fill=%22none%22 opacity=%220.45%22 stroke-linecap=%22round%22/%3E%3Cpath d=%22M120 420 q90 -60 180 0 t180 0%22 stroke=%22%236B4E3A%22 stroke-width=%2214%22 fill=%22none%22 opacity=%220.7%22 stroke-linecap=%22round%22/%3E%3C/svg%3E' },
+  { id: 'fragrance', label: 'عطر و رایحه', caption: 'امضای شخصی شما', image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 600 760%22 width=%22600%22 height=%22760%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22cg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F2E8DC%22/%3E%3Cstop offset=%221%22 stop-color=%22%23E0CDB3%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22600%22 height=%22760%22 fill=%22url(%23cg)%22/%3E%3Ccircle cx=%22300%22 cy=%22330%22 r=%22190%22 fill=%22%23FAF7F2%22 opacity=%220.4%22/%3E%3Cpath d=%22M300 210 q92 132 92 196 a92 92 0 0 1 -184 0 q0 -64 92 -196 z%22 fill=%22%236B4E3A%22 opacity=%220.85%22/%3E%3C/svg%3E' },
+  { id: 'accessories', label: 'لوازم جانبی', caption: 'ابزار حرفه‌ای', image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 600 760%22 width=%22600%22 height=%22760%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22cg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23EAE4DB%22/%3E%3Cstop offset=%221%22 stop-color=%22%23D2C8BA%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22600%22 height=%22760%22 fill=%22url(%23cg)%22/%3E%3Ccircle cx=%22300%22 cy=%22330%22 r=%22190%22 fill=%22%23FAF7F2%22 opacity=%220.4%22/%3E%3Ccircle cx=%22300%22 cy=%22340%22 r=%22120%22 fill=%22none%22 stroke=%22%236B4E3A%22 stroke-width=%2218%22 opacity=%220.75%22/%3E%3Ccircle cx=%22300%22 cy=%22340%22 r=%2258%22 fill=%22%236B4E3A%22 opacity=%220.6%22/%3E%3C/svg%3E' },
+];
+
+/* برندها */
+const BRANDS = [
+  { id: 'lumiere', label: 'لومیر', logo: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 260 90%22 width=%22260%22 height=%2290%22 role=%22img%22%3E%3Crect width=%22260%22 height=%2290%22 fill=%22none%22/%3E%3Ctext x=%22130%22 y=%2252%22 text-anchor=%22middle%22 font-family=%22Georgia,serif%22 font-size=%2230%22 letter-spacing=%225%22 fill=%22%236B4E3A%22%3ELUMIÈRE%3C/text%3E%3Cline x1=%2286%22 y1=%2266%22 x2=%22174%22 y2=%2266%22 stroke=%22%236B4E3A%22 stroke-width=%221.5%22 opacity=%220.55%22/%3E%3C/svg%3E' },
+  { id: 'aurelia', label: 'اورلیا', logo: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 260 90%22 width=%22260%22 height=%2290%22 role=%22img%22%3E%3Crect width=%22260%22 height=%2290%22 fill=%22none%22/%3E%3Ctext x=%22130%22 y=%2252%22 text-anchor=%22middle%22 font-family=%22Georgia,serif%22 font-size=%2230%22 letter-spacing=%225%22 fill=%22%236B4E3A%22%3EAURELIA%3C/text%3E%3Cline x1=%2286%22 y1=%2266%22 x2=%22174%22 y2=%2266%22 stroke=%22%236B4E3A%22 stroke-width=%221.5%22 opacity=%220.55%22/%3E%3C/svg%3E' },
+  { id: 'botanica', label: 'بوتانیکا', logo: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 260 90%22 width=%22260%22 height=%2290%22 role=%22img%22%3E%3Crect width=%22260%22 height=%2290%22 fill=%22none%22/%3E%3Ctext x=%22130%22 y=%2252%22 text-anchor=%22middle%22 font-family=%22Georgia,serif%22 font-size=%2230%22 letter-spacing=%225%22 fill=%22%236B4E3A%22%3EBOTANICA%3C/text%3E%3Cline x1=%2286%22 y1=%2266%22 x2=%22174%22 y2=%2266%22 stroke=%22%236B4E3A%22 stroke-width=%221.5%22 opacity=%220.55%22/%3E%3C/svg%3E' },
+  { id: 'maison', label: 'میزون آر', logo: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 260 90%22 width=%22260%22 height=%2290%22 role=%22img%22%3E%3Crect width=%22260%22 height=%2290%22 fill=%22none%22/%3E%3Ctext x=%22130%22 y=%2252%22 text-anchor=%22middle%22 font-family=%22Georgia,serif%22 font-size=%2230%22 letter-spacing=%225%22 fill=%22%236B4E3A%22%3EMAISON·R%3C/text%3E%3Cline x1=%2286%22 y1=%2266%22 x2=%22174%22 y2=%2266%22 stroke=%22%236B4E3A%22 stroke-width=%221.5%22 opacity=%220.55%22/%3E%3C/svg%3E' },
+  { id: 'velour', label: 'ولور', logo: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 260 90%22 width=%22260%22 height=%2290%22 role=%22img%22%3E%3Crect width=%22260%22 height=%2290%22 fill=%22none%22/%3E%3Ctext x=%22130%22 y=%2252%22 text-anchor=%22middle%22 font-family=%22Georgia,serif%22 font-size=%2230%22 letter-spacing=%225%22 fill=%22%236B4E3A%22%3EVELOUR%3C/text%3E%3Cline x1=%2286%22 y1=%2266%22 x2=%22174%22 y2=%2266%22 stroke=%22%236B4E3A%22 stroke-width=%221.5%22 opacity=%220.55%22/%3E%3C/svg%3E' },
+  { id: 'sereine', label: 'سرن', logo: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 260 90%22 width=%22260%22 height=%2290%22 role=%22img%22%3E%3Crect width=%22260%22 height=%2290%22 fill=%22none%22/%3E%3Ctext x=%22130%22 y=%2252%22 text-anchor=%22middle%22 font-family=%22Georgia,serif%22 font-size=%2230%22 letter-spacing=%225%22 fill=%22%236B4E3A%22%3ESEREINE%3C/text%3E%3Cline x1=%2286%22 y1=%2266%22 x2=%22174%22 y2=%2266%22 stroke=%22%236B4E3A%22 stroke-width=%221.5%22 opacity=%220.55%22/%3E%3C/svg%3E' },
+];
+
+/* --------------------------------------------------------------------------
+ * محصولات
+ * --------------------------------------------------------------------------
+ *   price     قیمت فعلی (تومان)
+ *   oldPrice  قیمت پیش از تخفیف، یا null اگر تخفیفی ندارد
+ *   concerns  نیازهای پوستی — برای بخش «روتین پوست» استفاده می‌شود
+ *   tags      new / bestseller برای بخش‌های مختلف صفحه
+ * ------------------------------------------------------------------------*/
+const PRODUCTS = [
+  { id: 'p01', name: 'ژل شست‌وشوی صورت پوست چرب', brand: 'botanica', category: 'skincare',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23FAF7F2%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23C9B7A4%22/%3E%3Cstop offset=%221%22 stop-color=%22%23B3A08C%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Cpath d=%22M330 300 h140 l24 300 a24 24 0 0 1 -24 26 h-140 a24 24 0 0 1 -24 -26 z%22 fill=%22url(%23body)%22/%3E%3Crect x=%22352%22 y=%22236%22 width=%2296%22 height=%2268%22 rx=%2212%22 fill=%22%23B3A08C%22/%3E%3Crect x=%22340%22 y=%22216%22 width=%22120%22 height=%2226%22 rx=%2213%22 fill=%22%236B4E3A%22/%3E%3C/svg%3E', price: 486000, oldPrice: 620000, rating: 4.6, reviews: 214,
+    volume: '۲۰۰ میلی‌لیتر', concerns: ['oily', 'acne'], tags: ['bestseller'],
+    short: 'پاک‌سازی عمیق بدون خشکی، مناسب پوست‌های چرب و مستعد جوش.' },
+
+  { id: 'p02', name: 'فوم پاک‌کننده ملایم صورت', brand: 'sereine', category: 'skincare',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F6F1EA%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23DCCFC0%22/%3E%3Cstop offset=%221%22 stop-color=%22%23C6B6A4%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22315%22 y=%22290%22 width=%22170%22 height=%22330%22 rx=%2226%22 fill=%22url(%23body)%22/%3E%3Crect x=%22368%22 y=%22228%22 width=%2264%22 height=%2270%22 rx=%2210%22 fill=%22%23C6B6A4%22/%3E%3Crect x=%22350%22 y=%22196%22 width=%22120%22 height=%2234%22 rx=%2217%22 fill=%22%236B4E3A%22/%3E%3Crect x=%22300%22 y=%22196%22 width=%2260%22 height=%2216%22 rx=%228%22 fill=%22%236B4E3A%22/%3E%3C/svg%3E', price: 398000, oldPrice: null, rating: 4.4, reviews: 128,
+    volume: '۱۵۰ میلی‌لیتر', concerns: ['sensitive', 'dry'], tags: ['new'],
+    short: 'فرمول بدون صابون با pH متعادل، برای پوست‌های حساس.' },
+
+  { id: 'p03', name: 'سرم ویتامین ث ۲۰ درصد', brand: 'lumiere', category: 'skincare',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23FBF4E8%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23D8A85F%22/%3E%3Cstop offset=%221%22 stop-color=%22%23BE8C43%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22330%22 y=%22320%22 width=%22140%22 height=%22290%22 rx=%2220%22 fill=%22url(%23body)%22/%3E%3Crect x=%22366%22 y=%22256%22 width=%2268%22 height=%2268%22 rx=%228%22 fill=%22%23BE8C43%22/%3E%3Crect x=%22352%22 y=%22206%22 width=%2296%22 height=%2256%22 rx=%2212%22 fill=%22%236B4E3A%22/%3E%3C/svg%3E', price: 1290000, oldPrice: 1650000, rating: 4.8, reviews: 512,
+    volume: '۳۰ میلی‌لیتر', concerns: ['dull', 'spots'], tags: ['bestseller'],
+    short: 'روشن‌کننده و آنتی‌اکسیدان قوی برای یکنواختی رنگ پوست.' },
+
+  { id: 'p04', name: 'سرم نیاسینامید ۱۰ درصد', brand: 'aurelia', category: 'skincare',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F2F5EF%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23B9C2B1%22/%3E%3Cstop offset=%221%22 stop-color=%22%2394A08B%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22330%22 y=%22320%22 width=%22140%22 height=%22290%22 rx=%2220%22 fill=%22url(%23body)%22/%3E%3Crect x=%22366%22 y=%22256%22 width=%2268%22 height=%2268%22 rx=%228%22 fill=%22%2394A08B%22/%3E%3Crect x=%22352%22 y=%22206%22 width=%2296%22 height=%2256%22 rx=%2212%22 fill=%22%236B4E3A%22/%3E%3C/svg%3E', price: 745000, oldPrice: 890000, rating: 4.7, reviews: 341,
+    volume: '۳۰ میلی‌لیتر', concerns: ['oily', 'acne', 'spots'], tags: ['bestseller'],
+    short: 'تنظیم چربی و کوچک‌کردن ظاهر منافذ پوست.' },
+
+  { id: 'p05', name: 'کرم آبرسان روزانه', brand: 'sereine', category: 'skincare',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23FAF4ED%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23E4D3C2%22/%3E%3Cstop offset=%221%22 stop-color=%22%23CBB69F%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22280%22 y=%22380%22 width=%22240%22 height=%22210%22 rx=%2234%22 fill=%22url(%23body)%22/%3E%3Crect x=%22262%22 y=%22320%22 width=%22276%22 height=%2274%22 rx=%2224%22 fill=%22%23CBB69F%22/%3E%3Crect x=%22262%22 y=%22320%22 width=%22276%22 height=%2220%22 rx=%2210%22 fill=%22%23FAF7F2%22 opacity=%220.5%22/%3E%3C/svg%3E', price: 690000, oldPrice: null, rating: 4.5, reviews: 189,
+    volume: '۵۰ میلی‌لیتر', concerns: ['dry', 'sensitive'], tags: [],
+    short: 'بافت سبک با هیالورونیک اسید، بدون چربی اضافه.' },
+
+  { id: 'p06', name: 'کرم شب ترمیم‌کننده رتینول', brand: 'botanica', category: 'skincare',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F1F4EE%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%238E9B86%22/%3E%3Cstop offset=%221%22 stop-color=%22%236E7C67%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22280%22 y=%22380%22 width=%22240%22 height=%22210%22 rx=%2234%22 fill=%22url(%23body)%22/%3E%3Crect x=%22262%22 y=%22320%22 width=%22276%22 height=%2274%22 rx=%2224%22 fill=%22%236E7C67%22/%3E%3Crect x=%22262%22 y=%22320%22 width=%22276%22 height=%2220%22 rx=%2210%22 fill=%22%23FAF7F2%22 opacity=%220.5%22/%3E%3C/svg%3E', price: 1450000, oldPrice: 1820000, rating: 4.7, reviews: 267,
+    volume: '۵۰ میلی‌لیتر', concerns: ['aging', 'dull'], tags: ['bestseller'],
+    short: 'بازسازی شبانه پوست و کاهش خطوط ریز.' },
+
+  { id: 'p07', name: 'ضدآفتاب بی‌رنگ SPF۵۰', brand: 'lumiere', category: 'skincare',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23FCF7E9%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23EBD9A8%22/%3E%3Cstop offset=%221%22 stop-color=%22%23D4BE83%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Cpath d=%22M330 300 h140 l24 300 a24 24 0 0 1 -24 26 h-140 a24 24 0 0 1 -24 -26 z%22 fill=%22url(%23body)%22/%3E%3Crect x=%22352%22 y=%22236%22 width=%2296%22 height=%2268%22 rx=%2212%22 fill=%22%23D4BE83%22/%3E%3Crect x=%22340%22 y=%22216%22 width=%22120%22 height=%2226%22 rx=%2213%22 fill=%22%236B4E3A%22/%3E%3C/svg%3E', price: 820000, oldPrice: 980000, rating: 4.9, reviews: 733,
+    volume: '۵۰ میلی‌لیتر', concerns: ['spots', 'aging', 'sensitive'], tags: ['bestseller'],
+    short: 'بدون رد سفید، مناسب زیر آرایش و همه انواع پوست.' },
+
+  { id: 'p08', name: 'کرم دور چشم روشن‌کننده', brand: 'aurelia', category: 'skincare',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F8F2F6%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23D6C3D0%22/%3E%3Cstop offset=%221%22 stop-color=%22%23B9A2B3%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22280%22 y=%22380%22 width=%22240%22 height=%22210%22 rx=%2234%22 fill=%22url(%23body)%22/%3E%3Crect x=%22262%22 y=%22320%22 width=%22276%22 height=%2274%22 rx=%2224%22 fill=%22%23B9A2B3%22/%3E%3Crect x=%22262%22 y=%22320%22 width=%22276%22 height=%2220%22 rx=%2210%22 fill=%22%23FAF7F2%22 opacity=%220.5%22/%3E%3C/svg%3E', price: 935000, oldPrice: null, rating: 4.3, reviews: 96,
+    volume: '۱۵ میلی‌لیتر', concerns: ['aging', 'dull'], tags: ['new'],
+    short: 'کاهش پفـ و تیرگی زیر چشم با کافئین و پپتید.' },
+
+  { id: 'p09', name: 'کرم پودر مات ماندگار', brand: 'velour', category: 'makeup',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F9F1E9%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23C79C78%22/%3E%3Cstop offset=%221%22 stop-color=%22%23AC8060%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22315%22 y=%22290%22 width=%22170%22 height=%22330%22 rx=%2226%22 fill=%22url(%23body)%22/%3E%3Crect x=%22368%22 y=%22228%22 width=%2264%22 height=%2270%22 rx=%2210%22 fill=%22%23AC8060%22/%3E%3Crect x=%22350%22 y=%22196%22 width=%22120%22 height=%2234%22 rx=%2217%22 fill=%22%236B4E3A%22/%3E%3Crect x=%22300%22 y=%22196%22 width=%2260%22 height=%2216%22 rx=%228%22 fill=%22%236B4E3A%22/%3E%3C/svg%3E', price: 1180000, oldPrice: 1390000, rating: 4.6, reviews: 405,
+    volume: '۳۰ میلی‌لیتر', concerns: [], tags: ['bestseller'],
+    short: 'پوشش متوسط تا زیاد با ماندگاری ۱۲ ساعته.' },
+
+  { id: 'p10', name: 'کانسیلر روشن‌کننده زیر چشم', brand: 'velour', category: 'makeup',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23FBF4EC%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23DDBCA0%22/%3E%3Cstop offset=%221%22 stop-color=%22%23C4A084%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22330%22 y=%22320%22 width=%22140%22 height=%22290%22 rx=%2220%22 fill=%22url(%23body)%22/%3E%3Crect x=%22366%22 y=%22256%22 width=%2268%22 height=%2268%22 rx=%228%22 fill=%22%23C4A084%22/%3E%3Crect x=%22352%22 y=%22206%22 width=%2296%22 height=%2256%22 rx=%2212%22 fill=%22%236B4E3A%22/%3E%3C/svg%3E', price: 645000, oldPrice: null, rating: 4.4, reviews: 158,
+    volume: '۷ میلی‌لیتر', concerns: [], tags: [],
+    short: 'بافت کرمی و سبک، بدون نشستن در خطوط.' },
+
+  { id: 'p11', name: 'ریمل حجم‌دهنده ضدآب', brand: 'velour', category: 'makeup',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F4F1EC%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%233A362F%22/%3E%3Cstop offset=%221%22 stop-color=%22%2324211C%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22362%22 y=%22330%22 width=%2276%22 height=%22290%22 rx=%2216%22 fill=%22url(%23body)%22/%3E%3Crect x=%22374%22 y=%22200%22 width=%2252%22 height=%22140%22 rx=%2212%22 fill=%22%2324211C%22/%3E%3Crect x=%22386%22 y=%22176%22 width=%2228%22 height=%2230%22 rx=%228%22 fill=%22%236B4E3A%22/%3E%3C/svg%3E', price: 520000, oldPrice: 680000, rating: 4.5, reviews: 322,
+    volume: '۱۰ میلی‌لیتر', concerns: [], tags: ['bestseller'],
+    short: 'براش مخروطی برای جداسازی و حجم‌دهی مژه‌ها.' },
+
+  { id: 'p12', name: 'رژ لب جیر نود', brand: 'maison', category: 'makeup',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23FAF3ED%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23A8795A%22/%3E%3Cstop offset=%221%22 stop-color=%22%238A5F44%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22350%22 y=%22360%22 width=%22100%22 height=%22250%22 rx=%2214%22 fill=%22url(%23body)%22/%3E%3Crect x=%22356%22 y=%22280%22 width=%2288%22 height=%2284%22 rx=%2210%22 fill=%22%238A5F44%22/%3E%3Cpath d=%22M362 280 h76 v-62 l-76 34 z%22 fill=%22%23E3C9C0%22/%3E%3C/svg%3E', price: 590000, oldPrice: null, rating: 4.6, reviews: 241,
+    volume: '۴ گرم', concerns: [], tags: ['new'],
+    short: 'فینیش مخملی مات با حس راحت روی لب.' },
+
+  { id: 'p13', name: 'رژ لب مخملی رزی', brand: 'maison', category: 'makeup',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23FBF2F0%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23B5736E%22/%3E%3Cstop offset=%221%22 stop-color=%22%23985A56%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22350%22 y=%22360%22 width=%22100%22 height=%22250%22 rx=%2214%22 fill=%22url(%23body)%22/%3E%3Crect x=%22356%22 y=%22280%22 width=%2288%22 height=%2284%22 rx=%2210%22 fill=%22%23985A56%22/%3E%3Cpath d=%22M362 280 h76 v-62 l-76 34 z%22 fill=%22%23E3C9C0%22/%3E%3C/svg%3E', price: 590000, oldPrice: 720000, rating: 4.4, reviews: 177,
+    volume: '۴ گرم', concerns: [], tags: [],
+    short: 'رنگ‌دهی بالا با یک بار کشیدن.' },
+
+  { id: 'p14', name: 'رژگونه پودری ابریشمی', brand: 'velour', category: 'makeup',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23FBF2EF%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23DDA89D%22/%3E%3Cstop offset=%221%22 stop-color=%22%23C48C81%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22150%22 fill=%22url(%23body)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22104%22 fill=%22%23FBF2EF%22 opacity=%220.55%22/%3E%3Crect x=%22356%22 y=%22266%22 width=%2288%22 height=%2224%22 rx=%2212%22 fill=%22%23C48C81%22/%3E%3C/svg%3E', price: 480000, oldPrice: null, rating: 4.5, reviews: 134,
+    volume: '۶ گرم', concerns: [], tags: ['new'],
+    short: 'پودر نرم و قابل لایه‌لایه کردن بدون پخش شدن.' },
+
+  { id: 'p15', name: 'شامپو تقویت‌کننده ضدریزش', brand: 'botanica', category: 'haircare',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F2F5EF%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23A9B5A0%22/%3E%3Cstop offset=%221%22 stop-color=%22%2387957D%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22320%22 y=%22250%22 width=%22160%22 height=%22380%22 rx=%2230%22 fill=%22url(%23body)%22/%3E%3Crect x=%22372%22 y=%22186%22 width=%2256%22 height=%2268%22 rx=%2210%22 fill=%22%2387957D%22/%3E%3Crect x=%22344%22 y=%22156%22 width=%22112%22 height=%2232%22 rx=%2216%22 fill=%22%236B4E3A%22/%3E%3C/svg%3E', price: 435000, oldPrice: 560000, rating: 4.5, reviews: 288,
+    volume: '۴۰۰ میلی‌لیتر', concerns: [], tags: ['bestseller'],
+    short: 'بدون سولفات، همراه با عصاره گزنه و بیوتین.' },
+
+  { id: 'p16', name: 'نرم‌کننده مو بدون آبکشی', brand: 'botanica', category: 'haircare',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F8F3EC%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23CFC0AE%22/%3E%3Cstop offset=%221%22 stop-color=%22%23B4A28D%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22320%22 y=%22250%22 width=%22160%22 height=%22380%22 rx=%2230%22 fill=%22url(%23body)%22/%3E%3Crect x=%22372%22 y=%22186%22 width=%2256%22 height=%2268%22 rx=%2210%22 fill=%22%23B4A28D%22/%3E%3Crect x=%22344%22 y=%22156%22 width=%22112%22 height=%2232%22 rx=%2216%22 fill=%22%236B4E3A%22/%3E%3C/svg%3E', price: 410000, oldPrice: null, rating: 4.3, reviews: 112,
+    volume: '۳۰۰ میلی‌لیتر', concerns: [], tags: [],
+    short: 'نرمی و شانه‌پذیری بدون سنگین کردن مو.' },
+
+  { id: 'p17', name: 'ماسک مو کراتین ترمیم‌کننده', brand: 'sereine', category: 'haircare',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F7F1E9%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23B79F86%22/%3E%3Cstop offset=%221%22 stop-color=%22%239A8268%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22280%22 y=%22380%22 width=%22240%22 height=%22210%22 rx=%2234%22 fill=%22url(%23body)%22/%3E%3Crect x=%22262%22 y=%22320%22 width=%22276%22 height=%2274%22 rx=%2224%22 fill=%22%239A8268%22/%3E%3Crect x=%22262%22 y=%22320%22 width=%22276%22 height=%2220%22 rx=%2210%22 fill=%22%23FAF7F2%22 opacity=%220.5%22/%3E%3C/svg%3E', price: 760000, oldPrice: 920000, rating: 4.7, reviews: 203,
+    volume: '۲۵۰ میلی‌لیتر', concerns: [], tags: ['bestseller'],
+    short: 'بازسازی موهای آسیب‌دیده در ۱۰ دقیقه.' },
+
+  { id: 'p18', name: 'روغن مو آرگان خالص', brand: 'botanica', category: 'haircare',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23FBF6E6%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23C9A227%22/%3E%3Cstop offset=%221%22 stop-color=%22%23A8861C%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22330%22 y=%22320%22 width=%22140%22 height=%22290%22 rx=%2220%22 fill=%22url(%23body)%22/%3E%3Crect x=%22366%22 y=%22256%22 width=%2268%22 height=%2268%22 rx=%228%22 fill=%22%23A8861C%22/%3E%3Crect x=%22352%22 y=%22206%22 width=%2296%22 height=%2256%22 rx=%2212%22 fill=%22%236B4E3A%22/%3E%3C/svg%3E', price: 680000, oldPrice: null, rating: 4.6, reviews: 166,
+    volume: '۱۰۰ میلی‌لیتر', concerns: [], tags: ['new'],
+    short: 'درخشندگی و کنترل وز بدون حس چربی.' },
+
+  { id: 'p19', name: 'لوسیون بدن شی‌باتر', brand: 'sereine', category: 'bodycare',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23FAF5EE%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23E0D2C1%22/%3E%3Cstop offset=%221%22 stop-color=%22%23C7B49E%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22320%22 y=%22250%22 width=%22160%22 height=%22380%22 rx=%2230%22 fill=%22url(%23body)%22/%3E%3Crect x=%22372%22 y=%22186%22 width=%2256%22 height=%2268%22 rx=%2210%22 fill=%22%23C7B49E%22/%3E%3Crect x=%22344%22 y=%22156%22 width=%22112%22 height=%2232%22 rx=%2216%22 fill=%22%236B4E3A%22/%3E%3C/svg%3E', price: 395000, oldPrice: 490000, rating: 4.4, reviews: 151,
+    volume: '۳۰۰ میلی‌لیتر', concerns: ['dry'], tags: [],
+    short: 'رطوبت‌رسانی ۲۴ ساعته با رایحه ملایم وانیل.' },
+
+  { id: 'p20', name: 'اسکراب بدن قهوه و نمک دریا', brand: 'botanica', category: 'bodycare',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F8F2E9%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23C4A98C%22/%3E%3Cstop offset=%221%22 stop-color=%22%23A88C6F%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22280%22 y=%22380%22 width=%22240%22 height=%22210%22 rx=%2234%22 fill=%22url(%23body)%22/%3E%3Crect x=%22262%22 y=%22320%22 width=%22276%22 height=%2274%22 rx=%2224%22 fill=%22%23A88C6F%22/%3E%3Crect x=%22262%22 y=%22320%22 width=%22276%22 height=%2220%22 rx=%2210%22 fill=%22%23FAF7F2%22 opacity=%220.5%22/%3E%3C/svg%3E', price: 340000, oldPrice: null, rating: 4.2, reviews: 87,
+    volume: '۲۰۰ گرم', concerns: [], tags: ['new'],
+    short: 'لایه‌برداری ملایم و شاداب‌سازی پوست بدن.' },
+
+  { id: 'p21', name: 'ادوپرفیوم زنانه رز و مشک', brand: 'maison', category: 'fragrance',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23FAF3EA%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23B98E6A%22/%3E%3Cstop offset=%221%22 stop-color=%22%239A6F4D%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Cpath d=%22M320 380 q80 -60 160 0 v190 a34 34 0 0 1 -34 34 h-92 a34 34 0 0 1 -34 -34 z%22 fill=%22url(%23body)%22/%3E%3Crect x=%22376%22 y=%22300%22 width=%2248%22 height=%2286%22 rx=%228%22 fill=%22%239A6F4D%22/%3E%3Crect x=%22358%22 y=%22246%22 width=%2284%22 height=%2258%22 rx=%2214%22 fill=%22%236B4E3A%22/%3E%3C/svg%3E', price: 2450000, oldPrice: 2980000, rating: 4.8, reviews: 419,
+    volume: '۷۵ میلی‌لیتر', concerns: [], tags: ['bestseller'],
+    short: 'رایحه گرم و ماندگار با نت پایه چوب صندل.' },
+
+  { id: 'p22', name: 'ست براش آرایشی ۱۲ عددی', brand: 'velour', category: 'accessories',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F6F1EA%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%239E8B76%22/%3E%3Cstop offset=%221%22 stop-color=%22%237E6C58%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22378%22 y=%22400%22 width=%2244%22 height=%22220%22 rx=%2220%22 fill=%22url(%23body)%22/%3E%3Cpath d=%22M378 400 q22 -110 44 0 z%22 fill=%22%237E6C58%22/%3E%3Crect x=%22372%22 y=%22382%22 width=%2256%22 height=%2226%22 rx=%228%22 fill=%22%236B4E3A%22/%3E%3C/svg%3E', price: 890000, oldPrice: 1150000, rating: 4.5, reviews: 198,
+    volume: '۱۲ عدد', concerns: [], tags: ['bestseller'],
+    short: 'موی مصنوعی نرم با دسته چوبی و کیف نگهدارنده.' },
+
+  { id: 'p23', name: 'رولر سنگ جید صورت', brand: 'aurelia', category: 'accessories',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23F1F5F0%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%238FA38B%22/%3E%3Cstop offset=%221%22 stop-color=%22%236F846B%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Crect x=%22378%22 y=%22400%22 width=%2244%22 height=%22220%22 rx=%2220%22 fill=%22url(%23body)%22/%3E%3Cpath d=%22M378 400 q22 -110 44 0 z%22 fill=%22%236F846B%22/%3E%3Crect x=%22372%22 y=%22382%22 width=%2256%22 height=%2226%22 rx=%228%22 fill=%22%236B4E3A%22/%3E%3C/svg%3E', price: 320000, oldPrice: null, rating: 4.1, reviews: 74,
+    volume: '۱ عدد', concerns: ['dull'], tags: ['new'],
+    short: 'ماساژ و کاهش پف صورت در روتین صبحگاهی.' },
+
+  { id: 'p24', name: 'پد پاف آرایشی مرطوب', brand: 'velour', category: 'accessories',
+    image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 800%22 width=%22800%22 height=%22800%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22bg%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23FBF3F0%22/%3E%3Cstop offset=%221%22 stop-color=%22%23ffffff%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22body%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23DDBFB4%22/%3E%3Cstop offset=%221%22 stop-color=%22%23C4A196%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22800%22 fill=%22url(%23bg)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22250%22 fill=%22%23DFCDBA%22 opacity=%220.35%22/%3E%3Cellipse cx=%22400%22 cy=%22650%22 rx=%22150%22 ry=%2218%22 fill=%22%236B4E3A%22 opacity=%220.13%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22150%22 fill=%22url(%23body)%22/%3E%3Ccircle cx=%22400%22 cy=%22430%22 r=%22104%22 fill=%22%23FBF3F0%22 opacity=%220.55%22/%3E%3Crect x=%22356%22 y=%22266%22 width=%2288%22 height=%2224%22 rx=%2212%22 fill=%22%23C4A196%22/%3E%3C/svg%3E', price: 185000, oldPrice: 240000, rating: 4.3, reviews: 143,
+    volume: '۲ عدد', concerns: [], tags: [],
+    short: 'پخش یکنواخت کرم پودر بدون جذب بیش از حد محصول.' },
+];
+
+/* نیازهای پوستی برای بخش روتین */
+const CONCERNS = [
+  { id: 'oily', label: 'پوست چرب', caption: 'کنترل چربی و منافذ باز' },
+  { id: 'dry', label: 'پوست خشک', caption: 'آبرسانی عمیق و طولانی' },
+  { id: 'sensitive', label: 'پوست حساس', caption: 'فرمول ملایم و بدون تحریک' },
+  { id: 'acne', label: 'جوش و آکنه', caption: 'کاهش التهاب و لک‌های باقی‌مانده' },
+  { id: 'aging', label: 'ضدپیری', caption: 'سفتی پوست و خطوط ریز' },
+  { id: 'spots', label: 'لک و تیرگی', caption: 'یکنواختی رنگ پوست' },
+];
+
+/* گزینه‌های مرتب‌سازی محصولات */
+const SORT_OPTIONS = [
+  { id: 'featured', label: 'پیشنهاد آوینا' },
+  { id: 'price-asc', label: 'ارزان‌ترین' },
+  { id: 'price-desc', label: 'گران‌ترین' },
+  { id: 'rating', label: 'محبوب‌ترین' },
+  { id: 'discount', label: 'بیشترین تخفیف' },
+];
+
+/* بخش مجله زیبایی */
+const POSTS = [
+  { title: 'ترتیب درست استفاده از محصولات در روتین شب',
+    excerpt: 'از پاک‌کننده تا کرم شب؛ ترتیبی که اثر هر محصول را چند برابر می‌کند.',
+    category: 'روتین پوست', readingTime: '۶ دقیقه', image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 560%22 width=%22800%22 height=%22560%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22eg%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%220%22%3E%3Cstop offset=%220%22 stop-color=%22%23EFE4D6%22/%3E%3Cstop offset=%221%22 stop-color=%22%23D9C7B2%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22560%22 fill=%22url(%23eg)%22/%3E%3Ccircle cx=%22560%22 cy=%22250%22 r=%22150%22 fill=%22%23FAF7F2%22 opacity=%220.5%22/%3E%3Crect x=%22180%22 y=%22230%22 width=%22130%22 height=%22230%22 rx=%2224%22 fill=%22%23A8795A%22 opacity=%220.8%22/%3E%3Crect x=%22340%22 y=%22300%22 width=%22100%22 height=%22160%22 rx=%2220%22 fill=%22%237D8770%22 opacity=%220.7%22/%3E%3C/svg%3E' },
+  { title: 'ویتامین ث یا نیاسینامید؟ کدام برای پوست شما',
+    excerpt: 'مقایسه دو ماده موثر پرطرفدار و اینکه چه زمانی باید کنار هم استفاده شوند.',
+    category: 'دانش مواد موثره', readingTime: '۸ دقیقه', image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 560%22 width=%22800%22 height=%22560%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22eg%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%220%22%3E%3Cstop offset=%220%22 stop-color=%22%23E7EBE4%22/%3E%3Cstop offset=%221%22 stop-color=%22%23CCD5C5%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22560%22 fill=%22url(%23eg)%22/%3E%3Cpath d=%22M0 420 q200 -120 400 0 t400 0 v140 H0 z%22 fill=%22%23FAF7F2%22 opacity=%220.55%22/%3E%3Ccircle cx=%22250%22 cy=%22210%22 r=%2296%22 fill=%22%23DFCDBA%22 opacity=%220.65%22/%3E%3Cpath d=%22M560 400 q-80 -140 0 -240 q80 100 0 240 z%22 fill=%22%237D8770%22 opacity=%220.7%22/%3E%3C/svg%3E' },
+  { title: 'آرایش روزانه در ده دقیقه با پنج محصول',
+    excerpt: 'یک روتین ساده و تمیز برای روزهایی که وقت کم است اما ظاهر مرتب می‌خواهید.',
+    category: 'آرایش', readingTime: '۵ دقیقه', image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 560%22 width=%22800%22 height=%22560%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22eg%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%220%22%3E%3Cstop offset=%220%22 stop-color=%22%23F1E6E2%22/%3E%3Cstop offset=%221%22 stop-color=%22%23DCC6BF%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22800%22 height=%22560%22 fill=%22url(%23eg)%22/%3E%3Crect x=%22120%22 y=%22200%22 width=%2290%22 height=%22240%22 rx=%2218%22 fill=%22%236B4E3A%22 opacity=%220.25%22/%3E%3Crect x=%22230%22 y=%22250%22 width=%2290%22 height=%22190%22 rx=%2218%22 fill=%22%236B4E3A%22 opacity=%220.35%22/%3E%3Crect x=%22340%22 y=%22200%22 width=%2290%22 height=%22240%22 rx=%2218%22 fill=%22%236B4E3A%22 opacity=%220.45%22/%3E%3Crect x=%22450%22 y=%22250%22 width=%2290%22 height=%22190%22 rx=%2218%22 fill=%22%236B4E3A%22 opacity=%220.55%22/%3E%3Crect x=%22560%22 y=%22200%22 width=%2290%22 height=%22240%22 rx=%2218%22 fill=%22%236B4E3A%22 opacity=%220.65%22/%3E%3C/svg%3E' },
+];
+
+/* بخش اعتماد مشتری */
+const TRUST = [
+  { icon: 'verified', title: 'تضمین اصالت کالا', text: 'تمام محصولات دارای کد رهگیری و مجوز واردات هستند.' },
+  { icon: 'local_shipping', title: 'ارسال سریع', text: 'ارسال همان روز در تهران و ۴۸ ساعته به سراسر کشور.' },
+  { icon: 'lock', title: 'پرداخت امن', text: 'درگاه بانکی معتبر با رمز پویا و بدون ذخیره اطلاعات کارت.' },
+  { icon: 'support_agent', title: 'پشتیبانی تخصصی', text: 'مشاوره رایگان پوست و مو، همه روزه از ۹ تا ۲۱.' },
+];
+
+/* فوتر */
+const FOOTER_MENUS = [
+  { title: 'خرید', links: ['مراقبت پوست', 'آرایش', 'مراقبت مو', 'مراقبت بدن', 'عطر و رایحه', 'لوازم جانبی'] },
+  { title: 'خدمات مشتریان', links: ['پیگیری سفارش', 'شرایط بازگشت کالا', 'راهنمای خرید', 'روش‌های پرداخت', 'پرسش‌های پرتکرار'] },
+  { title: 'درباره آوینا', links: ['داستان ما', 'فرصت‌های شغلی', 'همکاری با ما', 'مجله زیبایی', 'تماس با ما'] },
+];
+
+const PAYMENT_BADGES = ['پرداخت امن', 'نماد اعتماد', 'ارسال سریع', 'ضمانت بازگشت'];
+
+/* پیشنهاد شگفت‌انگیز — شمارش معکوس تا این تعداد ساعت بعد */
+const OFFER = {
+  title: 'هفته مراقبت از پوست',
+  subtitle: 'تا ۳۵٪ تخفیف روی سرم‌ها و ضدآفتاب‌ها',
+  text: 'مجموعه‌ای منتخب از پرفروش‌ترین محصولات مراقبت پوست، برای مدت محدود.',
+  cta: 'مشاهده پیشنهادها',
+  image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 520%22 width=%221200%22 height=%22520%22 role=%22img%22%3E%3Cdefs%3E%3ClinearGradient id=%22pg%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%220%22%3E%3Cstop offset=%220%22 stop-color=%22%236B4E3A%22/%3E%3Cstop offset=%221%22 stop-color=%22%238A6647%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%221200%22 height=%22520%22 fill=%22url(%23pg)%22/%3E%3Ccircle cx=%22980%22 cy=%22260%22 r=%22210%22 fill=%22%23FAF7F2%22 opacity=%220.16%22/%3E%3Ccircle cx=%221080%22 cy=%22150%22 r=%2280%22 fill=%22%23DFCDBA%22 opacity=%220.2%22/%3E%3Crect x=%22900%22 y=%22180%22 width=%22150%22 height=%22250%22 rx=%2228%22 fill=%22%23DFCDBA%22 opacity=%220.9%22/%3E%3Crect x=%22946%22 y=%22120%22 width=%2258%22 height=%2264%22 rx=%2210%22 fill=%22%23A8795A%22/%3E%3Crect x=%221070%22 y=%22250%22 width=%22110%22 height=%22180%22 rx=%2222%22 fill=%22%23E3C9C0%22 opacity=%220.75%22/%3E%3C/svg%3E',
+  hoursFromNow: 47,
+};
+
+
+/* ===== JS/utils.js ===== */
+/* ============================================================================
+ * utils.js — ابزارهای کوچک مشترک
+ * ----------------------------------------------------------------------------
+ * هیچ‌کدام از این توابع چیزی درباره فروشگاه نمی‌دانند؛ فقط کار بقیه فایل‌ها را
+ * کوتاه‌تر و خواناتر می‌کنند.
+ * ==========================================================================*/
+
+/** یک عنصر را پیدا می‌کند. */
+function find(selector, scope) {
+  return (scope || document).querySelector(selector);
+}
+
+/** همه عناصر منطبق را به شکل آرایه برمی‌گرداند. */
+function findAll(selector, scope) {
+  return Array.from((scope || document).querySelectorAll(selector));
+}
+
+/**
+ * ساخت یک عنصر در یک خط.
+ *   el('p', 'note', 'سلام')  →  <p class="note">سلام</p>
+ */
+function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined && text !== null) node.textContent = text;
+  return node;
+}
+
+/** محتوای یک عنصر را با فرزندان تازه جایگزین می‌کند. */
+function fill(node, children) {
+  node.replaceChildren(...children);
+}
+
+/** آیکون متریال. */
+function icon(name) {
+  const node = el('span', 'material-symbols-rounded', name);
+  node.setAttribute('aria-hidden', 'true');
+  return node;
+}
+
+/* ------------------------------------------------------------------ اعداد */
+
+const PERSIAN_DIGITS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+
+/** ۱۲۳ → ۱۲۳ (ارقام فارسی) */
+function fa(value) {
+  return String(value).replace(/[0-9]/g, (d) => PERSIAN_DIGITS[d]);
+}
+
+/** ارقام فارسی را برای محاسبه به انگلیسی برمی‌گرداند. */
+function toEnglishDigits(text) {
+  return String(text).replace(/[۰-۹]/g, (d) => String(PERSIAN_DIGITS.indexOf(d)));
+}
+
+/** ۴۸۶۰۰۰ → «۴۸۶٬۰۰۰» */
+function money(amount) {
+  return fa(Math.round(amount).toLocaleString('en-US')).replace(/,/g, '٬');
+}
+
+/** درصد تخفیف بین قیمت قدیم و جدید. */
+function discountPercent(product) {
+  if (!product.oldPrice || product.oldPrice <= product.price) return 0;
+  return Math.round((1 - product.price / product.oldPrice) * 100);
+}
+
+/* ------------------------------------------------------------- ستاره‌ها */
+
+/**
+ * ستاره‌های امتیاز.
+ * ستاره پر برای هر واحد کامل و یک ستاره نیمه برای باقی‌مانده.
+ */
+function ratingStars(value) {
+  const wrap = el('span', 'rating');
+  const stars = el('span', 'rating__stars');
+
+  for (let i = 1; i <= 5; i += 1) {
+    let glyph = '☆';
+    if (value >= i) glyph = '★';
+    else if (value >= i - 0.5) glyph = '⯨';
+    stars.append(document.createTextNode(glyph));
+  }
+
+  wrap.append(stars, el('span', 'rating__value', fa(value.toFixed(1))));
+  wrap.setAttribute('aria-label', `امتیاز ${fa(value.toFixed(1))} از ۵`);
+  return wrap;
+}
+
+/* ------------------------------------------------------------ جست‌وجوها */
+
+/** یک محصول را با شناسه پیدا می‌کند. */
+function productById(id) {
+  return PRODUCTS.find((p) => p.id === id) || null;
+}
+
+/** نام فارسی برند از روی شناسه. */
+function brandLabel(id) {
+  const brand = BRANDS.find((b) => b.id === id);
+  return brand ? brand.label : id;
+}
+
+/** نام فارسی دسته از روی شناسه. */
+function categoryLabel(id) {
+  const cat = CATEGORIES.find((c) => c.id === id);
+  return cat ? cat.label : id;
+}
+
+/**
+ * تاخیر انداختن اجرای یک تابع تا وقتی کاربر دست از تایپ بردارد.
+ * برای جستجوی زنده لازم است تا با هر کلید کل فهرست دوباره ساخته نشود.
+ */
+function debounce(fn, wait) {
+  let timer = null;
+  return function debounced() {
+    const args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(null, args), wait);
+  };
+}
+
+/**
+ * تماشای اندازه صفحه با احتیاط: در برخی مرورگرهای قدیمی و ابزارهای تست
+ * matchMedia وجود ندارد و نبود آن نباید کل صفحه را از کار بیندازد.
+ */
+function watchMedia(query, onChange) {
+  if (typeof window.matchMedia !== 'function') return { matches: false };
+
+  const mq = window.matchMedia(query);
+  if (typeof mq.addEventListener === 'function') mq.addEventListener('change', onChange);
+  else if (typeof mq.addListener === 'function') mq.addListener(onChange);
+  return mq;
+}
+
+const MOBILE_QUERY = '(max-width: 768px)';
+
+
+/* ===== JS/storage.js ===== */
+/* ============================================================================
+ * storage.js — نگهداری سبد خرید و علاقه‌مندی‌ها در مرورگر
+ * ----------------------------------------------------------------------------
+ * localStorage ممکن است خاموش باشد (حالت ناشناس، تنظیمات مرورگر) و در آن حالت
+ * حتی خواندن هم خطا می‌دهد. برای همین همه‌جا داخل try/catch است: اگر ذخیره
+ * ممکن نباشد سایت کار می‌کند، فقط بین بازدیدها چیزی به یاد نمی‌آورد.
+ * ==========================================================================*/
+
+const STORAGE_KEYS = {
+  cart: 'avina.cart',
+  wishlist: 'avina.wishlist',
+  prefs: 'avina.prefs',
+};
+
+/** خواندن یک مقدار JSON از حافظه مرورگر. */
+function readStore(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return fallback;
+    const parsed = JSON.parse(raw);
+    return parsed === null || parsed === undefined ? fallback : parsed;
+  } catch (error) {
+    /* حافظه در دسترس نیست یا داده خراب است — با مقدار پیش‌فرض ادامه می‌دهیم. */
+    return fallback;
+  }
+}
+
+/** نوشتن یک مقدار در حافظه مرورگر. */
+function writeStore(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+
+/* ===== JS/toast.js ===== */
+/* ============================================================================
+ * toast.js — پیام‌های کوتاه گوشه صفحه
+ * ----------------------------------------------------------------------------
+ *   toast('به سبد اضافه شد');
+ *   toast('موجودی کافی نیست', 'error');
+ * ==========================================================================*/
+
+const TOAST_LIFETIME = 3600;
+
+const TOAST_ICONS = {
+  success: 'check_circle',
+  info: 'info',
+  error: 'error',
+};
+
+function toast(message, type) {
+  const host = find('#toasts');
+  if (!host) return;
+
+  const kind = TOAST_ICONS[type] ? type : 'success';
+  const node = el('div', 'toast toast--' + kind);
+  node.append(icon(TOAST_ICONS[kind]), el('span', 'toast__text', message));
+
+  const close = el('button', 'toast__close');
+  close.type = 'button';
+  close.setAttribute('aria-label', 'بستن پیام');
+  close.append(icon('close'));
+  close.addEventListener('click', () => dismissToast(node));
+  node.append(close);
+
+  host.append(node);
+
+  /* کلاس در فریم بعد اضافه می‌شود تا انیمیشن ورود اجرا شود. */
+  requestAnimationFrame(() => node.classList.add('is-visible'));
+  setTimeout(() => dismissToast(node), TOAST_LIFETIME);
+}
+
+function dismissToast(node) {
+  if (!node.isConnected) return;
+  node.classList.remove('is-visible');
+  node.addEventListener('transitionend', () => node.remove(), { once: true });
+  /* اگر انیمیشن‌ها خاموش باشند transitionend اجرا نمی‌شود. */
+  setTimeout(() => node.remove(), 500);
+}
+
+
+/* ===== JS/modal.js ===== */
+/* ============================================================================
+ * modal.js — پنجره‌های شناور و کشوها
+ * ----------------------------------------------------------------------------
+ * این فایل فقط باز و بسته کردن را می‌داند، نه محتوای داخل پنجره را. همان کد
+ * برای مودال نگاه سریع، کشوی سبد خرید و منوی موبایل استفاده می‌شود.
+ *
+ * نکته‌های دسترس‌پذیری که اینجا رعایت شده:
+ *   - کلید Escape می‌بندد
+ *   - کلیک روی پس‌زمینه تیره می‌بندد
+ *   - کلید Tab از داخل پنجره بیرون نمی‌رود
+ *   - بعد از بستن، فوکوس به همان دکمه‌ای که باز کرده بود برمی‌گردد
+ * ==========================================================================*/
+
+const layerState = {
+  open: null,        // عنصری که الان باز است
+  lastFocus: null,   // چیزی که پیش از باز شدن فوکوس داشت
+};
+
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), ' +
+  'textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function focusables(scope) {
+  return findAll(FOCUSABLE, scope).filter((node) => !node.hasAttribute('hidden'));
+}
+
+/**
+ * باز کردن یک لایه.
+ * @param {Element} layer   مودال، کشو یا منو
+ * @param {boolean} isModal آیا عنصر با ویژگی hidden پنهان شده است
+ */
+function openLayer(layer, isModal) {
+  if (!layer || layerState.open) return;
+
+  layerState.lastFocus = document.activeElement;
+  layerState.open = layer;
+
+  if (isModal) layer.hidden = false;
+  layer.classList.add('is-open');
+  layer.setAttribute('aria-hidden', 'false');
+
+  const overlay = find('#overlay');
+  if (overlay) overlay.classList.add('is-open');
+  document.body.classList.add('is-locked');
+
+  const targets = focusables(layer);
+  if (targets.length) targets[0].focus();
+}
+
+/** بستن لایه باز. */
+function closeLayer() {
+  const layer = layerState.open;
+  if (!layer) return;
+
+  layer.classList.remove('is-open');
+  layer.setAttribute('aria-hidden', 'true');
+  /* مودال‌ها با hidden پنهان می‌شوند، کشوها با transform. */
+  if (layer.classList.contains('modal')) layer.hidden = true;
+
+  const overlay = find('#overlay');
+  if (overlay) overlay.classList.remove('is-open');
+  document.body.classList.remove('is-locked');
+
+  layerState.open = null;
+  if (layerState.lastFocus && layerState.lastFocus.focus) layerState.lastFocus.focus();
+  layerState.lastFocus = null;
+}
+
+/** نگه داشتن کلید Tab داخل لایه باز. */
+function trapFocus(event) {
+  const layer = layerState.open;
+  if (!layer) return;
+
+  const targets = focusables(layer);
+  if (!targets.length) return;
+
+  const first = targets[0];
+  const last = targets[targets.length - 1];
+
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+/** راه‌اندازی رفتار مشترک همه لایه‌ها. یک بار در شروع صدا زده می‌شود. */
+function setupLayers() {
+  document.addEventListener('keydown', (event) => {
+    if (!layerState.open) return;
+    if (event.key === 'Escape') closeLayer();
+    if (event.key === 'Tab') trapFocus(event);
+  });
+
+  /* هر عنصری با data-close-layer لایه را می‌بندد. */
+  document.addEventListener('click', (event) => {
+    if (event.target.closest('[data-close-layer]')) closeLayer();
+  });
+}
+
+/* ------------------------------------------------------- نگاه سریع محصول */
+
+/** ساخت و باز کردن پنجره نگاه سریع برای یک محصول. */
+function openQuickView(productId) {
+  const product = productById(productId);
+  const modal = find('#quick-modal');
+  const body = find('#quick-body');
+  if (!product || !modal || !body) return;
+
+  const media = el('div', 'quick__media');
+  const image = el('img');
+  image.src = product.image;
+  image.alt = product.name;
+  media.append(image);
+
+  const info = el('div', 'quick__body');
+  info.append(
+    el('p', 'quick__brand', brandLabel(product.brand)),
+    el('h2', 'quick__name', product.name),
+    ratingStars(product.rating)
+  );
+
+  const price = el('div', 'price');
+  price.append(el('strong', 'price__now num', money(product.price)));
+  price.append(el('span', 'price__unit', 'تومان'));
+  if (product.oldPrice) {
+    price.append(el('del', 'price__old num', money(product.oldPrice)));
+    price.append(el('span', 'badge badge--sale', fa(discountPercent(product)) + '٪ تخفیف'));
+  }
+  info.append(price);
+
+  info.append(el('p', 'quick__short', product.short));
+
+  const meta = el('div', 'quick__meta');
+  meta.append(
+    el('span', null, 'دسته: ' + categoryLabel(product.category)),
+    el('span', null, 'حجم: ' + product.volume),
+    el('span', null, fa(product.reviews) + ' دیدگاه ثبت‌شده')
+  );
+  info.append(meta);
+
+  const actions = el('div', 'quick__actions');
+
+  const add = el('button', 'btn btn--primary');
+  add.type = 'button';
+  add.append(icon('shopping_bag'), document.createTextNode('افزودن به سبد'));
+  add.addEventListener('click', () => {
+    addToCart(product.id);
+    closeLayer();
+  });
+
+  const wish = el('button', 'btn btn--ghost');
+  wish.type = 'button';
+  const inWishlist = isWishlisted(product.id);
+  wish.append(icon(inWishlist ? 'favorite' : 'favorite_border'),
+              document.createTextNode(inWishlist ? 'در علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی'));
+  wish.addEventListener('click', () => {
+    toggleWishlist(product.id);
+    closeLayer();
+  });
+
+  actions.append(add, wish);
+  info.append(actions);
+
+  const layout = el('div', 'quick');
+  layout.append(media, info);
+  fill(body, [layout]);
+
+  openLayer(modal, true);
+}
+
+
+/* ===== JS/wishlist.js ===== */
+/* ============================================================================
+ * wishlist.js — فهرست علاقه‌مندی‌ها
+ * ----------------------------------------------------------------------------
+ * فهرست فقط آرایه‌ای از شناسه محصول است و در حافظه مرورگر ذخیره می‌شود.
+ * ==========================================================================*/
+
+let wishlist = readStore(STORAGE_KEYS.wishlist, []);
+
+/** آیا این محصول در علاقه‌مندی‌هاست؟ */
+function isWishlisted(productId) {
+  return wishlist.indexOf(productId) !== -1;
+}
+
+/** افزودن یا برداشتن یک محصول از علاقه‌مندی‌ها. */
+function toggleWishlist(productId) {
+  const product = productById(productId);
+  if (!product) return;
+
+  const at = wishlist.indexOf(productId);
+  if (at === -1) {
+    wishlist.push(productId);
+    toast('«' + product.name + '» به علاقه‌مندی‌ها اضافه شد.');
+  } else {
+    wishlist.splice(at, 1);
+    toast('«' + product.name + '» از علاقه‌مندی‌ها حذف شد.', 'info');
+  }
+
+  writeStore(STORAGE_KEYS.wishlist, wishlist);
+  refreshWishlistUI();
+}
+
+/** به‌روزرسانی شمارنده هدر و همه دکمه‌های قلب روی صفحه. */
+function refreshWishlistUI() {
+  const count = find('#wishlist-count');
+  if (count) {
+    count.textContent = fa(wishlist.length);
+    count.classList.toggle('is-visible', wishlist.length > 0);
+  }
+
+  for (const button of findAll('.product-card__wish')) {
+    const active = isWishlisted(button.dataset.id);
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', String(active));
+    button.setAttribute('aria-label', active ? 'حذف از علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی‌ها');
+    const glyph = button.querySelector('.material-symbols-rounded');
+    if (glyph) glyph.textContent = active ? 'favorite' : 'favorite_border';
+  }
+}
+
+
+/* ===== JS/cart.js ===== */
+/* ============================================================================
+ * cart.js — سبد خرید
+ * ----------------------------------------------------------------------------
+ * سبد آرایه‌ای از { id, qty } است. قیمت‌ها هنگام نمایش از PRODUCTS خوانده
+ * می‌شوند، نه از حافظه — تا اگر قیمتی در data.js عوض شد، سبد قدیمی کاربر
+ * قیمت قدیمی را نشان ندهد.
+ * ==========================================================================*/
+
+const FREE_SHIPPING_FROM = 1500000;
+const SHIPPING_COST = 69000;
+const MAX_QTY = 10;
+
+let cart = readStore(STORAGE_KEYS.cart, []);
+
+/** خط مربوط به یک محصول در سبد. */
+function cartLine(productId) {
+  return cart.find((line) => line.id === productId) || null;
+}
+
+/** تعداد کل اقلام سبد. */
+function cartCount() {
+  return cart.reduce((sum, line) => sum + line.qty, 0);
+}
+
+/** جمع قیمت کالاها. */
+function cartSubtotal() {
+  return cart.reduce((sum, line) => {
+    const product = productById(line.id);
+    return product ? sum + product.price * line.qty : sum;
+  }, 0);
+}
+
+/** مجموع تخفیف‌ها، برای نمایش در خلاصه سبد. */
+function cartSavings() {
+  return cart.reduce((sum, line) => {
+    const product = productById(line.id);
+    if (!product || !product.oldPrice) return sum;
+    return sum + (product.oldPrice - product.price) * line.qty;
+  }, 0);
+}
+
+/** هزینه ارسال؛ بالای سقف مشخص رایگان می‌شود. */
+function cartShipping() {
+  if (cart.length === 0) return 0;
+  return cartSubtotal() >= FREE_SHIPPING_FROM ? 0 : SHIPPING_COST;
+}
+
+/* ------------------------------------------------------------ تغییر سبد */
+
+function persistCart() {
+  writeStore(STORAGE_KEYS.cart, cart);
+  renderCart();
+}
+
+/** افزودن یک محصول به سبد. */
+function addToCart(productId, quantity) {
+  const product = productById(productId);
+  if (!product) return;
+
+  const amount = quantity || 1;
+  const line = cartLine(productId);
+
+  if (line) {
+    if (line.qty >= MAX_QTY) {
+      toast('حداکثر ' + fa(MAX_QTY) + ' عدد از هر کالا قابل سفارش است.', 'error');
+      return;
+    }
+    line.qty = Math.min(MAX_QTY, line.qty + amount);
+  } else {
+    cart.push({ id: productId, qty: Math.min(MAX_QTY, amount) });
+  }
+
+  persistCart();
+  toast('«' + product.name + '» به سبد اضافه شد.');
+}
+
+/** کم یا زیاد کردن تعداد یک قلم. */
+function changeQty(productId, delta) {
+  const line = cartLine(productId);
+  if (!line) return;
+
+  const next = line.qty + delta;
+  if (next < 1) {
+    removeFromCart(productId);
+    return;
+  }
+  if (next > MAX_QTY) {
+    toast('حداکثر ' + fa(MAX_QTY) + ' عدد از هر کالا قابل سفارش است.', 'error');
+    return;
+  }
+
+  line.qty = next;
+  persistCart();
+}
+
+/** حذف یک قلم از سبد. */
+function removeFromCart(productId) {
+  const product = productById(productId);
+  cart = cart.filter((line) => line.id !== productId);
+  persistCart();
+  if (product) toast('«' + product.name + '» از سبد حذف شد.', 'info');
+}
+
+/** خالی کردن کامل سبد. */
+function clearCart() {
+  if (cart.length === 0) return;
+  cart = [];
+  persistCart();
+  toast('سبد خرید خالی شد.', 'info');
+}
+
+/* ------------------------------------------------------------- نمایش سبد */
+
+/** یک ردیف از کشوی سبد. */
+function renderCartLine(line) {
+  const product = productById(line.id);
+  if (!product) return null;
+
+  const row = el('article', 'cart-line');
+
+  const media = el('div', 'cart-line__media');
+  const image = el('img');
+  image.src = product.image;
+  image.alt = product.name;
+  image.loading = 'lazy';
+  media.append(image);
+
+  const body = el('div');
+  body.append(
+    el('p', 'cart-line__brand', brandLabel(product.brand)),
+    el('h3', 'cart-line__name', product.name)
+  );
+
+  const controls = el('div', 'cart-line__row');
+
+  const qty = el('div', 'qty');
+  const minus = el('button', null);
+  minus.type = 'button';
+  minus.setAttribute('aria-label', 'کاهش تعداد');
+  minus.append(icon('remove'));
+  minus.addEventListener('click', () => changeQty(product.id, -1));
+
+  const plus = el('button', null);
+  plus.type = 'button';
+  plus.setAttribute('aria-label', 'افزایش تعداد');
+  plus.append(icon('add'));
+  plus.disabled = line.qty >= MAX_QTY;
+  plus.addEventListener('click', () => changeQty(product.id, 1));
+
+  qty.append(minus, el('span', 'qty__value num', fa(line.qty)), plus);
+
+  const price = el('span', 'cart-line__price num', money(product.price * line.qty) + ' تومان');
+  controls.append(qty, price);
+
+  const remove = el('button', 'cart-line__remove', 'حذف');
+  remove.type = 'button';
+  remove.addEventListener('click', () => removeFromCart(product.id));
+
+  const footRow = el('div', 'cart-line__row');
+  footRow.append(remove);
+
+  body.append(controls, footRow);
+  row.append(media, body);
+  return row;
+}
+
+/** بازکشیدن کامل کشوی سبد و شمارنده هدر. */
+function renderCart() {
+  const badge = find('#cart-count');
+  if (badge) {
+    const count = cartCount();
+    badge.textContent = fa(count);
+    badge.classList.toggle('is-visible', count > 0);
+  }
+
+  const body = find('#cart-body');
+  const foot = find('#cart-foot');
+  if (!body || !foot) return;
+
+  if (cart.length === 0) {
+    const empty = el('div', 'empty-state');
+    empty.append(icon('shopping_bag'), el('p', null, 'سبد خرید شما خالی است.'));
+    const cta = el('button', 'btn btn--ghost btn--sm', 'دیدن پرفروش‌ها');
+    cta.type = 'button';
+    cta.setAttribute('data-close-layer', '');
+    cta.addEventListener('click', () => {
+      const target = find('#bestsellers');
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+    empty.append(cta);
+    fill(body, [empty]);
+    fill(foot, []);
+    return;
+  }
+
+  fill(body, cart.map(renderCartLine).filter(Boolean));
+
+  const summary = el('div', 'cart-summary');
+
+  const sub = el('div', 'cart-summary__row');
+  sub.append(el('span', null, 'جمع کالاها'), el('span', 'num', money(cartSubtotal()) + ' تومان'));
+  summary.append(sub);
+
+  const savings = cartSavings();
+  if (savings > 0) {
+    const row = el('div', 'cart-summary__row');
+    row.append(el('span', null, 'سود شما از خرید'), el('span', 'num', money(savings) + ' تومان'));
+    summary.append(row);
+  }
+
+  const shipping = cartShipping();
+  const ship = el('div', 'cart-summary__row');
+  ship.append(el('span', null, 'هزینه ارسال'),
+              el('span', 'num', shipping === 0 ? 'رایگان' : money(shipping) + ' تومان'));
+  summary.append(ship);
+
+  if (shipping > 0) {
+    const remaining = FREE_SHIPPING_FROM - cartSubtotal();
+    summary.append(el('p', 'cart-summary__row',
+      'تا ' + money(remaining) + ' تومان دیگر تا ارسال رایگان'));
+  }
+
+  const total = el('div', 'cart-summary__row cart-summary__row--total');
+  total.append(el('span', null, 'مبلغ قابل پرداخت'),
+               el('span', 'num', money(cartSubtotal() + shipping) + ' تومان'));
+  summary.append(total);
+
+  const checkout = el('button', 'btn btn--primary btn--block', 'تکمیل خرید');
+  checkout.type = 'button';
+  checkout.addEventListener('click', () => {
+    /* پرداخت واقعی به سرور و درگاه بانکی نیاز دارد — README را ببینید. */
+    toast('ثبت سفارش به سرور و درگاه پرداخت نیاز دارد.', 'info');
+  });
+
+  const clear = el('button', 'cart-clear', 'خالی کردن سبد');
+  clear.type = 'button';
+  clear.className = 'cart-line__remove';
+  clear.style.marginTop = '0.9rem';
+  clear.style.display = 'block';
+  clear.style.marginInline = 'auto';
+  clear.addEventListener('click', clearCart);
+
+  fill(foot, [summary, checkout, clear]);
+}
+
+
+/* ===== JS/products.js ===== */
+/* ============================================================================
+ * products.js — کارت محصول، فیلتر و مرتب‌سازی
+ * ----------------------------------------------------------------------------
+ * کارت محصول یک بار اینجا ساخته می‌شود و همه بخش‌های صفحه (پرفروش‌ها،
+ * جدیدترین‌ها، نتایج فیلتر) از همان استفاده می‌کنند.
+ * ==========================================================================*/
+
+/* وضعیت فهرست پرفروش‌ها: کاربر روی چه فیلتری است و چطور مرتب کرده. */
+const catalogState = {
+  category: 'all',
+  sort: 'featured',
+  concern: null,
+};
+
+/* --------------------------------------------------------------- کارت */
+
+/** ساخت کارت یک محصول. */
+function productCard(product) {
+  const card = el('article', 'product-card');
+  card.dataset.id = product.id;
+
+  /* --- تصویر و دکمه‌های رویش --- */
+  const media = el('div', 'product-card__media');
+  const image = el('img');
+  image.src = product.image;
+  image.alt = product.name;
+  image.loading = 'lazy';
+  media.append(image);
+
+  const badges = el('div', 'product-card__badges');
+  const off = discountPercent(product);
+  if (off > 0) badges.append(el('span', 'badge badge--sale', fa(off) + '٪'));
+  if (product.tags.indexOf('new') !== -1) badges.append(el('span', 'badge badge--new', 'جدید'));
+  if (badges.childElementCount) media.append(badges);
+
+  const wish = el('button', 'product-card__wish');
+  wish.type = 'button';
+  wish.dataset.id = product.id;
+  wish.append(icon('favorite_border'));
+  wish.addEventListener('click', () => toggleWishlist(product.id));
+  media.append(wish);
+
+  const quick = el('button', 'product-card__quick', 'نگاه سریع');
+  quick.type = 'button';
+  quick.addEventListener('click', () => openQuickView(product.id));
+  media.append(quick);
+
+  /* --- متن و قیمت --- */
+  const body = el('div', 'product-card__body');
+  body.append(el('p', 'product-card__brand', brandLabel(product.brand)));
+
+  const name = el('a', 'product-card__name', product.name);
+  name.href = '#';
+  name.addEventListener('click', (event) => {
+    event.preventDefault();
+    openQuickView(product.id);
+  });
+  body.append(name);
+
+  body.append(ratingStars(product.rating), el('p', 'product-card__volume', product.volume));
+
+  const foot = el('div', 'product-card__foot');
+  const price = el('div', 'price');
+  price.append(el('strong', 'price__now num', money(product.price)),
+               el('span', 'price__unit', 'تومان'));
+  if (product.oldPrice) price.append(el('del', 'price__old num', money(product.oldPrice)));
+  foot.append(price);
+
+  const actions = el('div', 'product-card__actions');
+  const add = el('button', 'btn btn--primary btn--sm');
+  add.type = 'button';
+  add.append(icon('add_shopping_cart'), document.createTextNode('افزودن'));
+  add.addEventListener('click', () => addToCart(product.id));
+  actions.append(add);
+  foot.append(actions);
+
+  body.append(foot);
+  card.append(media, body);
+  return card;
+}
+
+/** کشیدن فهرستی از محصولات داخل یک ظرف. */
+function renderProductList(container, products) {
+  if (!container) return;
+
+  if (products.length === 0) {
+    const empty = el('div', 'empty-state');
+    empty.append(icon('search_off'), el('p', null, 'محصولی با این فیلترها پیدا نشد.'));
+    const reset = el('button', 'btn btn--ghost btn--sm', 'حذف فیلترها');
+    reset.type = 'button';
+    reset.addEventListener('click', () => {
+      catalogState.category = 'all';
+      catalogState.concern = null;
+      renderCatalog();
+      syncFilterButtons();
+    });
+    empty.append(reset);
+    empty.style.gridColumn = '1 / -1';
+    fill(container, [empty]);
+    return;
+  }
+
+  fill(container, products.map(productCard));
+  refreshWishlistUI();
+}
+
+/* ------------------------------------------------------ فیلتر و مرتب‌سازی */
+
+/** مرتب‌سازی یک آرایه محصول بر اساس گزینه انتخابی. */
+function sortProducts(list, mode) {
+  const sorted = list.slice();
+
+  if (mode === 'price-asc') sorted.sort((a, b) => a.price - b.price);
+  else if (mode === 'price-desc') sorted.sort((a, b) => b.price - a.price);
+  else if (mode === 'rating') sorted.sort((a, b) => b.rating - a.rating || b.reviews - a.reviews);
+  else if (mode === 'discount') sorted.sort((a, b) => discountPercent(b) - discountPercent(a));
+  else {
+    /* پیشنهاد فروشگاه: اول پرفروش‌ها، بعد امتیاز بالاتر. */
+    sorted.sort((a, b) => {
+      const aBest = a.tags.indexOf('bestseller') !== -1 ? 1 : 0;
+      const bBest = b.tags.indexOf('bestseller') !== -1 ? 1 : 0;
+      return bBest - aBest || b.rating - a.rating;
+    });
+  }
+
+  return sorted;
+}
+
+/** اعمال فیلتر دسته و نیاز پوستی. */
+function filterProducts(list) {
+  return list.filter((product) => {
+    if (catalogState.category !== 'all' && product.category !== catalogState.category) return false;
+    if (catalogState.concern && product.concerns.indexOf(catalogState.concern) === -1) return false;
+    return true;
+  });
+}
+
+/** کشیدن دوباره فهرست اصلی محصولات. */
+function renderCatalog() {
+  const grid = find('#catalog-grid');
+  if (!grid) return;
+
+  const products = sortProducts(filterProducts(PRODUCTS), catalogState.sort);
+  renderProductList(grid, products);
+
+  const count = find('#catalog-count');
+  if (count) count.textContent = fa(products.length) + ' محصول';
+}
+
+/** هماهنگ کردن ظاهر دکمه‌های فیلتر با وضعیت فعلی. */
+function syncFilterButtons() {
+  for (const button of findAll('.filter')) {
+    const active = button.dataset.category === catalogState.category;
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', String(active));
+  }
+  for (const card of findAll('.concern-card')) {
+    card.classList.toggle('is-active', card.dataset.concern === catalogState.concern);
+  }
+}
+
+/** ساخت نوار فیلتر و منوی مرتب‌سازی. */
+function renderToolbar() {
+  const filters = find('#catalog-filters');
+  if (filters) {
+    const all = el('button', 'filter is-active', 'همه');
+    all.type = 'button';
+    all.dataset.category = 'all';
+
+    const buttons = [all].concat(CATEGORIES.map((cat) => {
+      const button = el('button', 'filter', cat.label);
+      button.type = 'button';
+      button.dataset.category = cat.id;
+      return button;
+    }));
+
+    for (const button of buttons) {
+      button.addEventListener('click', () => {
+        catalogState.category = button.dataset.category;
+        catalogState.concern = null;   /* فیلتر نیاز پوستی با انتخاب دسته پاک می‌شود */
+        renderCatalog();
+        syncFilterButtons();
+      });
+    }
+
+    fill(filters, buttons);
+  }
+
+  const select = find('#catalog-sort');
+  if (select) {
+    fill(select, SORT_OPTIONS.map((option) => {
+      const node = el('option', null, option.label);
+      node.value = option.id;
+      return node;
+    }));
+    select.value = catalogState.sort;
+    select.addEventListener('change', () => {
+      catalogState.sort = select.value;
+      writeStore(STORAGE_KEYS.prefs, { sort: catalogState.sort });
+      renderCatalog();
+    });
+  }
+}
+
+/** بخش جدیدترین‌ها — چهار محصول با برچسب new. */
+function renderNewArrivals() {
+  const grid = find('#new-grid');
+  if (!grid) return;
+  const items = PRODUCTS.filter((p) => p.tags.indexOf('new') !== -1).slice(0, 4);
+  renderProductList(grid, items);
+}
+
+
+/* ===== JS/search.js ===== */
+/* ============================================================================
+ * search.js — جستجوی زنده محصولات
+ * ----------------------------------------------------------------------------
+ * با هر کلید، نام و برند و دسته محصولات جستجو می‌شود و چند نتیجه اول زیر
+ * کادر جستجو می‌آید. debounce باعث می‌شود تا کاربر دست از تایپ برندارد
+ * فهرست دوباره ساخته نشود.
+ * ==========================================================================*/
+
+const SEARCH_LIMIT = 6;
+
+/**
+ * نرمال‌سازی متن فارسی برای مقایسه.
+ * ی و ک عربی به فارسی تبدیل می‌شوند و اعراب و نیم‌فاصله حذف می‌شود، تا
+ * «آبرسان» و «آب رسان» هر دو پیدا شوند.
+ */
+function normalize(text) {
+  return toEnglishDigits(String(text))
+    .replace(/[يی]/g, 'ی')
+    .replace(/[كک]/g, 'ک')
+    .replace(/[ً-ْ‌‏]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
+/** جستجو در محصولات و برگرداندن نتایج. */
+function searchProducts(term) {
+  const needle = normalize(term);
+  if (needle.length < 2) return [];
+
+  return PRODUCTS.filter((product) => {
+    const haystack = normalize(
+      product.name + ' ' + brandLabel(product.brand) + ' ' +
+      categoryLabel(product.category) + ' ' + product.short
+    );
+    return haystack.indexOf(needle) !== -1;
+  });
+}
+
+/** ساخت یک ردیف نتیجه. */
+function searchResultRow(product) {
+  const row = el('button', 'search-result');
+  row.type = 'button';
+
+  const image = el('img');
+  image.src = product.image;
+  image.alt = '';
+  image.loading = 'lazy';
+
+  const text = el('span');
+  text.append(el('span', 'search-result__name', product.name),
+              el('span', 'search-result__brand', brandLabel(product.brand)));
+
+  row.append(image, text, el('span', 'search-result__price num', money(product.price) + ' تومان'));
+  row.addEventListener('click', () => openQuickView(product.id));
+  return row;
+}
+
+/** راه‌اندازی یک کادر جستجو. برای هدر و منوی موبایل جداگانه صدا زده می‌شود. */
+function setupSearch(fieldId, resultsId, clearId) {
+  const input = find(fieldId);
+  const results = find(resultsId);
+  const clear = clearId ? find(clearId) : null;
+  if (!input || !results) return;
+
+  function hide() {
+    results.hidden = true;
+    fill(results, []);
+  }
+
+  function run() {
+    const term = input.value;
+    if (clear) clear.classList.toggle('is-visible', term.length > 0);
+
+    if (normalize(term).length < 2) {
+      hide();
+      return;
+    }
+
+    const matches = searchProducts(term);
+    results.hidden = false;
+
+    if (matches.length === 0) {
+      fill(results, [el('p', 'search__empty', 'نتیجه‌ای برای «' + term + '» پیدا نشد.')]);
+      return;
+    }
+
+    fill(results, matches.slice(0, SEARCH_LIMIT).map(searchResultRow));
+  }
+
+  input.addEventListener('input', debounce(run, 180));
+  input.addEventListener('focus', run);
+
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      input.value = '';
+      if (clear) clear.classList.remove('is-visible');
+      hide();
+      input.blur();
+    }
+  });
+
+  if (clear) {
+    clear.addEventListener('click', () => {
+      input.value = '';
+      clear.classList.remove('is-visible');
+      hide();
+      input.focus();
+    });
+  }
+
+  /* کلیک بیرون از کادر، فهرست را می‌بندد. */
+  document.addEventListener('click', (event) => {
+    if (!results.hidden && !event.target.closest(fieldId) && !event.target.closest(resultsId)) {
+      hide();
+    }
+  });
+}
+
+
+/* ===== JS/sections.js ===== */
+/* ============================================================================
+ * sections.js — بخش‌هایی که از روی داده ساخته می‌شوند
+ * ----------------------------------------------------------------------------
+ * دسته‌ها، برندها، روتین پوست، مجله، اعتماد مشتری و فوتر. هیچ‌کدام از این
+ * محتواها در HTML نوشته نشده‌اند تا اضافه کردن یک مورد تازه فقط یک خط در
+ * data.js باشد.
+ * ==========================================================================*/
+
+/** کارت‌های دسته‌بندی. کلیک روی هر کدام فهرست محصولات را فیلتر می‌کند. */
+function renderCategories() {
+  const grid = find('#category-grid');
+  if (!grid) return;
+
+  fill(grid, CATEGORIES.map((cat) => {
+    const card = el('a', 'category-card');
+    card.href = '#catalog';
+
+    const image = el('img');
+    image.src = cat.image;
+    image.alt = cat.label;
+    image.loading = 'lazy';
+
+    const body = el('div', 'category-card__body');
+    body.append(el('h3', 'category-card__title', cat.label),
+                el('p', 'category-card__caption', cat.caption));
+
+    card.append(image, body);
+    card.addEventListener('click', () => {
+      catalogState.category = cat.id;
+      catalogState.concern = null;
+      renderCatalog();
+      syncFilterButtons();
+    });
+    return card;
+  }));
+}
+
+/** نوار برندها. */
+function renderBrands() {
+  const strip = find('#brand-strip');
+  if (!strip) return;
+
+  fill(strip, BRANDS.map((brand) => {
+    const chip = el('a', 'brand-chip');
+    chip.href = '#catalog';
+    chip.setAttribute('aria-label', 'محصولات ' + brand.label);
+
+    const logo = el('img');
+    logo.src = brand.logo;
+    logo.alt = brand.label;
+    logo.loading = 'lazy';
+
+    chip.append(logo);
+    return chip;
+  }));
+}
+
+/**
+ * بخش روتین پوست.
+ * مراحل شماره‌گذاری شده‌اند چون واقعا ترتیب دارند — شماره اینجا اطلاعات است،
+ * نه تزئین.
+ */
+const ROUTINE_STEPS = [
+  { title: 'پاک‌سازی', text: 'شست‌وشوی ملایم صبح و شب، متناسب با نوع پوست.' },
+  { title: 'درمان', text: 'سرم اختصاصی برای نیاز اصلی پوست شما.' },
+  { title: 'آبرسانی', text: 'قفل کردن رطوبت با کرمی که سنگینی نکند.' },
+  { title: 'محافظت', text: 'ضدآفتاب هر روز، حتی در روزهای ابری.' },
+];
+
+function renderRoutine() {
+  const steps = find('#routine-steps');
+  if (steps) {
+    fill(steps, ROUTINE_STEPS.map((step, index) => {
+      const row = el('div', 'routine__step');
+      row.append(el('span', 'routine__num', String(index + 1).padStart(2, '0')));
+
+      const body = el('div');
+      body.append(el('h3', null, step.title), el('p', null, step.text));
+      row.append(body);
+      return row;
+    }));
+  }
+
+  const grid = find('#concern-grid');
+  if (!grid) return;
+
+  fill(grid, CONCERNS.map((concern) => {
+    const matches = PRODUCTS.filter((p) => p.concerns.indexOf(concern.id) !== -1).length;
+
+    const card = el('button', 'concern-card');
+    card.type = 'button';
+    card.dataset.concern = concern.id;
+    card.append(
+      el('strong', null, concern.label),
+      el('span', null, concern.caption),
+      el('span', 'concern-card__count', fa(matches) + ' محصول پیشنهادی')
+    );
+
+    card.addEventListener('click', () => {
+      /* کلیک دوباره روی همان نیاز، فیلتر را برمی‌دارد. */
+      const same = catalogState.concern === concern.id;
+      catalogState.concern = same ? null : concern.id;
+      catalogState.category = 'all';
+      renderCatalog();
+      syncFilterButtons();
+
+      const target = find('#catalog');
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+      if (!same) toast('محصولات مناسب «' + concern.label + '» نمایش داده شد.', 'info');
+    });
+
+    return card;
+  }));
+}
+
+/** بخش مجله زیبایی. */
+function renderPosts() {
+  const grid = find('#post-grid');
+  if (!grid) return;
+
+  fill(grid, POSTS.map((post) => {
+    const card = el('article', 'post-card');
+
+    const link = el('a');
+    link.href = '#';
+    link.setAttribute('aria-label', post.title);
+
+    const media = el('div', 'post-card__media');
+    const image = el('img');
+    image.src = post.image;
+    image.alt = '';
+    image.loading = 'lazy';
+    media.append(image);
+
+    const meta = el('div', 'post-card__meta');
+    meta.append(el('span', 'post-card__cat', post.category),
+                el('span', null, '•'),
+                el('span', null, 'مطالعه ' + post.readingTime));
+
+    link.append(media, meta,
+                el('h3', 'post-card__title', post.title),
+                el('p', 'post-card__excerpt', post.excerpt));
+    card.append(link);
+    return card;
+  }));
+}
+
+/** بخش اعتماد مشتری. */
+function renderTrust() {
+  const grid = find('#trust-grid');
+  if (!grid) return;
+
+  fill(grid, TRUST.map((item) => {
+    const row = el('div', 'trust__item');
+    const badge = el('div', 'trust__icon');
+    badge.append(icon(item.icon));
+
+    const body = el('div');
+    body.append(el('h3', null, item.title), el('p', null, item.text));
+
+    row.append(badge, body);
+    return row;
+  }));
+}
+
+/** فوتر: ستون‌های لینک، اطلاعات تماس و نشان‌ها. */
+function renderFooter() {
+  const columns = find('#footer-columns');
+  if (columns) {
+    fill(columns, FOOTER_MENUS.map((menu) => {
+      const col = el('div', 'footer__col');
+      col.append(el('h3', null, menu.title));
+
+      const nav = el('nav');
+      const list = el('ul');
+      for (const label of menu.links) {
+        const item = el('li');
+        const link = el('a', null, label);
+        link.href = '#';
+        item.append(link);
+        list.append(item);
+      }
+      nav.append(list);
+      col.append(nav);
+      return col;
+    }));
+  }
+
+  const contact = find('#footer-contact');
+  if (contact) {
+    const rows = [
+      { glyph: 'call', text: STORE.phone },
+      { glyph: 'mail', text: STORE.email },
+      { glyph: 'location_on', text: STORE.address },
+    ];
+    fill(contact, rows.map((row) => {
+      const item = el('li');
+      item.append(icon(row.glyph), el('span', null, row.text));
+      return item;
+    }));
+  }
+
+  const badges = find('#footer-badges');
+  if (badges) {
+    fill(badges, PAYMENT_BADGES.map((label) => el('span', 'footer__badge', label)));
+  }
+
+  const year = find('#footer-year');
+  if (year) year.textContent = fa(new Date().getFullYear() - 621);  /* تقریب سال شمسی */
+}
+
+/** متن‌های بخش پیشنهاد ویژه از data.js خوانده می‌شوند. */
+function renderOffer() {
+  const title = find('#offer-title');
+  const sub = find('#offer-sub');
+  const text = find('#offer-text');
+  const image = find('#offer-image');
+
+  if (title) title.textContent = OFFER.title;
+  if (sub) sub.textContent = OFFER.subtitle;
+  if (text) text.textContent = OFFER.text;
+  if (image) { image.src = OFFER.image; image.alt = OFFER.title; }
+}
+
+
+/* ===== JS/countdown.js ===== */
+/* ============================================================================
+ * countdown.js — شمارش معکوس پیشنهاد ویژه
+ * ----------------------------------------------------------------------------
+ * زمان پایان از روی OFFER.hoursFromNow حساب می‌شود و در حافظه مرورگر می‌ماند،
+ * تا با هر بار تازه‌سازی صفحه دوباره از اول شروع نشود.
+ * ==========================================================================*/
+
+const OFFER_KEY = 'avina.offerEnds';
+
+/** زمان پایان پیشنهاد؛ اگر گذشته باشد یک دوره تازه شروع می‌شود. */
+function offerDeadline() {
+  const stored = Number(readStore(OFFER_KEY, 0));
+  if (stored && stored > Date.now()) return stored;
+
+  const next = Date.now() + OFFER.hoursFromNow * 60 * 60 * 1000;
+  writeStore(OFFER_KEY, next);
+  return next;
+}
+
+function startCountdown() {
+  const host = find('#countdown');
+  if (!host) return;
+
+  const deadline = offerDeadline();
+
+  const units = [
+    { id: 'days', label: 'روز' },
+    { id: 'hours', label: 'ساعت' },
+    { id: 'minutes', label: 'دقیقه' },
+    { id: 'seconds', label: 'ثانیه' },
+  ];
+
+  /* ساختار یک بار ساخته می‌شود؛ بعد فقط عددها عوض می‌شوند. */
+  const values = {};
+  fill(host, units.map((unit) => {
+    const box = el('div', 'countdown__unit');
+    const value = el('span', 'countdown__value num', '۰۰');
+    values[unit.id] = value;
+    box.append(value, el('span', 'countdown__label', unit.label));
+    return box;
+  }));
+
+  function pad(n) {
+    return fa(String(n).padStart(2, '0'));
+  }
+
+  function tick() {
+    const remaining = Math.max(0, deadline - Date.now());
+    const totalSeconds = Math.floor(remaining / 1000);
+
+    values.days.textContent = pad(Math.floor(totalSeconds / 86400));
+    values.hours.textContent = pad(Math.floor(totalSeconds / 3600) % 24);
+    values.minutes.textContent = pad(Math.floor(totalSeconds / 60) % 60);
+    values.seconds.textContent = pad(totalSeconds % 60);
+  }
+
+  tick();
+  setInterval(tick, 1000);
+}
+
+
+/* ===== JS/forms.js ===== */
+/* ============================================================================
+ * forms.js — اعتبارسنجی فرم خبرنامه
+ * ----------------------------------------------------------------------------
+ * این فایل فقط بررسی می‌کند چیزی که کاربر نوشته معتبر است یا نه. ثبت واقعی
+ * ایمیل به سرور نیاز دارد و اینجا شبیه‌سازی نمی‌شود — README را ببینید.
+ * ==========================================================================*/
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+function setupNewsletter() {
+  const form = find('#newsletter-form');
+  const input = find('#newsletter-email');
+  const error = find('#newsletter-error');
+  if (!form || !input || !error) return;
+
+  function showError(message) {
+    error.textContent = message;
+    input.classList.toggle('has-error', Boolean(message));
+    input.setAttribute('aria-invalid', message ? 'true' : 'false');
+  }
+
+  /* پیام خطا به‌محض شروع اصلاح پاک می‌شود. */
+  input.addEventListener('input', () => {
+    if (input.classList.contains('has-error')) showError('');
+  });
+
+  input.addEventListener('blur', () => {
+    const value = input.value.trim();
+    if (value && !EMAIL_PATTERN.test(value)) showError('نشانی ایمیل معتبر نیست.');
+  });
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const value = input.value.trim();
+
+    if (!value) {
+      showError('لطفا نشانی ایمیل خود را وارد کنید.');
+      input.focus();
+      return;
+    }
+    if (!EMAIL_PATTERN.test(value)) {
+      showError('نشانی ایمیل معتبر نیست. نمونه: name@mail.com');
+      input.focus();
+      return;
+    }
+
+    showError('');
+    form.reset();
+    toast('ایمیل شما معتبر است؛ ثبت نهایی به سرور نیاز دارد.', 'info');
+  });
+}
+
+
+/* ===== JS/navigation.js ===== */
+/* ============================================================================
+ * navigation.js — هدر، منوها و رفتارهای پیمایش صفحه
+ * ----------------------------------------------------------------------------
+ *   - منوی اصلی و زیرمنوها از روی NAV_MENU
+ *   - منوی کشویی موبایل با بخش‌های بازشونده
+ *   - چرخش پیام‌های نوار اعلان
+ *   - سایه هدر هنگام اسکرول
+ *   - دکمه بازگشت به بالا
+ *   - پیمایش نرم برای لینک‌های داخل صفحه
+ * ==========================================================================*/
+
+/** منوی افقی هدر. */
+function renderMainNav() {
+  const list = find('#nav-list');
+  if (!list) return;
+
+  fill(list, NAV_MENU.map((entry) => {
+    const item = el('li', 'nav__item');
+
+    const link = el('a', 'nav__link' + (entry.highlight ? ' nav__link--highlight' : ''));
+    link.href = '#catalog';
+    link.append(document.createTextNode(entry.label));
+    if (entry.children.length) link.append(icon('expand_more'));
+
+    link.addEventListener('click', () => {
+      /* آیتم‌هایی که با یک دسته محصول متناظرند، فهرست را فیلتر می‌کنند. */
+      if (CATEGORIES.some((c) => c.id === entry.id)) {
+        catalogState.category = entry.id;
+        catalogState.concern = null;
+        renderCatalog();
+        syncFilterButtons();
+      }
+    });
+
+    item.append(link);
+
+    if (entry.children.length) {
+      const panel = el('div', 'nav__panel');
+      for (const child of entry.children) {
+        const childLink = el('a', null, child);
+        childLink.href = '#catalog';
+        panel.append(childLink);
+      }
+      item.append(panel);
+    }
+
+    return item;
+  }));
+}
+
+/** منوی موبایل: همان داده، به شکل آکاردئون. */
+function renderMobileNav() {
+  const body = find('#mobile-nav-body');
+  if (!body) return;
+
+  const groups = NAV_MENU.map((entry) => {
+    const group = el('div', 'mobile-nav__group');
+
+    const toggle = el('button', 'mobile-nav__toggle');
+    toggle.type = 'button';
+    toggle.append(document.createTextNode(entry.label));
+
+    if (entry.children.length) {
+      toggle.append(icon('expand_more'));
+      toggle.setAttribute('aria-expanded', 'false');
+
+      const panel = el('div', 'mobile-nav__panel');
+      for (const child of entry.children) {
+        const link = el('a', null, child);
+        link.href = '#catalog';
+        link.addEventListener('click', () => closeLayer());
+        panel.append(link);
+      }
+
+      toggle.addEventListener('click', () => {
+        const open = group.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', String(open));
+      });
+
+      group.append(toggle, panel);
+    } else {
+      toggle.addEventListener('click', () => {
+        if (CATEGORIES.some((c) => c.id === entry.id)) {
+          catalogState.category = entry.id;
+          renderCatalog();
+          syncFilterButtons();
+        }
+        closeLayer();
+        const target = find('#catalog');
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+      group.append(toggle);
+    }
+
+    return group;
+  });
+
+  fill(body, groups);
+}
+
+/** چرخش پیام‌های نوار اعلان بالای صفحه. */
+function startAnnouncements() {
+  const track = find('#announce-track');
+  if (!track) return;
+
+  const items = ANNOUNCEMENTS.map((text, index) => {
+    const node = el('p', 'announce__item' + (index === 0 ? ' is-active' : ''), text);
+    return node;
+  });
+  fill(track, items);
+
+  if (items.length < 2) return;
+
+  let current = 0;
+  setInterval(() => {
+    items[current].classList.remove('is-active');
+    current = (current + 1) % items.length;
+    items[current].classList.add('is-active');
+  }, 4200);
+
+  const close = find('#announce-close');
+  const bar = find('#announce');
+  if (close && bar) {
+    close.addEventListener('click', () => bar.remove());
+  }
+}
+
+/** سایه هدر پس از اسکرول. */
+function setupStickyHeader() {
+  const header = find('#header');
+  if (!header) return;
+
+  function update() {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+}
+
+/** دکمه بازگشت به بالای صفحه. */
+function setupBackToTop() {
+  const button = find('#to-top');
+  if (!button) return;
+
+  function update() {
+    button.classList.toggle('is-visible', window.scrollY > 700);
+  }
+
+  button.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+}
+
+/**
+ * پیمایش نرم برای لینک‌های داخل صفحه.
+ * یک شنونده روی کل سند به‌جای یکی برای هر لینک.
+ */
+function setupSmoothScroll() {
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    const id = link.getAttribute('href');
+    if (!id || id === '#') return;
+
+    const target = find(id);
+    if (!target) return;
+
+    event.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+
+/** اتصال دکمه‌های هدر به کشوها و منوها. */
+function setupHeaderActions() {
+  const cartButton = find('#cart-button');
+  const cartDrawer = find('#cart-drawer');
+  if (cartButton && cartDrawer) {
+    cartButton.addEventListener('click', () => openLayer(cartDrawer, false));
+  }
+
+  const menuButton = find('#menu-toggle');
+  const mobileNav = find('#mobile-nav');
+  if (menuButton && mobileNav) {
+    menuButton.addEventListener('click', () => openLayer(mobileNav, false));
+  }
+
+  const wishButton = find('#wishlist-button');
+  if (wishButton) {
+    wishButton.addEventListener('click', () => {
+      if (wishlist.length === 0) {
+        toast('هنوز محصولی به علاقه‌مندی‌ها اضافه نکرده‌اید.', 'info');
+        return;
+      }
+      /* فهرست علاقه‌مندی‌ها را در همان شبکه محصولات نشان می‌دهیم. */
+      const grid = find('#catalog-grid');
+      const items = wishlist.map(productById).filter(Boolean);
+      renderProductList(grid, items);
+
+      const count = find('#catalog-count');
+      if (count) count.textContent = fa(items.length) + ' محصول در علاقه‌مندی‌ها';
+
+      const target = find('#catalog');
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+      toast('علاقه‌مندی‌های شما نمایش داده شد.', 'info');
+    });
+  }
+
+  const accountButton = find('#account-button');
+  if (accountButton) {
+    accountButton.addEventListener('click', () => {
+      /* ورود واقعی به سرور نیاز دارد — README را ببینید. */
+      toast('ورود به حساب کاربری به سرور نیاز دارد.', 'info');
+    });
+  }
+}
+
+
+/* ===== JS/main.js ===== */
+/* ============================================================================
+ * main.js — نقطه شروع
+ * ----------------------------------------------------------------------------
+ * بقیه فایل‌ها فقط تابع تعریف می‌کنند و خودشان اجرا نمی‌شوند. این فایل است که
+ * آن‌ها را به ترتیب صدا می‌زند.
+ *
+ * اگر خواستید بدانید صفحه از کجا شروع می‌شود، از همین‌جا شروع کنید.
+ * ==========================================================================*/
+
+function startApp() {
+  /* ۱. تنظیمات ذخیره‌شده کاربر (مثل ترتیب مرتب‌سازی) */
+  const prefs = readStore(STORAGE_KEYS.prefs, {});
+  if (prefs.sort && SORT_OPTIONS.some((o) => o.id === prefs.sort)) {
+    catalogState.sort = prefs.sort;
+  }
+
+  /* ۲. رفتار مشترک کشوها و مودال‌ها */
+  setupLayers();
+
+  /* ۳. هدر و ناوبری */
+  startAnnouncements();
+  renderMainNav();
+  renderMobileNav();
+  setupHeaderActions();
+  setupStickyHeader();
+  setupBackToTop();
+  setupSmoothScroll();
+  setupSearch('#search-input', '#search-results', '#search-clear');
+  setupSearch('#mobile-search-input', '#mobile-search-results', null);
+
+  /* ۴. بخش‌های صفحه */
+  renderCategories();
+  renderToolbar();
+  renderCatalog();
+  renderNewArrivals();
+  renderOffer();
+  startCountdown();
+  renderBrands();
+  renderRoutine();
+  renderPosts();
+  renderTrust();
+  renderFooter();
+
+  /* ۵. سبد خرید و علاقه‌مندی‌ها از حافظه مرورگر */
+  renderCart();
+  refreshWishlistUI();
+
+  /* ۶. فرم‌ها */
+  setupNewsletter();
+}
+
+/* صبر می‌کنیم تا مرورگر کل HTML را خوانده باشد، وگرنه عناصری که می‌خواهیم
+   پر کنیم هنوز وجود ندارند. */
+document.addEventListener('DOMContentLoaded', startApp);
+
+</script>
+</body>
+</html>

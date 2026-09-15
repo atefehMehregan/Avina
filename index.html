@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="آوینا — فروشگاه آنلاین محصولات مراقبت پوست، آرایش، مو و بدن با تضمین اصالت کالا." />
+    <meta name="theme-color" content="#faf7f2" />
+
+    <title>آوینا | فروشگاه محصولات مراقبت پوست و زیبایی</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;600&display=swap"
+      rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block"
+      rel="stylesheet" />
+
+    <link rel="stylesheet" href="CSS/style.css" />
+    <link rel="stylesheet" href="CSS/responsive.css" />
+  </head>
+
+  <body>
+    <!-- ==================================================================
+         بیشتر ظرف‌های این صفحه عمدا خالی هستند؛ جاوااسکریپت آن‌ها را پر
+         می‌کند. برای پیدا کردن کد هر بخش، id آن را در پوشه JS جستجو کنید.
+         ================================================================ -->
+
+    <a class="sr-only" href="#catalog">پرش به فهرست محصولات</a>
+
+    <!-- نوار اعلان -->
+    <div class="announce" id="announce">
+      <div class="container announce__inner">
+        <span class="material-symbols-rounded" aria-hidden="true">local_shipping</span>
+        <!-- پیام‌ها از ANNOUNCEMENTS در data.js می‌آیند -->
+        <div class="announce__track" id="announce-track" aria-live="polite"></div>
+        <button class="announce__close" id="announce-close" type="button" aria-label="بستن نوار اعلان">
+          <span class="material-symbols-rounded" aria-hidden="true">close</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- هدر -->
+    <header class="header" id="header">
+      <div class="container header__bar">
+        <a class="brand" href="#" aria-label="آوینا، صفحه اصلی">
+          <span class="brand__name">آوینا</span>
+          <span class="brand__latin">AVINA</span>
+        </a>
+
+        <div class="search">
+          <div class="search__field">
+            <span class="material-symbols-rounded search__icon" aria-hidden="true">search</span>
+            <label class="sr-only" for="search-input">جستجوی محصول</label>
+            <input
+              class="search__input"
+              id="search-input"
+              type="search"
+              autocomplete="off"
+              placeholder="جستجو در محصولات، برندها و دسته‌ها..." />
+            <button class="search__clear" id="search-clear" type="button" aria-label="پاک کردن جستجو">
+              <span class="material-symbols-rounded" aria-hidden="true">close</span>
+            </button>
+          </div>
+          <div class="search__results" id="search-results" role="listbox" hidden></div>
+        </div>
+
+        <div class="header__actions">
+          <button class="icon-btn" id="account-button" type="button" aria-label="حساب کاربری">
+            <span class="material-symbols-rounded" aria-hidden="true">person</span>
+          </button>
+
+          <button class="icon-btn" id="wishlist-button" type="button" aria-label="علاقه‌مندی‌ها">
+            <span class="material-symbols-rounded" aria-hidden="true">favorite_border</span>
+            <span class="icon-btn__count num" id="wishlist-count">۰</span>
+          </button>
+
+          <button class="icon-btn" id="cart-button" type="button" aria-label="سبد خرید" aria-haspopup="dialog">
+            <span class="material-symbols-rounded" aria-hidden="true">shopping_bag</span>
+            <span class="icon-btn__count num" id="cart-count">۰</span>
+          </button>
+
+          <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="منو" aria-haspopup="dialog">
+            <span class="material-symbols-rounded" aria-hidden="true">menu</span>
+          </button>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="ناوبری اصلی">
+        <div class="container">
+          <ul class="nav__list" id="nav-list"></ul>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- قهرمان صفحه -->
+      <section class="hero">
+        <div class="container hero__inner">
+          <div class="hero__body">
+            <p class="eyebrow">مراقبت پوست، اصیل و ساده</p>
+            <h1 class="hero__title">
+              پوست شما لایق <em>مراقبت درست</em> است، نه قفسه‌ای پر از محصول
+            </h1>
+            <p class="hero__text">
+              در آوینا محصولاتی را انتخاب کرده‌ایم که فرمول روشن، اثر اثبات‌شده و
+              اصالت تضمین‌شده دارند. روتین خود را با چند قدم ساده بسازید.
+            </p>
+
+            <div class="hero__actions">
+              <a class="btn btn--primary" href="#catalog">
+                <span class="material-symbols-rounded" aria-hidden="true">shopping_bag</span>
+                مشاهده محصولات
+              </a>
+              <a class="btn btn--ghost" href="#routine">ساخت روتین پوست</a>
+            </div>
+
+            <div class="hero__meta">
+              <div class="hero__stat">
+                <strong class="num">۲۴۰+</strong>
+                <span>محصول اصل</span>
+              </div>
+              <div class="hero__stat">
+                <strong class="num">۱۸</strong>
+                <span>برند منتخب</span>
+              </div>
+              <div class="hero__stat">
+                <strong class="num">۴.۸</strong>
+                <span>رضایت مشتریان</span>
+              </div>
+            </div>
+          </div>
+
+          <figure class="hero__figure">
+            <img src="IMG/hero.svg" alt="مجموعه‌ای از محصولات مراقبت پوست آوینا" width="900" height="1100" />
+            <figcaption class="hero__tag">
+              <span class="material-symbols-rounded" aria-hidden="true">eco</span>
+              <span>
+                <strong>فرمول بدون آزار</strong>
+                <span>تست‌شده روی پوست حساس</span>
+              </span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- دسته‌بندی‌ها -->
+      <section class="section" id="categories">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">دسته‌بندی‌ها</p>
+              <h2 class="section-title">از کجا شروع می‌کنید؟</h2>
+              <p class="section-sub">هر دسته با دقت چیده شده تا پیدا کردن محصول مناسب ساده باشد.</p>
+            </div>
+            <a class="link-more" href="#catalog">
+              همه محصولات
+              <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span>
+            </a>
+          </div>
+
+          <div class="category-grid" id="category-grid"></div>
+        </div>
+      </section>
+
+      <!-- فهرست محصولات: پرفروش‌ها، فیلتر و مرتب‌سازی -->
+      <section class="section section--tight" id="catalog">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">پرفروش‌ترین‌ها</p>
+              <h2 class="section-title">انتخاب مشتریان آوینا</h2>
+              <p class="section-sub" id="catalog-count">۲۴ محصول</p>
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <div class="filters" id="catalog-filters" role="group" aria-label="فیلتر دسته‌بندی"></div>
+            <div class="sort">
+              <label for="catalog-sort">مرتب‌سازی</label>
+              <select id="catalog-sort"></select>
+            </div>
+          </div>
+
+          <div class="product-grid" id="catalog-grid"></div>
+        </div>
+      </section>
+
+      <!-- پیشنهاد ویژه -->
+      <section class="section section--tight" id="offers">
+        <div class="container">
+          <div class="offer">
+            <div class="offer__inner">
+              <div class="offer__body">
+                <p class="eyebrow">پیشنهاد محدود</p>
+                <h2 class="offer__title" id="offer-title"></h2>
+                <p class="offer__sub" id="offer-sub"></p>
+                <p class="offer__text" id="offer-text"></p>
+
+                <div class="countdown" id="countdown" aria-label="زمان باقی‌مانده تا پایان پیشنهاد"></div>
+
+                <div class="hero__actions">
+                  <a class="btn btn--light" href="#catalog">مشاهده پیشنهادها</a>
+                </div>
+              </div>
+
+              <figure class="offer__figure">
+                <img id="offer-image" src="" alt="" width="1200" height="520" />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- جدیدترین‌ها -->
+      <section class="section" id="new-arrivals">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">تازه رسیده‌ها</p>
+              <h2 class="section-title">جدیدترین محصولات</h2>
+            </div>
+            <a class="link-more" href="#catalog">
+              همه محصولات
+              <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span>
+            </a>
+          </div>
+
+          <div class="product-grid" id="new-grid"></div>
+        </div>
+      </section>
+
+      <!-- برندها -->
+      <section class="section section--tight" id="brands">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">برندهای منتخب</p>
+              <h2 class="section-title">برندهایی که به آن‌ها اعتماد داریم</h2>
+            </div>
+          </div>
+
+          <div class="brand-strip" id="brand-strip"></div>
+        </div>
+      </section>
+
+      <!-- روتین پوست -->
+      <section class="section routine" id="routine">
+        <div class="container routine__grid">
+          <div>
+            <p class="eyebrow">روتین شخصی</p>
+            <h2 class="section-title">چهار قدم تا پوستی که دوستش دارید</h2>
+            <p class="section-sub">
+              لازم نیست ده محصول بخرید. با چهار قدم ساده شروع کنید و بعد بر اساس
+              نیاز پوستتان کامل‌ترش کنید.
+            </p>
+            <div class="routine__steps" id="routine-steps"></div>
+          </div>
+
+          <div>
+            <p class="eyebrow">نیاز پوست شما</p>
+            <h2 class="section-title" style="margin-bottom: 1.4rem">محصول را بر اساس نیاز پیدا کنید</h2>
+            <div class="concern-grid" id="concern-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- مجله -->
+      <section class="section" id="journal">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">مجله زیبایی</p>
+              <h2 class="section-title">دانستنی‌های مراقبت از پوست</h2>
+            </div>
+            <a class="link-more" href="articles/index.html">
+              همه مقاله‌ها
+              <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span>
+            </a>
+          </div>
+
+          <div class="post-grid" id="post-grid"></div>
+        </div>
+      </section>
+
+      <!-- اعتماد مشتری -->
+      <section class="section section--tight trust">
+        <div class="container trust__grid" id="trust-grid"></div>
+      </section>
+
+      <!-- خبرنامه -->
+      <section class="section newsletter">
+        <div class="container newsletter__inner">
+          <div>
+            <p class="eyebrow">خبرنامه آوینا</p>
+            <h2 class="section-title">اول از همه باخبر شوید</h2>
+            <p class="section-sub">
+              پیشنهادهای ویژه، محصولات تازه و نکته‌های مراقبت از پوست — ماهی دو بار،
+              بدون پیام اضافه.
+            </p>
+          </div>
+
+          <form class="newsletter__form-wrap" id="newsletter-form" novalidate>
+            <div class="newsletter__form">
+              <div class="newsletter__control">
+                <label class="sr-only" for="newsletter-email">نشانی ایمیل</label>
+                <input
+                  class="newsletter__input"
+                  id="newsletter-email"
+                  type="email"
+                  autocomplete="email"
+                  placeholder="نشانی ایمیل شما"
+                  aria-describedby="newsletter-error" />
+              </div>
+              <button class="btn btn--primary" type="submit">عضویت</button>
+            </div>
+            <span class="form-error" id="newsletter-error" role="alert"></span>
+            <p class="newsletter__note">با عضویت، شرایط استفاده و حریم خصوصی آوینا را می‌پذیرید.</p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- فوتر -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__top">
+          <div class="footer__brand">
+            <span class="brand">
+              <span class="brand__name">آوینا</span>
+              <span class="brand__latin">AVINA</span>
+            </span>
+            <p class="footer__about">
+              فروشگاه آنلاین محصولات مراقبت پوست، آرایش و زیبایی با تضمین اصالت کالا
+              و مشاوره تخصصی رایگان.
+            </p>
+            <ul class="footer__contact" id="footer-contact"></ul>
+          </div>
+
+          <!-- سه ستون لینک از FOOTER_MENUS -->
+          <div style="display: contents" id="footer-columns"></div>
+        </div>
+
+        <div class="footer__bottom">
+          <p>© <span id="footer-year" class="num"></span> تمام حقوق برای فروشگاه آوینا محفوظ است.</p>
+          <div class="footer__badges" id="footer-badges"></div>
+          <div class="footer__social">
+            <a href="#" aria-label="اینستاگرام"><span class="material-symbols-rounded" aria-hidden="true">photo_camera</span></a>
+            <a href="#" aria-label="تلگرام"><span class="material-symbols-rounded" aria-hidden="true">send</span></a>
+            <a href="#" aria-label="تماس"><span class="material-symbols-rounded" aria-hidden="true">call</span></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ============ لایه‌های شناور ============ -->
+
+    <div class="overlay" id="overlay" data-close-layer></div>
+
+    <!-- کشوی سبد خرید -->
+    <aside class="drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title" aria-hidden="true">
+      <header class="drawer__head">
+        <h2 class="drawer__title" id="cart-title">سبد خرید</h2>
+        <button class="icon-btn" type="button" data-close-layer aria-label="بستن سبد خرید">
+          <span class="material-symbols-rounded" aria-hidden="true">close</span>
+        </button>
+      </header>
+      <div class="drawer__body" id="cart-body"></div>
+      <div class="drawer__foot" id="cart-foot"></div>
+    </aside>
+
+    <!-- منوی موبایل -->
+    <aside class="mobile-nav" id="mobile-nav" role="dialog" aria-modal="true" aria-label="منوی اصلی" aria-hidden="true">
+      <header class="mobile-nav__head">
+        <span class="brand">
+          <span class="brand__name">آوینا</span>
+          <span class="brand__latin">AVINA</span>
+        </span>
+        <button class="icon-btn" type="button" data-close-layer aria-label="بستن منو">
+          <span class="material-symbols-rounded" aria-hidden="true">close</span>
+        </button>
+      </header>
+
+      <div class="mobile-nav__body">
+        <div class="search mobile-search">
+          <div class="search__field">
+            <span class="material-symbols-rounded search__icon" aria-hidden="true">search</span>
+            <label class="sr-only" for="mobile-search-input">جستجوی محصول</label>
+            <input class="search__input" id="mobile-search-input" type="search" autocomplete="off" placeholder="جستجوی محصول..." />
+          </div>
+          <div class="search__results" id="mobile-search-results" hidden></div>
+        </div>
+
+        <div id="mobile-nav-body"></div>
+      </div>
+    </aside>
+
+    <!-- نگاه سریع محصول -->
+    <div class="modal" id="quick-modal" role="dialog" aria-modal="true" aria-label="مشخصات محصول" hidden>
+      <div class="modal__window">
+        <button class="modal__close" type="button" data-close-layer aria-label="بستن پنجره">
+          <span class="material-symbols-rounded" aria-hidden="true">close</span>
+        </button>
+        <div id="quick-body"></div>
+      </div>
+    </div>
+
+    <!-- پیام‌های کوتاه -->
+    <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+    <button class="to-top" id="to-top" type="button" aria-label="بازگشت به بالای صفحه">
+      <span class="material-symbols-rounded" aria-hidden="true">arrow_upward</span>
+    </button>
+
+    <!-- ==================================================================
+         ترتیب فایل‌ها مهم است: data.js اول چون بقیه از آن می‌خوانند،
+         و main.js آخر چون صفحه را راه می‌اندازد.
+         ================================================================ -->
+    <script src="JS/data.js"></script>
+    <script src="JS/utils.js"></script>
+    <script src="JS/storage.js"></script>
+    <script src="JS/toast.js"></script>
+    <script src="JS/modal.js"></script>
+    <script src="JS/wishlist.js"></script>
+    <script src="JS/cart.js"></script>
+    <script src="JS/products.js"></script>
+    <script src="JS/search.js"></script>
+    <script src="JS/sections.js"></script>
+    <script src="JS/countdown.js"></script>
+    <script src="JS/forms.js"></script>
+    <script src="JS/navigation.js"></script>
+    <script src="JS/main.js"></script>
+  </body>
+</html>

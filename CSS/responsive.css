@@ -1,0 +1,92 @@
+/* ============================================================================
+ * responsive.css — چیدمان در اندازه‌های مختلف صفحه
+ * ----------------------------------------------------------------------------
+ * نقاط شکست از بزرگ به کوچک چیده شده‌اند تا خواندنشان ساده باشد:
+ *   ۱۲۰۰px  لپ‌تاپ کوچک
+ *   ۹۹۲px   تبلت افقی
+ *   ۷۶۸px   تبلت عمودی و موبایل بزرگ  ← اینجا منوی موبایل فعال می‌شود
+ *   ۵۲۰px   موبایل
+ * ==========================================================================*/
+
+@media (max-width: 1200px) {
+  .product-grid { grid-template-columns: repeat(3, 1fr); }
+  .category-grid { grid-template-columns: repeat(3, 1fr); }
+  .brand-strip { grid-template-columns: repeat(3, 1fr); }
+  .hero__inner { gap: var(--gap-lg); }
+}
+
+@media (max-width: 992px) {
+  :root { --header-h: 66px; }
+
+  /* قهرمان صفحه از دو ستون به یک ستون می‌رود و تصویر پایین می‌نشیند */
+  .hero__inner {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: var(--gap-xl);
+  }
+  .hero__figure { max-width: 480px; margin-inline: auto; }
+  .hero__tag { inset-inline-start: 1rem; }
+
+  .offer__inner { grid-template-columns: 1fr; }
+  .offer__figure { order: -1; }
+  .offer__figure img { max-height: 260px; }
+  .offer__body { padding: var(--gap-lg); }
+
+  .routine__grid { grid-template-columns: 1fr; }
+  .newsletter__inner { grid-template-columns: 1fr; gap: var(--gap-lg); }
+  .trust__grid { grid-template-columns: repeat(2, 1fr); }
+  .post-grid { grid-template-columns: 1fr; }
+  .footer__top { grid-template-columns: 1fr 1fr; gap: var(--gap-lg); }
+  .quick { grid-template-columns: 1fr; }
+  .quick__media img { max-height: 320px; }
+}
+
+@media (max-width: 768px) {
+  /* جستجو از نوار بالا حذف و به منوی موبایل منتقل می‌شود */
+  .header__bar .search { display: none; }
+  .nav { display: none; }
+  .menu-toggle { display: inline-flex; }
+
+  .header__bar { gap: 0.5rem; }
+  .brand__name { font-size: 1.35rem; }
+
+  .mobile-search { display: block; margin-bottom: var(--gap); }
+
+  .product-grid { grid-template-columns: repeat(2, 1fr); gap: var(--gap) 0.8rem; }
+  .category-grid { grid-template-columns: repeat(2, 1fr); }
+  .brand-strip { grid-template-columns: repeat(2, 1fr); }
+
+  .section-head { flex-direction: column; align-items: flex-start; gap: var(--gap-sm); }
+
+  .toolbar { flex-direction: column; align-items: stretch; }
+  /* نوار فیلتر افقی اسکرول می‌شود تا صفحه به هم نریزد */
+  .filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.4rem;
+    scrollbar-width: none;
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .filter { white-space: nowrap; }
+
+  .concern-grid { grid-template-columns: 1fr; }
+  .hero__meta { gap: var(--gap); }
+  .countdown__unit { min-width: 58px; }
+
+  .toasts { inset-inline: 1rem; inset-block-end: 1rem; max-width: none; }
+  .to-top { inset-block-end: 1rem; inset-inline-start: 1rem; }
+}
+
+@media (max-width: 520px) {
+  .product-grid { grid-template-columns: 1fr; }
+  .category-grid { grid-template-columns: 1fr; }
+  .trust__grid { grid-template-columns: 1fr; }
+  .footer__top { grid-template-columns: 1fr; }
+
+  .hero__actions .btn { width: 100%; }
+  .newsletter__form { flex-direction: column; }
+  .quick__actions { flex-direction: column; }
+
+  .footer__bottom { flex-direction: column; align-items: flex-start; }
+  .drawer { width: 100%; }
+}
