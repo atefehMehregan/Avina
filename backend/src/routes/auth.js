@@ -5,21 +5,26 @@
  *   * هیچ پاسخی password_hash یا فیلد داخلی برنمی‌گرداند (تابع publicUser).
  *   * فقط فیلدهای مشخص از بدنه خوانده می‌شود، نه ...req.body (mass assignment).
  *   * پیام خطای ورود عمدا مبهم است تا نشود فهمید کدام حساب وجود دارد.
+ *   * همه کوئری‌ها پارامتری‌اند ($1، $2 ...).
+ *
+ * قرارداد API با فرانت تغییر نکرده؛ فقط پایگاه داده زیرش عوض شده است.
  * ==========================================================================*/
 import express from 'express';
 import crypto from 'node:crypto';
-import { db, nowIso } from '../db/index.js';
+import { query, queryOne } from '../db/index.js';
 import { config } from '../config.js';
 import { hashPassword, verifyPassword } from '../lib/password.js';
 import { validateRegistration, validateLogin } from '../lib/validate.js';
-import {
-  createSession, revokeSession, revokeAllForUser,
-} from '../lib/session.js';
+import { createSession, revokeSession, revokeAllForUser } from '../lib/session.js';
 import {
   recordLoginAttempt, isLoginBlocked, registerLimiter, requireCsrf,
 } from '../middleware/security.js';
 
 export const authRouter = express.Router();
+
+/* کد خطای PostgreSQL برای نقض قید یکتایی. در SQLite این با متن پیام
+   تشخیص داده می‌شد؛ کد عددی قابل اتکاتر است. */
+const UNIQUE_VIOLATION = '23505';
 
 /* ------------------------------------------------------------- کمکی‌ها */
 
@@ -51,8 +56,8 @@ function csrfCookieOptions() {
   return { ...sessionCookieOptions(), httpOnly: false };
 }
 
-function issueSession(res, userId, req) {
-  const { token, csrf } = createSession(userId, {
+async function issueSession(res, userId, req) {
+  const { token, csrf } = await createSession(userId, {
     userAgent: req.headers['user-agent'],
     ip: req.clientIp,
   });
@@ -69,15 +74,6 @@ function clearSessionCookies(res) {
 
 /* --------------------------------------------------- POST /api/auth/register */
 
-const findByEmail = db.prepare('SELECT id FROM users WHERE email = ?');
-const findByPhone = db.prepare('SELECT id FROM users WHERE phone = ?');
-const insertUser = db.prepare(`
-  INSERT INTO users (id, first_name, last_name, email, phone, password_hash,
-                     is_active, created_at, updated_at)
-  VALUES (@id, @first_name, @last_name, @email, @phone, @password_hash,
-          1, @created_at, @updated_at)
-`);
-
 authRouter.post('/register', registerLimiter, async (req, res, next) => {
   try {
     const check = validateRegistration(req.body);
@@ -88,14 +84,14 @@ authRouter.post('/register', registerLimiter, async (req, res, next) => {
     }
     const { first, last, email, phone, password } = check.value;
 
-    if (findByEmail.get(email)) {
+    if (await queryOne('SELECT id FROM users WHERE email = $1', [email])) {
       return res.status(409).json({
         ok: false,
         message: 'این ایمیل قبلا ثبت شده است.',
         errors: { email: 'این ایمیل قبلا ثبت شده است. وارد شوید یا ایمیل دیگری بدهید.' },
       });
     }
-    if (findByPhone.get(phone)) {
+    if (await queryOne('SELECT id FROM users WHERE phone = $1', [phone])) {
       return res.status(409).json({
         ok: false,
         message: 'این شماره موبایل قبلا ثبت شده است.',
@@ -103,31 +99,28 @@ authRouter.post('/register', registerLimiter, async (req, res, next) => {
       });
     }
 
-    const now = nowIso();
-    const user = {
-      id: crypto.randomUUID(),
-      first_name: first,
-      last_name: last,
-      email,
-      phone,
-      password_hash: await hashPassword(password),
-      created_at: now,
-      updated_at: now,
-    };
+    const id = crypto.randomUUID();
+    const passwordHash = await hashPassword(password);
 
+    let created;
     try {
-      insertUser.run(user);
+      created = await queryOne(
+        `INSERT INTO users (id, first_name, last_name, email, phone, password_hash)
+         VALUES ($1, $2, $3, $4, $5, $6)
+         RETURNING id, first_name, last_name, email, phone, created_at`,
+        [id, first, last, email, phone, passwordHash]
+      );
     } catch (err) {
       /* اگر دو درخواست هم‌زمان برسند، ایندکس یکتا اینجا خطا می‌دهد. */
-      if (String(err.message).includes('UNIQUE')) {
+      if (err.code === UNIQUE_VIOLATION) {
         return res.status(409).json({ ok: false, message: 'این حساب قبلا ثبت شده است.' });
       }
       throw err;
     }
 
-    issueSession(res, user.id, req);
+    await issueSession(res, created.id, req);
     return res.status(201).json({
-      ok: true, message: 'حساب شما ساخته شد. خوش آمدید!', user: publicUser(user),
+      ok: true, message: 'حساب شما ساخته شد. خوش آمدید!', user: publicUser(created),
     });
   } catch (err) {
     next(err);
@@ -135,10 +128,6 @@ authRouter.post('/register', registerLimiter, async (req, res, next) => {
 });
 
 /* ------------------------------------------------------ POST /api/auth/login */
-
-const findForLogin = db.prepare(
-  'SELECT * FROM users WHERE email = ? OR phone = ? LIMIT 1'
-);
 
 authRouter.post('/login', async (req, res, next) => {
   try {
@@ -151,14 +140,17 @@ authRouter.post('/login', async (req, res, next) => {
     const { identifier, password } = check.value;
     const ip = req.clientIp;
 
-    if (isLoginBlocked(identifier, ip)) {
+    if (await isLoginBlocked(identifier, ip)) {
       return res.status(429).json({
         ok: false,
         message: 'تلاش‌های ناموفق زیاد بود. چند دقیقه صبر کنید و دوباره تلاش کنید.',
       });
     }
 
-    const row = findForLogin.get(identifier, identifier);
+    const row = await queryOne(
+      'SELECT * FROM users WHERE email = $1 OR phone = $1 LIMIT 1',
+      [identifier]
+    );
 
     /* حتی وقتی کاربر نیست یک هش ساختگی می‌سنجیم تا زمان پاسخ لو ندهد
        که این حساب وجود دارد یا نه. */
@@ -167,14 +159,14 @@ authRouter.post('/login', async (req, res, next) => {
     const good = await verifyPassword(hash, password);
 
     if (!row || !good || !row.is_active) {
-      recordLoginAttempt(identifier, ip, false);
+      await recordLoginAttempt(identifier, ip, false);
       return res.status(401).json({
         ok: false, message: 'ایمیل/موبایل یا رمز درست نیست.',
       });
     }
 
-    recordLoginAttempt(identifier, ip, true);
-    issueSession(res, row.id, req);
+    await recordLoginAttempt(identifier, ip, true);
+    await issueSession(res, row.id, req);
     return res.json({ ok: true, message: 'خوش آمدید!', user: publicUser(row) });
   } catch (err) {
     next(err);
@@ -183,31 +175,41 @@ authRouter.post('/login', async (req, res, next) => {
 
 /* ----------------------------------------------------- POST /api/auth/logout */
 
-authRouter.post('/logout', requireCsrf, (req, res) => {
-  revokeSession(req.cookies?.[config.cookie.name]);
-  clearSessionCookies(res);
-  return res.json({ ok: true, message: 'از حساب خارج شدید.' });
+authRouter.post('/logout', requireCsrf, async (req, res, next) => {
+  try {
+    await revokeSession(req.cookies?.[config.cookie.name]);
+    clearSessionCookies(res);
+    return res.json({ ok: true, message: 'از حساب خارج شدید.' });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /** خروج از همه دستگاه‌ها — برای وقتی کاربر نگران نفوذ است. */
-authRouter.post('/logout-all', requireCsrf, (req, res) => {
-  if (req.session) revokeAllForUser(req.session.user_id);
-  clearSessionCookies(res);
-  return res.json({ ok: true, message: 'از همه دستگاه‌ها خارج شدید.' });
+authRouter.post('/logout-all', requireCsrf, async (req, res, next) => {
+  try {
+    if (req.session) await revokeAllForUser(req.session.user_id);
+    clearSessionCookies(res);
+    return res.json({ ok: true, message: 'از همه دستگاه‌ها خارج شدید.' });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /* --------------------------------------------------------- GET /api/auth/me */
 
-const findById = db.prepare('SELECT * FROM users WHERE id = ?');
-
-authRouter.get('/me', (req, res) => {
-  if (!req.session) {
-    return res.status(401).json({ ok: false, message: 'وارد نشده‌اید.' });
+authRouter.get('/me', async (req, res, next) => {
+  try {
+    if (!req.session) {
+      return res.status(401).json({ ok: false, message: 'وارد نشده‌اید.' });
+    }
+    const row = await queryOne('SELECT * FROM users WHERE id = $1', [req.session.user_id]);
+    if (!row || !row.is_active) {
+      clearSessionCookies(res);
+      return res.status(401).json({ ok: false, message: 'وارد نشده‌اید.' });
+    }
+    return res.json({ ok: true, user: publicUser(row) });
+  } catch (err) {
+    next(err);
   }
-  const row = findById.get(req.session.user_id);
-  if (!row || !row.is_active) {
-    clearSessionCookies(res);
-    return res.status(401).json({ ok: false, message: 'وارد نشده‌اید.' });
-  }
-  return res.json({ ok: true, user: publicUser(row) });
 });

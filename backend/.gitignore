@@ -1,8 +1,7 @@
 node_modules/
 data/
-*.sqlite
-*.sqlite-wal
-*.sqlite-shm
+.pglite/
+pglite-data/
 .env
 .env.*
 !.env.example

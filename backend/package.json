@@ -3,20 +3,23 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Avina Beauty — authentication API",
+  "description": "Avina Beauty — authentication API (PostgreSQL)",
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "start": "node src/server.js",
     "migrate": "node src/db/migrate.js",
-    "test": "node --test tests/"
+    "test": "node tests/auth.test.mjs"
   },
   "dependencies": {
     "argon2": "^0.45.1",
-    "better-sqlite3": "^13.0.3",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8"
   }
 }

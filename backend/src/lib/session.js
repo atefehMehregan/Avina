@@ -1,5 +1,5 @@
 /* ============================================================================
- * session.js — نشست‌های قابل ابطال
+ * session.js — نشست‌های قابل ابطال (PostgreSQL)
  * ----------------------------------------------------------------------------
  * چرا JWT نه؟ چون «خروج» با JWT واقعی نیست؛ توکن تا انقضا معتبر می‌ماند.
  * اینجا توکن تصادفی است و وضعیتش در دیتابیس نگه داشته می‌شود، پس خروج
@@ -7,9 +7,12 @@
  *
  * خودِ توکن در دیتابیس ذخیره نمی‌شود، فقط SHA-256 آن. اگر دیتابیس لو برود،
  * کسی نمی‌تواند با محتوای جدول جای کاربر جا بزند.
+ *
+ * تفاوت با نسخه SQLite: همه توابع async شده‌اند و مقایسه زمان‌ها روی
+ * TIMESTAMPTZ انجام می‌شود، نه روی رشته متنی.
  * ==========================================================================*/
 import crypto from 'node:crypto';
-import { db, nowIso } from '../db/index.js';
+import { query, queryOne } from '../db/index.js';
 import { config } from '../config.js';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -30,66 +33,70 @@ export function safeEqual(a, b) {
   return crypto.timingSafeEqual(x, y);
 }
 
-const insertSession = db.prepare(`
-  INSERT INTO sessions (id, user_id, token_hash, csrf_hash, user_agent, ip,
-                        created_at, last_seen_at, expires_at)
-  VALUES (@id, @user_id, @token_hash, @csrf_hash, @user_agent, @ip,
-          @created_at, @last_seen_at, @expires_at)
-`);
-
-export function createSession(userId, { userAgent, ip } = {}) {
+export async function createSession(userId, { userAgent, ip } = {}) {
   const token = randomToken();
   const csrf = randomToken(24);
-  const now = new Date();
-  insertSession.run({
-    id: crypto.randomUUID(),
-    user_id: userId,
-    token_hash: sha256(token),
-    csrf_hash: sha256(csrf),
-    user_agent: String(userAgent || '').slice(0, 300),
-    ip: String(ip || '').slice(0, 64),
-    created_at: now.toISOString(),
-    last_seen_at: now.toISOString(),
-    expires_at: new Date(now.getTime() + config.cookie.maxAgeDays * DAY_MS).toISOString(),
-  });
+  const expiresAt = new Date(Date.now() + config.cookie.maxAgeDays * DAY_MS);
+
+  await query(
+    `INSERT INTO sessions (id, user_id, token_hash, csrf_hash, user_agent, ip, expires_at)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+    [
+      crypto.randomUUID(),
+      userId,
+      sha256(token),
+      sha256(csrf),
+      String(userAgent || '').slice(0, 300),
+      String(ip || '').slice(0, 64),
+      expiresAt,
+    ]
+  );
   return { token, csrf };
 }
 
-const findByHash = db.prepare(`
-  SELECT id, user_id, csrf_hash, expires_at, revoked_at
-  FROM sessions WHERE token_hash = ?
-`);
-const touchSession = db.prepare('UPDATE sessions SET last_seen_at = ? WHERE id = ?');
-
-/** نشست معتبر را برمی‌گرداند، وگرنه null. */
-export function readSession(token) {
+/**
+ * نشست معتبر را برمی‌گرداند، وگرنه null.
+ * شرط‌های «باطل نشده» و «منقضی نشده» داخل خود کوئری‌اند تا رفت‌وبرگشت
+ * اضافه به دیتابیس نشود.
+ */
+export async function readSession(token) {
   if (!token) return null;
-  const row = findByHash.get(sha256(token));
+  const row = await queryOne(
+    `SELECT id, user_id, csrf_hash, expires_at
+     FROM sessions
+     WHERE token_hash = $1 AND revoked_at IS NULL AND expires_at > now()`,
+    [sha256(token)]
+  );
   if (!row) return null;
-  if (row.revoked_at) return null;
-  if (new Date(row.expires_at).getTime() <= Date.now()) return null;
-  touchSession.run(nowIso(), row.id);
+
+  /* به‌روزرسانی «آخرین بازدید» نباید جلوی پاسخ را بگیرد. */
+  query('UPDATE sessions SET last_seen_at = now() WHERE id = $1', [row.id])
+    .catch((err) => console.error('[session] last_seen_at:', err.message));
+
   return row;
 }
 
-const revokeOne = db.prepare(
-  'UPDATE sessions SET revoked_at = ? WHERE token_hash = ? AND revoked_at IS NULL'
-);
-export function revokeSession(token) {
+export async function revokeSession(token) {
   if (!token) return;
-  revokeOne.run(nowIso(), sha256(token));
+  await query(
+    'UPDATE sessions SET revoked_at = now() WHERE token_hash = $1 AND revoked_at IS NULL',
+    [sha256(token)]
+  );
 }
 
-const revokeMany = db.prepare(
-  'UPDATE sessions SET revoked_at = ? WHERE user_id = ? AND revoked_at IS NULL'
-);
-export function revokeAllForUser(userId) {
-  revokeMany.run(nowIso(), userId);
+export async function revokeAllForUser(userId) {
+  await query(
+    'UPDATE sessions SET revoked_at = now() WHERE user_id = $1 AND revoked_at IS NULL',
+    [userId]
+  );
 }
 
 /** نظافت دوره‌ای: نشست‌های منقضی و باطل‌شده قدیمی. */
-const purge = db.prepare('DELETE FROM sessions WHERE expires_at < ? OR revoked_at < ?');
-export function purgeExpiredSessions() {
-  const cutoff = new Date(Date.now() - 7 * DAY_MS).toISOString();
-  return purge.run(nowIso(), cutoff).changes;
+export async function purgeExpiredSessions() {
+  const result = await query(
+    `DELETE FROM sessions
+     WHERE expires_at < now()
+        OR (revoked_at IS NOT NULL AND revoked_at < now() - INTERVAL '7 days')`
+  );
+  return result.rowCount;
 }

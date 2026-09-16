@@ -3,21 +3,25 @@
  * ----------------------------------------------------------------------------
  * از نسخه فعلی، خودِ سرور هم هنگام بالا آمدن همین کار را می‌کند، پس اجرای
  * این دستور برای راه‌اندازی الزامی نیست. اینجا می‌ماند چون برای بررسی
- * دستی و دیدن فهرست جدول‌ها پس از استقرار مفید است.
+ * دستی و دیدن وضعیت پایگاه داده پس از استقرار مفید است.
  *
  * چند بار اجرا کردن بی‌خطر است (CREATE ... IF NOT EXISTS).
  * ==========================================================================*/
-import { db, applySchema } from './index.js';
+import { connect, applySchema, query, closeDb, currentDriver } from './index.js';
 import { config } from '../config.js';
 
-applySchema();
+await connect();
+await applySchema();
 
-const tables = db.prepare(
-  "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name"
-).all().map((r) => r.name);
+const tables = await query(
+  `SELECT table_name FROM information_schema.tables
+   WHERE table_schema = 'public' ORDER BY table_name`
+);
+const users = await query('SELECT COUNT(*)::int AS n FROM users');
 
-const users = db.prepare('SELECT COUNT(*) AS n FROM users').get().n;
+console.log('راننده:', currentDriver());
+console.log('پایگاه داده:', config.database.url ? config.database.url.replace(/:[^:@/]*@/, ':****@') : '(pglite محلی)');
+console.log('جدول‌ها:', tables.rows.map((r) => r.table_name).join(', '));
+console.log('تعداد کاربران:', users.rows[0].n);
 
-console.log('پایگاه داده:', config.databaseFile);
-console.log('جدول‌ها:', tables.join(', '));
-console.log('تعداد کاربران:', users);
+await closeDb();

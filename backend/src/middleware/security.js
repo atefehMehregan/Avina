@@ -1,7 +1,10 @@
 /* ============================================================================
  * security.js — CORS، CSRF، محدودیت نرخ، هدرهای امنیتی، مدیریت خطا
+ * ----------------------------------------------------------------------------
+ * تفاوت با نسخه SQLite: توابع محدودیت نرخ async شده‌اند و پنجره زمانی با
+ * INTERVAL خود PostgreSQL حساب می‌شود، نه با مقایسه رشته تاریخ.
  * ==========================================================================*/
-import { db, nowIso } from '../db/index.js';
+import { query, queryOne } from '../db/index.js';
 import { config } from '../config.js';
 import { sha256, safeEqual } from '../lib/session.js';
 
@@ -58,35 +61,33 @@ export function requireCsrf(req, res, next) {
 }
 
 /* -------------------------------------------------------- محدودیت نرخ */
-const countByIdentifier = db.prepare(
-  "SELECT COUNT(*) AS n FROM login_attempts WHERE identifier = ? AND ok = 0 AND created_at > ?"
-);
-const countByIp = db.prepare(
-  "SELECT COUNT(*) AS n FROM login_attempts WHERE ip = ? AND ok = 0 AND created_at > ?"
-);
-const insertAttempt = db.prepare(
-  'INSERT INTO login_attempts (identifier, ip, ok, created_at) VALUES (?, ?, ?, ?)'
-);
 
-export function recordLoginAttempt(identifier, ip, ok) {
-  insertAttempt.run(String(identifier).slice(0, 254), String(ip).slice(0, 64), ok ? 1 : 0, nowIso());
-}
-
-function windowStart() {
-  return new Date(Date.now() - config.rateLimit.windowMinutes * 60 * 1000).toISOString();
+export async function recordLoginAttempt(identifier, ip, ok) {
+  await query(
+    'INSERT INTO login_attempts (identifier, ip, ok) VALUES ($1, $2, $3)',
+    [String(identifier).slice(0, 254), String(ip).slice(0, 64), Boolean(ok)]
+  );
 }
 
 /**
  * آیا این ترکیب شناسه/آی‌پی فعلا قفل است؟
  * شمارش روی «تلاش ناموفق» است تا ورود درست کسی را قفل نکند.
+ * پنجره زمانی را خود PostgreSQL حساب می‌کند تا به ساعت سرور برنامه وابسته نباشد.
  */
-export function isLoginBlocked(identifier, ip) {
-  const since = windowStart();
-  const byId = countByIdentifier.get(identifier, since).n;
-  const byIp = countByIp.get(ip, since).n;
+export async function isLoginBlocked(identifier, ip) {
+  const minutes = config.rateLimit.windowMinutes;
+  const row = await queryOne(
+    `SELECT
+       COUNT(*) FILTER (WHERE identifier = $1) AS by_identifier,
+       COUNT(*) FILTER (WHERE ip = $2)         AS by_ip
+     FROM login_attempts
+     WHERE ok = FALSE
+       AND created_at > now() - ($3 || ' minutes')::interval`,
+    [identifier, ip, String(minutes)]
+  );
   return (
-    byId >= config.rateLimit.loginMaxPerIdentifier ||
-    byIp >= config.rateLimit.loginMaxPerIp
+    Number(row.by_identifier) >= config.rateLimit.loginMaxPerIdentifier ||
+    Number(row.by_ip) >= config.rateLimit.loginMaxPerIp
   );
 }
 
