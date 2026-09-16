@@ -1,0 +1,277 @@
+/* ============================================================================
+ * hero-art.css — نشان متحرک «گوزن آوینا» در بخش قهرمان
+ * ----------------------------------------------------------------------------
+ * این فایل فقط تصویر متحرک بالای صفحه را می‌پوشاند و به بقیه سایت کاری ندارد.
+ * رنگ‌ها همان توکن‌های style.css هستند تا نشان با بقیه صفحه یک زبان داشته باشد.
+ *
+ * ساختار فایل:
+ *   ۱. ظرف نشان
+ *   ۲. حالت پایه اجزا — همین حالت، نسخه ثابت و کامل نشان است
+ *   ۳. حرکت‌ها — همه بی‌درز تکرار می‌شوند
+ *   ۴. پارالاکس ملایم (کلاس‌ها را hero-art.js می‌گذارد)
+ *   ۵. واکنش‌گرایی
+ *   ۶. احترام به prefers-reduced-motion
+ *
+ * قاعده مهم: هیچ جزئی «با انیمیشن» ظاهر نمی‌شود. همه از ابتدا در حالت نهایی
+ * هستند و انیمیشن فقط روی آن‌ها حرکت اضافه می‌کند. اگر کاربر حرکت را خاموش
+ * کند، همان تصویر کامل و ثابت باقی می‌ماند.
+ * ==========================================================================*/
+
+/* ------------------------------------------------------------- ۱. ظرف نشان */
+.hero-art {
+  --av-mx: 0; /* موقعیت افقی اشاره‌گر، بین ۱- و ۱ */
+  --av-my: 0; /* موقعیت عمودی اشاره‌گر */
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.hero-art__svg { width: 100%; height: auto; }
+
+/* ---------------------------------------------- ۲. حالت پایه اجزای تصویر */
+
+/* پس‌زمینه و قاب طاقی */
+.av-arch { fill: var(--paper); opacity: 0.42; }
+.av-arch-line { fill: none; stroke: var(--nude); stroke-width: 2; opacity: 0.75; }
+.av-blob { fill: var(--nude); }
+.av-halo { fill: url(#av-halo); }
+.av-ground { fill: var(--cocoa); opacity: 0.1; }
+
+/* گوزن */
+.av-head { fill: url(#av-fur); stroke: var(--cocoa); stroke-width: 6; stroke-linejoin: round; }
+.av-ear-outer { fill: url(#av-fur); stroke: var(--cocoa); stroke-width: 5; stroke-linejoin: round; }
+.av-ear-inner { fill: var(--nude); opacity: 0.85; }
+.av-eye { fill: none; stroke: var(--cocoa); stroke-width: 5; stroke-linecap: round; }
+.av-lash { fill: none; stroke: var(--cocoa); stroke-width: 3; stroke-linecap: round; opacity: 0.8; }
+.av-nose { fill: var(--clay-deep); }
+.av-mark { fill: var(--clay); opacity: 0.42; }
+
+/* قطره سرم میان شاخ‌ها */
+.av-drop-glow { fill: url(#av-glow); }
+.av-serum { fill: url(#av-serum); }
+.av-serum-spark { fill: var(--paper); opacity: 0.75; }
+
+/* لوازم آرایشی — خطی، کم‌رنگ، در حاشیه ترکیب */
+.av-object { fill: var(--paper); stroke: var(--cocoa); stroke-width: 3.5; stroke-linejoin: round; }
+.av-object-line { fill: none; stroke: var(--cocoa); stroke-width: 3; stroke-linecap: round; opacity: 0.5; }
+.av-bullet { fill: var(--clay); opacity: 0.55; }
+.av-objects { opacity: 0.5; }
+
+/* گیاهان */
+.av-stem { fill: none; stroke: var(--olive); stroke-width: 3; stroke-linecap: round; opacity: 0.7; }
+.av-leaf { fill: var(--olive); opacity: 0.55; }
+
+/* قطره چکنده و حلقه‌های آب */
+.av-falling { fill: var(--clay); opacity: 0.75; }
+.av-ripple { fill: none; stroke: var(--clay); stroke-width: 2; }
+
+/* ذرات نور */
+.av-dust { fill: var(--paper); }
+.av-dust--warm { fill: var(--clay); }
+
+/* درخشش عبوری روی شاخ‌ها */
+.av-sheen-band { fill: url(#av-sheen); }
+
+/* ------------------------------------------------------------- ۳. حرکت‌ها */
+
+/* ورود آرام کل ترکیب — یک بار، و در حالت نهایی می‌ماند */
+@keyframes av-enter {
+  from { opacity: 0; transform: translateY(16px) scale(0.985); }
+  to   { opacity: 1; transform: none; }
+}
+.hero-art__stage {
+  animation: av-enter 1.5s var(--ease) both;
+  transform-origin: 50% 60%;
+}
+
+/* شاخ‌ها خودشان را می‌کشند. طول خط‌چین از بلندترین مسیر بیشتر است تا همه
+   مسیرها کامل کشیده شوند. dasharray فقط داخل کیفریم است، پس اگر انیمیشن
+   خاموش شود شاخ‌ها یکپارچه و کامل دیده می‌شوند. */
+@keyframes av-draw {
+  from { stroke-dasharray: 460; stroke-dashoffset: 460; }
+  to   { stroke-dasharray: 460; stroke-dashoffset: 0; }
+}
+.av-beam { animation: av-draw 1.7s var(--ease) 0.15s both; }
+.av-tine-1 { animation: av-draw 1.1s var(--ease) 0.75s both; }
+.av-tine-2 { animation: av-draw 1.1s var(--ease) 0.95s both; }
+.av-tine-3 { animation: av-draw 1.1s var(--ease) 1.15s both; }
+.av-tine-4 { animation: av-draw 1.1s var(--ease) 1.35s both; }
+.av-tine-5 { animation: av-draw 1.1s var(--ease) 1.45s both; }
+
+/* نفس کشیدن هاله پشت سر — رفت و برگشت، پس درز ندارد */
+@keyframes av-breathe {
+  from { transform: scale(1);     opacity: 0.55; }
+  to   { transform: scale(1.055); opacity: 0.8; }
+}
+.av-halo {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: av-breathe 9s ease-in-out infinite alternate;
+}
+
+/* خودِ گوزن هم بسیار آرام نفس می‌کشد */
+@keyframes av-deer-breathe {
+  from { transform: translateY(0) scale(1); }
+  to   { transform: translateY(-5px) scale(1.006); }
+}
+.av-deer {
+  transform-box: fill-box;
+  transform-origin: 50% 90%;
+  animation: av-deer-breathe 7.5s ease-in-out infinite alternate;
+}
+
+/* درخشش روی شاخ‌ها: یک بار در هر چرخه رد می‌شود و بقیه چرخه پنهان است.
+   ابتدا و انتهای کیفریم یکسان‌اند، پس بازگشت دیده نمی‌شود. */
+@keyframes av-sheen {
+  0%   { transform: translateX(0);      opacity: 0; }
+  6%   { opacity: 0.5; }
+  30%  { transform: translateX(1320px); opacity: 0; }
+  100% { transform: translateX(1320px); opacity: 0; }
+}
+.av-sheen-band { animation: av-sheen 11s linear 2.4s infinite; }
+
+/* شناور بودن بسیار ملایم لوازم آرایشی */
+@keyframes av-float-soft {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-11px); }
+}
+.av-float-a { animation: av-float-soft 8s ease-in-out infinite alternate; }
+.av-float-b { animation: av-float-soft 9.5s ease-in-out 0.8s infinite alternate; }
+.av-float-c { animation: av-float-soft 7s ease-in-out 1.6s infinite alternate; }
+
+/* تکان گیاهان، مثل نسیم خیلی ملایم */
+@keyframes av-sway {
+  from { transform: rotate(-1.6deg); }
+  to   { transform: rotate(1.6deg); }
+}
+.av-sprig {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: av-sway 6.5s ease-in-out infinite alternate;
+}
+.av-sprig--slow { animation-duration: 8.5s; animation-delay: 1.2s; }
+
+/* چکیدن قطره: در بیشتر چرخه نامرئی است، پس تکرارش پرش ندارد */
+@keyframes av-fall {
+  0%, 52%  { transform: translateY(0) scale(0.55);  opacity: 0; }
+  58%      { transform: translateY(14px) scale(1);  opacity: 0.8; }
+  90%      { transform: translateY(150px) scale(1); opacity: 0.8; }
+  94%, 100%{ transform: translateY(154px) scale(0.6); opacity: 0; }
+}
+.av-falling { animation: av-fall 9s ease-in 1.8s infinite; }
+
+/* حلقه‌های آب، درست وقتی قطره می‌رسد */
+@keyframes av-ripple {
+  0%   { transform: scale(0.3); opacity: 0; }
+  5%   { opacity: 0.45; }
+  28%  { transform: scale(1.3); opacity: 0; }
+  100% { transform: scale(1.3); opacity: 0; }
+}
+.av-ripple {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: av-ripple 9s ease-out infinite;
+}
+.av-ripple--1 { animation-delay: 9.9s; }
+.av-ripple--2 { animation-delay: 10.1s; }
+.av-ripple--3 { animation-delay: 10.35s; }
+
+/* ذرات نور: از نادیدنی شروع و به نادیدنی ختم می‌شوند تا حلقه بی‌درز باشد */
+@keyframes av-dust {
+  0%   { transform: translate3d(0, 0, 0); opacity: 0; }
+  20%  { opacity: 0.7; }
+  78%  { opacity: 0.45; }
+  100% { transform: translate3d(-9px, -70px, 0); opacity: 0; }
+}
+.av-dust {
+  opacity: 0;
+  animation: av-dust 12s ease-in-out infinite;
+}
+.av-dust--warm { animation-duration: 15s; }
+.av-d1 { animation-delay: 0s; }
+.av-d2 { animation-delay: 2.2s; }
+.av-d3 { animation-delay: 4.1s; }
+.av-d4 { animation-delay: 6.3s; }
+.av-d5 { animation-delay: 8.4s; }
+.av-d6 { animation-delay: 10.5s; }
+
+/* وقتی نشان از دید خارج است، چرخه‌ها متوقف می‌شوند تا باتری مصرف نشود */
+.hero-art.is-idle .hero-art__svg * { animation-play-state: paused; }
+
+/* ------------------------------------------------------------ ۴. پارالاکس */
+/* لایه‌های پارالاکس از لایه‌های انیمیشن جدا هستند تا transform هم را پاک نکنند. */
+.av-par { transition: transform 0.6s var(--ease); }
+.hero-art.has-parallax .av-par-1 {
+  transform: translate3d(calc(var(--av-mx) * 5px), calc(var(--av-my) * 4px), 0);
+}
+.hero-art.has-parallax .av-par-2 {
+  transform: translate3d(calc(var(--av-mx) * 13px), calc(var(--av-my) * 10px), 0);
+}
+.hero-art.has-parallax .av-par-3 {
+  transform: translate3d(calc(var(--av-mx) * 22px), calc(var(--av-my) * 16px), 0);
+}
+
+/* --------------------------------------------------------- ۵. واکنش‌گرایی */
+@media (max-width: 992px) {
+  /* روی موبایل ترکیب کمی جمع‌تر می‌شود تا ارتفاع صفحه را نبلعد */
+  .hero-art__svg { max-height: 62vh; margin-inline: auto; }
+}
+@media (max-width: 560px) {
+  /* حرکت‌های ریز روی نمایشگر کوچک دیده نمی‌شوند و فقط هزینه دارند */
+  .av-dust, .av-objects { display: none; }
+  .av-sheen-band { animation-duration: 14s; }
+}
+
+/* ------------------------------------------- ۶. احترام به کاهش حرکت سیستم */
+/* هیچ حرکتی اجرا نمی‌شود و همه اجزا در حالت کامل و خوانا می‌مانند.
+ *
+ * نکته مهم: transform را نمی‌شود با ستاره صفر کرد. نیمه راست گوزن با
+ * transform="translate(900 0) scale(-1 1)" ساخته می‌شود و برگ‌ها با rotate
+ * سر جای خود می‌نشینند؛ اگر transform همه را پاک کنیم، نیمی از نشان ناپدید
+ * می‌شود. پس فقط همان کلاس‌هایی که transform را برای انیمیشن به کار برده‌اند
+ * صفر می‌شوند. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-art .hero-art__svg *,
+  .hero-art .hero-art__svg *::before,
+  .hero-art .hero-art__svg *::after {
+    animation: none !important;
+    animation-name: none !important;
+    transition: none !important;
+  }
+
+  /* فقط لایه‌هایی که transformشان مالِ انیمیشن بود */
+  .hero-art .hero-art__stage,
+  .hero-art .av-halo,
+  .hero-art .av-deer,
+  .hero-art .av-sprig,
+  .hero-art .av-float-a,
+  .hero-art .av-float-b,
+  .hero-art .av-float-c,
+  .hero-art .av-dust,
+  .hero-art .av-ripple,
+  .hero-art .av-falling,
+  .hero-art .av-par-1,
+  .hero-art .av-par-2,
+  .hero-art .av-par-3 {
+    transform: none !important;
+  }
+
+  .hero-art .hero-art__stage { opacity: 1 !important; }
+
+  /* شاخ‌ها بدون انیمیشنِ کشیده‌شدن هم باید کامل باشند */
+  .hero-art .av-beam,
+  .hero-art .av-tine-1, .hero-art .av-tine-2, .hero-art .av-tine-3,
+  .hero-art .av-tine-4, .hero-art .av-tine-5 {
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  /* اجزایی که حالت پایه‌شان نامرئی است، ثابت و آرام دیده می‌شوند */
+  .hero-art .av-dust { opacity: 0.45 !important; }
+  .hero-art .av-falling { opacity: 0 !important; }
+  .hero-art .av-sheen-band { opacity: 0 !important; }
+  .hero-art .av-halo { opacity: 0.65 !important; }
+  /* حلقه آب بدون حرکت معنایی ندارد؛ فقط یکی، بسیار کم‌رنگ، می‌ماند */
+  .hero-art .av-ripple { opacity: 0 !important; }
+  .hero-art .av-ripple--1 { opacity: 0.18 !important; }
+}

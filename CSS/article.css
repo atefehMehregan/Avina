@@ -227,54 +227,76 @@
 /* ============================================================================
  * چیدمان سه‌ستونه صفحه مقاله
  * ----------------------------------------------------------------------------
- * ستون وسط دقیقا همان عرض قبلی (۶۸ نویسه) را نگه می‌دارد؛ فقط فضای خالی دو
- * طرف کار می‌کند. در چیدمان راست‌به‌چپ ستون اول گرید سمت راست می‌نشیند، پس
- * جای ستون‌ها صریح تعیین شده تا وابسته به ترتیب HTML نباشد.
- * minmax(0, …) روی همه ستون‌ها لازم است، وگرنه محتوای عریض گرید را می‌ترکاند.
+ * چرا قبلا دو طرف خالی بود؟
+ *   ستون‌ها با grid-column مشخص شده بودند ولی سطر نه. مقاله اول در سورس
+ *   می‌آید و در ستون ۲ می‌نشیند؛ بعد از آن مکان‌یابی خودکار گرید دیگر
+ *   نمی‌تواند به ستون ۱ همان سطر برگردد، پس هر دو ستون کناری به سطر ۲
+ *   می‌افتادند — یعنی زیر مقاله. نتیجه: دو ستون خالی به بلندی کل مقاله.
+ *   راه‌حل: سطر هر سه ستون صریح تعیین شود.
+ *
+ * در چیدمان راست‌به‌چپ، ستون ۱ سمت راست صفحه است:
+ *   ستون ۱ (راست) = ابزار خواندن: فهرست مطالب، موضوع‌ها، دعوت به فروشگاه
+ *   ستون ۲ (وسط)  = خود مقاله
+ *   ستون ۳ (چپ)   = کشف: مطالب مرتبط، پیشنهاد محصول، نشان برند
+ *
+ * minmax(0, …) روی ستون میانی لازم است، وگرنه جدول یا تصویر عریض گرید را
+ * می‌ترکاند و صفحه افقی می‌لغزد.
  * ==========================================================================*/
 
 .article__layout {
   display: grid;
-  grid-template-columns: minmax(240px, 1fr) minmax(0, 68ch) minmax(150px, 0.78fr);
-  gap: var(--gap-xl);
+  grid-template-columns: minmax(240px, 290px) minmax(0, 1fr) minmax(210px, 268px);
+  /* فاصله ثابت: با vw، ستون میانی روی نمایشگر بزرگ‌تر باریک‌تر می‌شد. */
+  column-gap: var(--gap-lg);
+  row-gap: var(--gap-xl);
   align-items: start;
   padding-block: var(--gap-lg);
 }
 
-/* مقاله اول در سورس می‌آید (برای موبایل و screen reader)، اما وسط می‌نشیند. */
-.article__main  { grid-column: 2; min-width: 0; }
-.article__aside { grid-column: 1; min-width: 0; }  /* راست */
-.article__deco  { grid-column: 3; min-width: 0; }  /* چپ */
+/* سطر صریح: همین یک خط بود که کم داشت. */
+.article__main,
+.article__aside,
+.article__extra { grid-row: 1; min-width: 0; }
 
+.article__main  { grid-column: 2; }
+.article__aside { grid-column: 1; }  /* راست */
+.article__extra { grid-column: 3; }  /* چپ */
+
+/* عرض ستون میانی خودش اندازه خواندن را تعیین می‌کند (~۷۲ نویسه). */
 .article__main .reading { max-width: none; }
 
+/* هر دو ستون کناری هنگام خواندن همراه می‌مانند. max-height تضمین می‌کند
+   ستون بلندتر از پنجره، خودش بلغزد و محتوایش گم نشود. */
+.article__aside,
+.article__extra {
+  position: sticky;
+  top: calc(var(--header-h) + var(--gap));
+  align-self: start;
+  max-height: calc(100vh - var(--header-h) - var(--gap-lg));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--nude) transparent;
+}
+.article__aside::-webkit-scrollbar,
+.article__extra::-webkit-scrollbar { width: 5px; }
+.article__aside::-webkit-scrollbar-thumb,
+.article__extra::-webkit-scrollbar-thumb {
+  background-color: var(--nude);
+  border-radius: 999px;
+}
+
+/* ستون راست یک پنل نرم کرم است — بدون قاب پررنگ. */
 .article__aside {
   background-color: var(--sand);
-  border: 1px solid rgba(168, 121, 90, 0.3);   /* --clay با شفافیت کم */
   border-radius: var(--radius-lg);
   padding: var(--gap) var(--gap-sm);
 }
 
-.article__aside {
-  position: sticky;
-  top: calc(var(--header-h) + var(--gap));
-  align-self: start;
-}
+/* ستون چپ عمدا سبک‌تر است تا دو طرف مقاله هم‌وزن و سنگین نشوند. */
+.article__extra { padding-block: 0.15rem; }
 
-/* نوار --sand پشت ستون تزئینی: خود ستون کشیده می‌شود تا نوار تمام‌قد شود،
-   و محتوای داخلش جداگانه چسبان می‌ماند. */
-.article__deco {
-  align-self: stretch;
-  background-color: var(--sand);
-  border-radius: var(--radius-lg);
-  padding-block: var(--gap-lg);
-}
-.deco__inner {
-  position: sticky;
-  top: calc(var(--header-h) + var(--gap));
-}
-
-/* ------------------------------------------------- ستون کناری مفید */
+/* ------------------------------------------------- بلوک‌های ستون کناری */
 /* عمدا سبک‌تر از متن: بدون سایه، فقط خط مو، متن کوچک‌تر. */
 .aside-block + .aside-block { margin-top: var(--gap-lg); }
 
@@ -290,6 +312,9 @@
   border-bottom: 1px solid rgba(168, 121, 90, 0.4);
 }
 .aside-block__title .material-symbols-rounded { font-size: 1.15em; color: var(--clay); }
+
+/* خط جداکننده روی زمینه روشنِ ستون چپ باید کم‌رنگ‌تر باشد */
+.article__extra .aside-block__title { border-bottom-color: var(--line); }
 
 /* فهرست مطالب */
 .toc { margin-top: var(--gap-sm); }
@@ -316,19 +341,22 @@
 }
 .toc a:hover {
   color: var(--ink);
-  background-color: var(--sand);
+  background-color: var(--ivory);
   border-inline-start-color: var(--clay);
 }
 
 /* مطالب مرتبط */
 .aside-post { display: block; padding: 0.7rem 0; }
-.aside-post + .aside-post { border-top: 1px solid rgba(168, 121, 90, 0.4); }
+.aside-post + .aside-post { border-top: 1px solid var(--line); }
 .aside-post__cat {
+  /* span است، پس بدون block روی همان خط عنوان می‌نشیند */
+  display: block;
   font-size: 0.72rem;
   color: var(--clay);
   font-weight: 500;
 }
 .aside-post__title {
+  display: block;
   margin-top: 0.25rem;
   font-size: var(--step--1);
   font-weight: 700;
@@ -337,6 +365,36 @@
   transition: color 0.2s var(--ease);
 }
 .aside-post:hover .aside-post__title { color: var(--clay-deep); }
+
+/* پیشنهاد محصول — همان زبان کارت‌های فروشگاه، فقط فشرده */
+.aside-product {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0;
+}
+.aside-product + .aside-product { border-top: 1px solid var(--line); }
+.aside-product__thumb {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius);
+  background-color: var(--ivory);
+  object-fit: contain;
+  transition: transform 0.25s var(--ease);
+}
+.aside-product:hover .aside-product__thumb { transform: scale(1.05); }
+.aside-product__brand { display: block; font-size: 0.72rem; color: var(--clay); }
+.aside-product__name {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: var(--step--1);
+  font-weight: 700;
+  line-height: 1.75;
+  color: var(--ink);
+  transition: color 0.2s var(--ease);
+}
+.aside-product:hover .aside-product__name { color: var(--clay-deep); }
 
 /* موضوعات مجله */
 .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: var(--gap-sm); }
@@ -365,118 +423,94 @@
   margin-bottom: 0.7rem;
 }
 
-/* ------------------------------------------------ ستون تزئینی (چپ) */
-/* وزن بصری این ستون عمدا کم است — بافت، نه محتوا. */
-.article__deco { text-align: center; color: var(--muted); }
-.deco__art { display: block; width: 100%; max-width: 180px; margin-inline: auto; }
-.deco__rule {
+/* ------------------------------------------------- نشان برند، ته ستون چپ */
+/* بافت است نه محتوا، پس از دید صفحه‌خوان پنهان می‌ماند. */
+.aside-brand {
+  margin-top: var(--gap-lg);
+  padding-top: var(--gap-lg);
+  border-top: 1px solid var(--line);
+  text-align: center;
+  color: var(--muted);
+}
+.aside-brand__art { display: block; width: 100%; max-width: 112px; margin-inline: auto; }
+.aside-brand__rule {
+  display: block;
   width: 1px;
-  height: clamp(48px, 7vw, 92px);
+  height: clamp(32px, 4vw, 54px);
   margin: var(--gap-sm) auto;
   background-color: var(--clay);
 }
-.deco__tagline {
+.aside-brand__tagline {
   font-size: var(--step--1);
   line-height: 2;
   color: var(--cocoa);
 }
-.deco__latin {
-  margin-top: var(--gap-sm);
+.aside-brand__latin {
+  margin-top: 0.5rem;
   font-family: var(--font-latin);
   font-size: 0.82rem;
-  letter-spacing: 0.5em;
+  letter-spacing: 0.42em;
   color: var(--clay-deep);
-  writing-mode: vertical-rl;
-  margin-inline: auto;
 }
 
-/* ------------------------------------------------------------ واکنش‌گرا */
+/* ============================================================================
+ * واکنش‌گرایی
+ * ==========================================================================*/
 
-/* تبلت بزرگ: ستون تزئینی می‌رود، ستون مفید می‌ماند. */
-@media (max-width: 1100px) {
-  .article__layout { grid-template-columns: minmax(240px, 1fr) minmax(0, 68ch); gap: var(--gap-lg); }
-  .article__main  { grid-column: 2; }
-  .article__aside { grid-column: 1; }
-  .article__deco  { display: none; }
+/* تبلت بزرگ: دو ستون. ستون چپ حذف نمی‌شود — کامل زیر مقاله می‌رود و
+   بلوک‌هایش کنار هم می‌چینند، پس هیچ محتوایی گم نمی‌شود. */
+@media (max-width: 1180px) {
+  .article__layout {
+    grid-template-columns: minmax(230px, 280px) minmax(0, 1fr);
+    column-gap: var(--gap-lg);
+  }
+  /* ستون کناری هر دو سطر را می‌گیرد، وگرنه چسبندگی‌اش از سطر اول بیرون
+     می‌زند و روی نوار پایینی می‌افتد. نوار پایینی هم زیر خود مقاله می‌ماند. */
+  .article__aside { grid-column: 1; grid-row: 1 / span 2; }
+  .article__main  { grid-column: 2; grid-row: 1; }
+
+  .article__extra {
+    grid-column: 2;
+    grid-row: 2;
+    position: static;
+    max-height: none;
+    overflow: visible;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-lg);
+    align-items: start;
+    padding-top: var(--gap-lg);
+    border-top: 1px solid var(--line);
+  }
+  .article__extra .aside-block + .aside-block { margin-top: 0; }
+  .aside-brand { grid-column: 1 / -1; }
 }
 
 /* تبلت و موبایل: یک ستون، مقاله اول. */
 @media (max-width: 992px) {
-  .article__layout { grid-template-columns: minmax(0, 1fr); gap: var(--gap-lg); }
-  .article__main,
-  .article__aside { grid-column: 1; }
+  .article__layout { grid-template-columns: minmax(0, 1fr); row-gap: var(--gap-lg); }
+  .article__main  { grid-column: 1; grid-row: 1; }
+  .article__aside { grid-column: 1; grid-row: 2; }
+  .article__extra { grid-column: 1; grid-row: 3; }
+
   .article__main .reading { max-width: 68ch; margin-inline: auto; }
-  .article__aside {
+  .article__aside,
+  .article__extra {
     position: static;
+    max-height: none;
+    overflow: visible;
     max-width: 68ch;
     margin-inline: auto;
+    width: 100%;
   }
+  .article__extra { border-top: 0; padding-top: 0; }
   /* در یک ستون، فهرست مطالب کمکی نمی‌کند چون متن همان‌جاست. */
   .aside-block--toc { display: none; }
 }
 
 @media (max-width: 768px) {
   .article__layout { padding-block: var(--gap); }
+  .article__extra { grid-template-columns: minmax(0, 1fr); gap: var(--gap); }
   .aside-block + .aside-block { margin-top: var(--gap); }
+  .article__extra .aside-block + .aside-block { margin-top: var(--gap); }
 }
-
-/* ============================================================================
- * ⚠ TEMPORARY DEBUG BLOCK — عیب‌یابی چیدمان، موقت است
- * ----------------------------------------------------------------------------
- * فقط وقتی کلاس .debug-article-layout روی <body> باشد فعال می‌شود.
- * ظاهر عادی صفحه دست‌نخورده می‌ماند.
- * برای حذف: همین بلوک را تا انتهای فایل پاک کنید.
- * ==========================================================================*/
-
-.debug-article-layout .article__aside,
-.debug-article-layout .article__deco {
-  background-color: var(--nude) !important;
-  border: 3px solid var(--clay) !important;
-  border-radius: var(--radius-lg) !important;
-  min-height: 220px !important;
-}
-
-.debug-article-layout .article__aside::before,
-.debug-article-layout .article__deco::before {
-  display: block !important;
-  margin: -0.4rem 0 0.8rem;
-  padding: 0.45rem 0.6rem;
-  background-color: var(--cocoa);
-  color: var(--ivory);
-  font-family: var(--font-latin);
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-align: center;
-  border-radius: var(--radius);
-  direction: ltr;
-}
-.debug-article-layout .article__aside::before { content: "SIDEBAR DEBUG"; }
-.debug-article-layout .article__deco::before  { content: "DECO DEBUG"; }
-
-/* نشان گوشه صفحه: می‌گوید کدام media query الان فعال است. */
-.debug-article-layout::after {
-  content: "DEBUG ON  |  width > 1100px  |  3 columns  |  DECO VISIBLE";
-  position: fixed;
-  inset-block-end: 0;
-  inset-inline-start: 0;
-  z-index: 9999;
-  padding: 0.5rem 0.9rem;
-  background-color: var(--cocoa);
-  color: var(--ivory);
-  font-family: var(--font-latin);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  direction: ltr;
-}
-@media (max-width: 1100px) {
-  .debug-article-layout::after {
-    content: "DEBUG ON  |  width <= 1100px  |  2 columns  |  DECO HIDDEN BY MEDIA QUERY";
-  }
-}
-@media (max-width: 992px) {
-  .debug-article-layout::after {
-    content: "DEBUG ON  |  width <= 992px  |  1 column  |  SIDEBAR BELOW ARTICLE";
-  }
-}
-/* ====================== پایان بلوک موقت عیب‌یابی ====================== */

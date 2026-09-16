@@ -19,6 +19,7 @@
 
     <link rel="stylesheet" href="CSS/style.css" />
     <link rel="stylesheet" href="CSS/responsive.css" />
+    <link rel="stylesheet" href="CSS/hero-art.css" />
   </head>
 
   <body>
@@ -133,7 +134,213 @@
           </div>
 
           <figure class="hero__figure">
-            <img src="IMG/hero.svg" alt="مجموعه‌ای از محصولات مراقبت پوست آوینا" width="900" height="1100" />
+            <!-- نشان متحرک آوینا. همه‌چیز SVG درون‌خطی است: بدون تصویر
+                 بیرونی، بدون کتابخانه. حرکت‌ها در CSS/hero-art.css و
+                 پارالاکس ملایم در JS/hero-art.js است. -->
+            <div class="hero-art" id="hero-art">
+              <svg
+                class="hero-art__svg"
+                viewBox="0 0 900 1100"
+                width="900"
+                height="1100"
+                role="img"
+                aria-labelledby="hero-art-title"
+                xmlns="http://www.w3.org/2000/svg">
+                <title id="hero-art-title">
+                  نشان آوینا: گوزنی ظریف با شاخ‌های گیاهی، قطره سرم و عناصر مراقبت پوست
+                </title>
+
+                <defs>
+                  <linearGradient id="av-panel" x1="0" y1="0" x2="0.35" y2="1">
+                    <stop offset="0" stop-color="#faf7f2" />
+                    <stop offset="0.55" stop-color="#f3ebe0" />
+                    <stop offset="1" stop-color="#e7dbcb" />
+                  </linearGradient>
+                  <linearGradient id="av-fur" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#fbf6ef" />
+                    <stop offset="1" stop-color="#ead9c6" />
+                  </linearGradient>
+                  <linearGradient id="av-serum" x1="0" y1="0" x2="0.3" y2="1">
+                    <stop offset="0" stop-color="#f6e7d5" />
+                    <stop offset="1" stop-color="#a8795a" />
+                  </linearGradient>
+                  <linearGradient id="av-sheen" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#fff8ee" stop-opacity="0" />
+                    <stop offset="0.5" stop-color="#fff4e4" stop-opacity="0.8" />
+                    <stop offset="1" stop-color="#fff8ee" stop-opacity="0" />
+                  </linearGradient>
+                  <radialGradient id="av-halo" cx="0.5" cy="0.5" r="0.5">
+                    <stop offset="0" stop-color="#ffffff" stop-opacity="0.95" />
+                    <stop offset="0.6" stop-color="#ffffff" stop-opacity="0.35" />
+                    <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+                  </radialGradient>
+                  <radialGradient id="av-glow" cx="0.5" cy="0.5" r="0.5">
+                    <stop offset="0" stop-color="#f3dcc2" stop-opacity="0.85" />
+                    <stop offset="1" stop-color="#f3dcc2" stop-opacity="0" />
+                  </radialGradient>
+
+                  <!-- نیمه چپ گوش و شاخ. نیمه راست همین است، آینه‌شده.
+                       رنگ خط عمداً اینجا تعریف نشده تا گروه والد آن را بدهد؛
+                       ماسکِ درخشش همین مسیرها را سفید می‌خواهد. -->
+                  <g id="av-ear">
+                    <path class="av-ear-outer" d="M296 448 C332 446 372 468 398 496 C364 506 324 484 296 448 Z" />
+                    <path class="av-ear-inner" d="M316 454 C344 456 372 474 390 494 C364 500 336 482 316 454 Z" />
+                  </g>
+                  <g id="av-antler">
+                    <path class="av-beam" fill="none" stroke-width="8" stroke-linecap="round"
+                      d="M424 470 C412 432 398 398 378 360 C360 326 346 292 342 256" />
+                    <path class="av-tine-1" fill="none" stroke-width="5.5" stroke-linecap="round"
+                      d="M401 422 C376 410 350 398 324 380" />
+                    <path class="av-tine-2" fill="none" stroke-width="5.5" stroke-linecap="round"
+                      d="M384 376 C358 358 334 342 310 324" />
+                    <path class="av-tine-3" fill="none" stroke-width="5.5" stroke-linecap="round"
+                      d="M364 326 C342 304 324 282 312 256" />
+                    <path class="av-tine-4" fill="none" stroke-width="5" stroke-linecap="round"
+                      d="M342 256 C335 236 327 220 320 202" />
+                    <path class="av-tine-5" fill="none" stroke-width="5" stroke-linecap="round"
+                      d="M342 256 C353 237 362 222 368 206" />
+                    <!-- شاخ‌ها در نوک به برگ تبدیل می‌شوند: طبیعت + زیبایی -->
+                    <ellipse class="av-leaf" cx="315" cy="374" rx="17" ry="7" transform="rotate(-26 315 374)" />
+                    <ellipse class="av-leaf" cx="301" cy="318" rx="16" ry="6.5" transform="rotate(-38 301 318)" />
+                    <ellipse class="av-leaf" cx="303" cy="248" rx="15" ry="6" transform="rotate(-56 303 248)" />
+                    <ellipse class="av-leaf" cx="372" cy="198" rx="13" ry="5.5" transform="rotate(26 372 198)" />
+                  </g>
+
+                  <!-- درخشش فقط جایی دیده می‌شود که خط شاخ هست -->
+                  <mask id="av-sheen-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="900" height="1100">
+                    <g fill="none" stroke="#ffffff">
+                      <use href="#av-antler" />
+                      <use href="#av-antler" transform="translate(900 0) scale(-1 1)" />
+                    </g>
+                  </mask>
+                </defs>
+
+                <g class="hero-art__stage">
+                  <!-- ۱. زمینه -->
+                  <rect width="900" height="1100" rx="28" fill="url(#av-panel)" />
+                  <circle class="av-blob" cx="162" cy="178" r="74" opacity="0.3" />
+                  <circle class="av-blob" cx="784" cy="958" r="112" opacity="0.26" />
+
+                  <!-- ۲. طاق — قاب آرام پشت نشان -->
+                  <path class="av-arch" d="M180 964 L180 452 A270 270 0 0 1 720 452 L720 964 Z" />
+                  <path class="av-arch-line" d="M196 964 L196 452 A254 254 0 0 1 704 452 L704 964" />
+                  <circle class="av-halo" cx="450" cy="470" r="300" />
+
+                  <!-- ۳. لوازم آرایشی و شاخه‌ها — حاشیه‌ای و کم‌رنگ -->
+                  <g class="av-par av-par-3 av-objects">
+                    <g class="av-float-a">
+                      <!-- رژ لب -->
+                      <rect class="av-object" x="128" y="332" width="40" height="88" rx="8" />
+                      <path class="av-bullet" d="M134 332 L134 300 C134 290 141 282 151 279 L160 276 L160 332 Z" />
+                      <path class="av-object-line" d="M130 348 L166 348" />
+                    </g>
+                    <g class="av-float-b">
+                      <!-- شیشه سرم با قطره‌چکان -->
+                      <rect class="av-object" x="118" y="724" width="46" height="38" rx="12" />
+                      <rect class="av-object" x="128" y="760" width="26" height="26" rx="4" />
+                      <rect class="av-object" x="104" y="784" width="74" height="118" rx="14" />
+                      <path class="av-object-line" d="M118 858 L164 858" />
+                    </g>
+                    <g class="av-float-c">
+                      <!-- کاسه کرم -->
+                      <rect class="av-object" x="734" y="822" width="96" height="80" rx="16" />
+                      <rect class="av-object" x="726" y="794" width="112" height="28" rx="10" />
+                      <path class="av-object-line" d="M752 862 L812 862" />
+                    </g>
+                    <g class="av-sprig av-sprig--slow">
+                      <!-- شاخه بالا-راست -->
+                      <path class="av-stem" d="M806 452 C778 408 758 348 754 276" />
+                      <ellipse class="av-leaf" cx="784" cy="414" rx="18" ry="7" transform="rotate(-46 784 414)" />
+                      <ellipse class="av-leaf" cx="770" cy="366" rx="17" ry="6.5" transform="rotate(-40 770 366)" />
+                      <ellipse class="av-leaf" cx="762" cy="318" rx="15" ry="6" transform="rotate(-30 762 318)" />
+                      <ellipse class="av-leaf" cx="755" cy="272" rx="13" ry="5.5" transform="rotate(-14 755 272)" />
+                    </g>
+                  </g>
+
+                  <!-- ۴. سبزه‌های پای ترکیب -->
+                  <g class="av-par av-par-2">
+                    <g class="av-sprig">
+                      <path class="av-stem" d="M248 902 C240 866 238 834 244 806" />
+                      <ellipse class="av-leaf" cx="234" cy="862" rx="16" ry="6.5" transform="rotate(-40 234 862)" />
+                      <ellipse class="av-leaf" cx="256" cy="838" rx="15" ry="6" transform="rotate(38 256 838)" />
+                      <ellipse class="av-leaf" cx="240" cy="812" rx="13" ry="5.5" transform="rotate(-22 240 812)" />
+                    </g>
+                    <g class="av-sprig av-sprig--slow">
+                      <path class="av-stem" d="M652 902 C660 866 662 834 656 806" />
+                      <ellipse class="av-leaf" cx="666" cy="862" rx="16" ry="6.5" transform="rotate(40 666 862)" />
+                      <ellipse class="av-leaf" cx="644" cy="838" rx="15" ry="6" transform="rotate(-38 644 838)" />
+                      <ellipse class="av-leaf" cx="660" cy="812" rx="13" ry="5.5" transform="rotate(22 660 812)" />
+                    </g>
+                  </g>
+
+                  <ellipse class="av-ground" cx="450" cy="906" rx="232" ry="22" />
+
+                  <!-- ۵. گوزن -->
+                  <g class="av-par av-par-1">
+                    <g class="av-deer">
+                      <g fill="none" stroke="#6b4e3a" stroke-linejoin="round">
+                        <use href="#av-ear" />
+                        <use href="#av-antler" />
+                        <g transform="translate(900 0) scale(-1 1)">
+                          <use href="#av-ear" />
+                          <use href="#av-antler" />
+                        </g>
+                      </g>
+
+                      <!-- نور عبوری روی شاخ‌ها، پیش از سر تا زیر آن پنهان بماند -->
+                      <g mask="url(#av-sheen-mask)">
+                        <g transform="skewX(-12)">
+                          <rect class="av-sheen-band" x="-260" y="140" width="170" height="380" />
+                        </g>
+                      </g>
+
+                      <path class="av-head"
+                        d="M450 456 C406 456 382 490 382 532 C382 578 396 630 418 672 C428 690 438 700 450 700 C462 700 472 690 482 672 C504 630 518 578 518 532 C518 490 494 456 450 456 Z" />
+
+                      <!-- چشم‌های بسته و آرام، با مژه‌های ظریف -->
+                      <path class="av-eye" d="M396 568 C406 554 428 554 438 568" />
+                      <path class="av-eye" d="M504 568 C494 554 472 554 462 568" />
+                      <path class="av-lash" d="M396 568 C390 561 385 557 379 555" />
+                      <path class="av-lash" d="M399 575 C393 572 388 570 382 569" />
+                      <path class="av-lash" d="M504 568 C510 561 515 557 521 555" />
+                      <path class="av-lash" d="M501 575 C507 572 512 570 518 569" />
+                      <path class="av-nose" d="M432 664 C442 657 458 657 468 664 C468 677 460 687 450 691 C440 687 432 677 432 664 Z" />
+                      <!-- نشان قطره روی پیشانی -->
+                      <path class="av-mark" d="M450 488 C463 505 463 518 450 518 C437 518 437 505 450 488 Z" />
+
+                      <!-- قطره سرم میان شاخ‌ها — کانون نشان -->
+                      <circle class="av-drop-glow" cx="450" cy="330" r="52" />
+                      <path class="av-serum" d="M450 300 C473 331 473 354 450 354 C427 354 427 331 450 300 Z" />
+                      <ellipse class="av-serum-spark" cx="442" cy="335" rx="5" ry="7" transform="rotate(-18 442 335)" />
+                    </g>
+                  </g>
+
+                  <!-- ۶. قطره‌ای که می‌چکد و حلقه‌های آب -->
+                  <g class="av-par av-par-2">
+                    <path class="av-falling" d="M450 726 C461 741 461 753 450 753 C439 753 439 741 450 726 Z" />
+                    <ellipse class="av-ripple av-ripple--1" cx="450" cy="903" rx="80" ry="16" />
+                    <ellipse class="av-ripple av-ripple--2" cx="450" cy="903" rx="80" ry="16" />
+                    <ellipse class="av-ripple av-ripple--3" cx="450" cy="903" rx="80" ry="16" />
+                  </g>
+
+                  <!-- ۷. ذرات نور -->
+                  <g class="av-par av-par-3">
+                    <circle class="av-dust av-d1" cx="252" cy="300" r="4.5" />
+                    <circle class="av-dust av-dust--warm av-d4" cx="296" cy="624" r="5" />
+                    <circle class="av-dust av-d3" cx="624" cy="262" r="3.5" />
+                    <circle class="av-dust av-dust--warm av-d6" cx="700" cy="556" r="5" />
+                    <circle class="av-dust av-d2" cx="176" cy="566" r="4" />
+                    <circle class="av-dust av-d5" cx="764" cy="700" r="3.5" />
+                    <circle class="av-dust av-dust--warm av-d2" cx="336" cy="762" r="4.5" />
+                    <circle class="av-dust av-d6" cx="580" cy="742" r="3.5" />
+                    <circle class="av-dust av-d4" cx="492" cy="942" r="3" />
+                    <circle class="av-dust av-dust--warm av-d5" cx="250" cy="486" r="3" />
+                    <circle class="av-dust av-d3" cx="392" cy="196" r="3" />
+                    <circle class="av-dust av-d1" cx="520" cy="176" r="4" />
+                  </g>
+                </g>
+              </svg>
+            </div>
             <figcaption class="hero__tag">
               <span class="material-symbols-rounded" aria-hidden="true">eco</span>
               <span>
@@ -430,6 +637,7 @@
     <script src="JS/countdown.js"></script>
     <script src="JS/forms.js"></script>
     <script src="JS/navigation.js"></script>
+    <script src="JS/hero-art.js"></script>
     <script src="JS/main.js"></script>
   </body>
 </html>

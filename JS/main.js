@@ -29,6 +29,7 @@ function startApp() {
   setupSearch('#mobile-search-input', '#mobile-search-results', null);
 
   /* ۴. بخش‌های صفحه */
+  setupHeroArt();
   renderCategories();
   renderToolbar();
   renderCatalog();
