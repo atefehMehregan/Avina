@@ -50,24 +50,64 @@
   .header__bar { gap: 0.5rem; }
   .brand__name { font-size: 1.35rem; }
 
+  /* نوار اعلان: آیکون تزئینی حذف می‌شود تا متن عرض بیشتری بگیرد، و ظرف
+     پیام به اندازه چند خط بلند می‌شود — با ارتفاع یک‌خطیِ دسکتاپ، متن
+     اعلان روی گوشی از پایین بریده می‌شد. */
+  .announce__inner > .material-symbols-rounded { display: none; }
+  .announce__inner { gap: 0.5rem; padding-block: 0.45rem; }
+  .announce__track { height: 3.5em; }   /* جا برای پیام دوخطی روی نمایشگر باریک */
+  .announce__item { line-height: 1.55; }
+  .announce__close { min-width: 32px; min-height: 32px; display: grid; place-items: center; }
+
   .mobile-search { display: block; margin-bottom: var(--gap); }
 
   .product-grid { grid-template-columns: repeat(2, 1fr); gap: var(--gap) 0.8rem; }
   .category-grid { grid-template-columns: repeat(2, 1fr); }
-  .brand-strip { grid-template-columns: repeat(2, 1fr); }
+  .brand-strip { grid-template-columns: repeat(3, 1fr); gap: var(--gap-sm); }
+  .brand-chip { padding: 1.1rem 0.7rem; }
 
-  .section-head { flex-direction: column; align-items: flex-start; gap: var(--gap-sm); }
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--gap-sm);
+    margin-bottom: var(--gap-lg);
+  }
 
-  .toolbar { flex-direction: column; align-items: stretch; }
-  /* نوار فیلتر افقی اسکرول می‌شود تا صفحه به هم نریزد */
+  /* نوار ابزار ستونی می‌شود.
+     flex-wrap باید صریحاً nowrap شود: در یک ظرف flex ستونیِ wrap‌شونده،
+     عرض هر آیتم از عریض‌ترین محتوای همان خط گرفته می‌شود — یعنی از ریل
+     فیلتر که nowrap است (~۶۳۶px) — و کل صفحه را از نمایشگر پهن‌تر می‌کند. */
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    gap: var(--gap-sm);
+  }
+
+  /* ریل فیلتر: تا لبه نمایشگر کشیده می‌شود و افقی کشیده (سوایپ) می‌شود.
+     min-width: 0 لازم است تا آیتم flex اجازه بدهد محتوایش کوچک‌تر شود. */
   .filters {
+    min-width: 0;
     flex-wrap: nowrap;
     overflow-x: auto;
+    margin-inline: -1.25rem;          /* برابر با حاشیه داخلی .container */
+    padding-inline: 1.25rem;
     padding-bottom: 0.4rem;
     scrollbar-width: none;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
   }
   .filters::-webkit-scrollbar { display: none; }
-  .filter { white-space: nowrap; }
+  .filter {
+    white-space: nowrap;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    padding-block: 0.62rem;           /* هدف لمس بلندتر */
+  }
+
+  .sort { min-width: 0; justify-content: space-between; }
+  .sort select { flex: 1; min-width: 0; }
 
   .concern-grid { grid-template-columns: 1fr; }
   .hero__meta { gap: var(--gap); }
@@ -75,13 +115,32 @@
 
   .toasts { inset-inline: 1rem; inset-block-end: 1rem; max-width: none; }
   .to-top { inset-block-end: 1rem; inset-inline-start: 1rem; }
+
+  /* «نگاه سریع» فقط با hover ظاهر می‌شود، پس روی لمس هرگز در دسترس نیست
+     و بی‌خود روی تصویر می‌نشیند. همان پنجره با لمس نام محصول باز می‌شود. */
+  .product-card__quick { display: none; }
+
+  /* هدف‌های لمسی بزرگ‌تر */
+  .product-card__wish { width: 40px; height: 40px; }
+  .qty button { width: 40px; height: 40px; }
+  .footer__social a { width: 42px; height: 42px; }
+  .link-more { padding-block: 0.45rem; }
+  .search__input { min-height: 34px; }
+  .mobile-search .search__field { padding-block: 0.7rem; }
 }
 
 @media (max-width: 520px) {
-  .product-grid { grid-template-columns: 1fr; }
-  .category-grid { grid-template-columns: 1fr; }
-  .trust__grid { grid-template-columns: 1fr; }
+  /* ریتم عمودی کمی فشرده‌تر تا صفحه روی گوشی بی‌پایان نشود */
+  :root { --section: 2.9rem; --header-h: 60px; }
+
+  .trust__grid { grid-template-columns: 1fr; gap: var(--gap); }
   .footer__top { grid-template-columns: 1fr; }
+
+  /* کارت دسته کوتاه‌تر می‌شود تا دو ستونه روی گوشی خوش‌فرم بماند */
+  .category-grid { gap: 0.7rem; }
+  .category-card img { aspect-ratio: 4 / 5; }
+  .category-card__body { padding: 0.8rem 0.75rem; }
+  .category-card__title { font-size: var(--step-0); }
 
   .hero__actions .btn { width: 100%; }
   .newsletter__form { flex-direction: column; }
@@ -89,4 +148,37 @@
 
   .footer__bottom { flex-direction: column; align-items: flex-start; }
   .drawer { width: 100%; }
+
+  /* کارت شناور روی تصویر قهرمان روی گوشی جای کافی ندارد و تصویر را شلوغ می‌کند */
+  .hero__tag { display: none; }
+
+  /* نشان‌های پرداخت فوتر همان چیزی را می‌گویند که بخش «اعتماد» گفته است */
+  .footer__badges { display: none; }
+
+  /* شمارش معکوس: min-width ثابت چهار خانه، کمینه‌عرض بنر پیشنهاد را
+     از عرض نمایشگر بزرگ‌تر می‌کرد. حالا عرض را بین خود تقسیم می‌کنند. */
+  .offer__body { padding: var(--gap-lg) var(--gap); }
+  .countdown { gap: 0.4rem; margin-top: var(--gap); }
+  .countdown__unit { min-width: 0; flex: 1 1 0; padding: 0.6rem 0.25rem; }
+  .countdown__value { font-size: var(--step-1); }
+
+  .quick__body { padding: var(--gap-lg) var(--gap); }
+  .modal { padding: 0.75rem; }
+
+  /* چکیده مقاله‌ها به دو خط محدود می‌شود تا فهرست مجله قابل مرور بماند */
+  .post-card__excerpt {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* گوشی‌های باریک — دو ستون دیگر خوانا نیست، به یک ستون می‌رویم */
+@media (max-width: 359px) {
+  .product-grid { grid-template-columns: 1fr; }
+  .category-grid { grid-template-columns: 1fr; }
+  .category-card img { aspect-ratio: 16 / 9; }
+  .brand-strip { grid-template-columns: repeat(2, 1fr); }
+  .hero__meta { gap: var(--gap-sm) var(--gap); }
 }

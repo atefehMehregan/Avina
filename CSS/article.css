@@ -198,6 +198,30 @@
   .article__body { line-height: 2.05; }
   .article__hero img { aspect-ratio: 4 / 3; }
   .article__nav .btn { width: 100%; justify-content: center; }
+
+  /* جدول عرض ثابت ۴۲۰px دارد و روی گوشی جا نمی‌شود. داخل ظرف خودش
+     می‌لغزد (نه کل صفحه)، ولی بدون نشانه، بریدگیِ لبه شبیه «محتوای گم‌شده»
+     دیده می‌شود. پس تا لبه نمایشگر پهن می‌شود و یک سایه لبه — با ترفند
+     background-attachment: local/scroll — می‌گوید هنوز ستون دیگری هست.
+     سایه خودبه‌خود وقتی به انتهای لغزش می‌رسیم محو می‌شود. */
+  .article__table-wrap {
+    margin-inline: -1.25rem;
+    padding-inline: 1.25rem;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    background-image:
+      linear-gradient(to left,  var(--ivory), rgba(250, 247, 242, 0)),
+      linear-gradient(to right, var(--ivory), rgba(250, 247, 242, 0)),
+      linear-gradient(to left,  rgba(38, 34, 30, 0.13), rgba(38, 34, 30, 0)),
+      linear-gradient(to right, rgba(38, 34, 30, 0.13), rgba(38, 34, 30, 0));
+    background-position: left center, right center, left center, right center;
+    background-repeat: no-repeat;
+    background-size: 1.25rem 100%, 1.25rem 100%, 14px 100%, 14px 100%;
+    background-attachment: local, local, scroll, scroll;
+  }
+  /* سلول‌ها نباید وسط کلمه بشکنند و ستون را باریک‌تر از خوانا کنند */
+  .article__table th,
+  .article__table td { padding: 0.7rem 0.75rem; }
 }
 
 /* ============================================================================
