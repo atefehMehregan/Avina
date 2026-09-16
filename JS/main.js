@@ -27,6 +27,7 @@ function startApp() {
   setupSmoothScroll();
   setupSearch('#search-input', '#search-results', '#search-clear');
   setupSearch('#mobile-search-input', '#mobile-search-results', null);
+  setupAuth();
 
   /* ۴. بخش‌های صفحه */
   setupHeroArt();

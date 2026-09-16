@@ -207,11 +207,6 @@ function setupHeaderActions() {
     });
   }
 
-  const accountButton = find('#account-button');
-  if (accountButton) {
-    accountButton.addEventListener('click', () => {
-      /* ورود واقعی به سرور نیاز دارد — README را ببینید. */
-      toast('ورود به حساب کاربری به سرور نیاز دارد.', 'info');
-    });
-  }
+  /* دکمه حساب کاربری را auth.js مدیریت می‌کند (setupAuth)، چون به وضعیت
+     ورود از سمت سرور وابسته است. اینجا عمدا چیزی به آن وصل نمی‌شود. */
 }

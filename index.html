@@ -8,6 +8,10 @@
 
     <title>آوینا | فروشگاه محصولات مراقبت پوست و زیبایی</title>
 
+    <!-- آدرس سرویس حساب کاربری. هنگام استقرار مقدار content را پر کنید،
+         مثلا https://api.avina.ir — خالی یعنی هنوز پیکربندی نشده است. -->
+    <meta name="avina-api-base" content="" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -20,6 +24,7 @@
     <link rel="stylesheet" href="CSS/style.css" />
     <link rel="stylesheet" href="CSS/responsive.css" />
     <link rel="stylesheet" href="CSS/hero-art.css" />
+    <link rel="stylesheet" href="CSS/auth.css" />
   </head>
 
   <body>
@@ -613,6 +618,17 @@
       </div>
     </div>
 
+    <!-- ورود، ثبت‌نام و حساب کاربری -->
+    <div class="modal" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title" hidden>
+      <div class="modal__window">
+        <button class="modal__close" type="button" data-close-layer aria-label="بستن پنجره">
+          <span class="material-symbols-rounded" aria-hidden="true">close</span>
+        </button>
+        <h2 class="modal__title" id="auth-title">ورود یا ثبت‌نام</h2>
+        <div id="auth-body"></div>
+      </div>
+    </div>
+
     <!-- پیام‌های کوتاه -->
     <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
@@ -624,6 +640,7 @@
          ترتیب فایل‌ها مهم است: data.js اول چون بقیه از آن می‌خوانند،
          و main.js آخر چون صفحه را راه می‌اندازد.
          ================================================================ -->
+    <script src="JS/config.js"></script>
     <script src="JS/data.js"></script>
     <script src="JS/utils.js"></script>
     <script src="JS/storage.js"></script>
@@ -638,6 +655,7 @@
     <script src="JS/forms.js"></script>
     <script src="JS/navigation.js"></script>
     <script src="JS/hero-art.js"></script>
+    <script src="JS/auth.js"></script>
     <script src="JS/main.js"></script>
   </body>
 </html>
