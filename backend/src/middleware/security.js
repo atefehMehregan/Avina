@@ -55,7 +55,28 @@ export function requireCsrf(req, res, next) {
 
   const sent = req.headers['x-csrf-token'];
   if (!sent || !safeEqual(sha256(sent), req.session.csrf_hash)) {
-    return res.status(403).json({ ok: false, message: 'درخواست معتبر نیست. صفحه را تازه کنید.' });
+    /* code ماشین‌خوان است تا فرانت بتواند «۴۰۳ به‌خاطر CSRF» را از هر ۴۰۳
+       دیگری تشخیص بدهد و یک بار با توکن تازه دوباره تلاش کند. تکیه بر متن
+       پیام شکننده است. */
+    return res.status(403).json({
+      ok: false, code: 'csrf_invalid', message: 'درخواست معتبر نیست. صفحه را تازه کنید.',
+    });
+  }
+  next();
+}
+
+/* --------------------------------------------------------- نیاز به ورود */
+/* هر مسیری که داده خصوصی کاربر را لمس می‌کند باید اول از این رد شود.
+ *
+ * ترتیب مهم است: requireAuth باید *پیش از* requireCsrf اجرا شود. دلیلش
+ * بالاتر در requireCsrf پیداست — آنجا اگر نشستی نباشد next() صدا زده
+ * می‌شود (چون ثبت‌نام و ورود هنوز نشست ندارند). پس اگر ترتیب برعکس شود،
+ * درخواست بدون نشست از CSRF رد می‌شود و تکیه بر requireCsrf به‌تنهایی
+ * برای احراز هویت اشتباه است.
+ */
+export function requireAuth(req, res, next) {
+  if (!req.session) {
+    return res.status(401).json({ ok: false, message: 'برای این کار باید وارد حساب شوید.' });
   }
   next();
 }

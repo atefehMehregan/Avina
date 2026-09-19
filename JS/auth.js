@@ -13,21 +13,52 @@
 const authState = {
   user: null,      // اطلاعات عمومی کاربر یا null
   ready: false,    // آیا یک بار از سرور پرسیده‌ایم؟
+  csrf: '',        // توکن CSRF جاری — فقط در حافظه، نه در localStorage
 };
 
 /* ------------------------------------------------------------ گفتگو با API */
 
+/**
+ * توکن CSRF جاری.
+ *
+ * اول از حافظه خوانده می‌شود: وقتی فرانت (github.io) و بک‌اند روی دو دامنه
+ * جدا هستند، کوکی CSRF بک‌اند host-only است و document.cookie اینجا آن را
+ * نمی‌بیند. سرور همان توکن را در بدنه پاسخ ورود/ثبت‌نام/me می‌فرستد.
+ *
+ * اگر حافظه خالی بود سراغ کوکی می‌رویم — حالت هم‌دامنه (توسعه محلی) که
+ * الگوی double-submit در آن کار می‌کند.
+ */
 function csrfToken() {
+  if (authState.csrf) return authState.csrf;
   const match = document.cookie.match(/(?:^|;\s*)avina_csrf=([^;]+)/);
   return match ? decodeURIComponent(match[1]) : '';
 }
 
+/* کدی که سرور هنگام رد شدن CSRF می‌فرستد. با همین کد «۴۰۳ به‌خاطر
+   CSRF» از هر ۴۰۳ دیگری تشخیص داده می‌شود؛ تکیه بر متن پیام شکننده است. */
+const CSRF_ERROR_CODE = 'csrf_invalid';
+
 /**
  * یک درخواست به API.
  * credentials: 'include' لازم است وگرنه کوکی نشست بین دامنه‌ها فرستاده نمی‌شود.
+ *
+ * اگر درخواستِ تغییردهنده فقط به‌خاطر CSRF رد شود (کد بالا)، یک بار — و
+ * فقط یک بار — توکن تازه گرفته می‌شود و همان درخواست دوباره فرستاده می‌شود.
+ * چرا امن است؟ requireCsrf پیش از رسیدن به هندلر مسیر اجرا می‌شود، پس
+ * درخواستِ ردشده هیچ اثری نگذاشته و تکرار آن عارضه دوباره نمی‌سازد.
+ *
  * @returns {Promise<{status:number, body:object}>}
  */
 async function apiRequest(path, options) {
+  return sendApiRequest(path, options, true);
+}
+
+/**
+ * @param {boolean} allowRetry اجازه یک‌بار تلاش دوباره پس از خطای CSRF.
+ *   روی خودِ تلاش دوباره و روی درخواستِ تازه‌سازی توکن false است، پس
+ *   حلقه بی‌پایان ممکن نیست.
+ */
+async function sendApiRequest(path, options, allowRetry) {
   const settings = options || {};
   const headers = {};
   if (settings.body) headers['Content-Type'] = 'application/json';
@@ -52,7 +83,40 @@ async function apiRequest(path, options) {
   } catch (error) {
     /* پاسخ بدون بدنه یا خراب — با body خالی ادامه می‌دهیم. */
   }
-  return { status: response.status, body: body || {} };
+  const result = { status: response.status, body: body || {} };
+
+  /* بازیابی یک‌باره: تب دیگری توکن را چرخانده و توکن این تب کهنه شده. */
+  if (allowRetry && method !== 'GET' &&
+      result.status === 403 && result.body.code === CSRF_ERROR_CODE) {
+    const fresh = await refreshCsrfToken();
+    if (fresh) return sendApiRequest(path, options, false);
+  }
+
+  return result;
+}
+
+/**
+ * توکن CSRF تازه از /api/auth/me.
+ * فقط توکن را به‌روز می‌کند؛ رابط کاربری را دوباره رسم نمی‌کند و سبد را
+ * دوباره بار نمی‌زند، چون این تابع وسط یک درخواست دیگر صدا زده می‌شود.
+ * @returns {Promise<string>} توکن تازه یا رشته خالی
+ */
+async function refreshCsrfToken() {
+  try {
+    const result = await sendApiRequest('/api/auth/me', {}, false);
+    if (result.status === 200 && result.body.csrf_token) {
+      authState.csrf = result.body.csrf_token;
+      return authState.csrf;
+    }
+    if (result.status === 401) {
+      /* نشست واقعا تمام شده — دیگر تلاش دوباره بی‌فایده است. */
+      authState.user = null;
+      authState.csrf = '';
+    }
+  } catch (error) {
+    /* سرور در دسترس نیست — خطای اصلی را برمی‌گردانیم. */
+  }
+  return '';
 }
 
 /* --------------------------------------------------------- وضعیت ورود */
@@ -65,12 +129,21 @@ async function refreshAuthState() {
   }
   try {
     const result = await apiRequest('/api/auth/me');
-    authState.user = result.status === 200 && result.body.user ? result.body.user : null;
+    const ok = result.status === 200 && result.body.user;
+    authState.user = ok ? result.body.user : null;
+    /* سرور با هر بار /me یک توکن CSRF تازه می‌دهد. */
+    authState.csrf = ok ? (result.body.csrf_token || '') : '';
   } catch (error) {
     authState.user = null;   // سرور در دسترس نیست
+    authState.csrf = '';
   }
   authState.ready = true;
   renderAccountButton();
+
+  /* نشست از بازدید قبلی مانده — سبد ماندگار کاربر را از سرور بیاور.
+     اگر cart.js بار نشده باشد (صفحه‌های مقاله) کاری نمی‌کند. */
+  if (authState.user && typeof loadServerCart === 'function') loadServerCart();
+
   return authState.user;
 }
 
@@ -239,9 +312,12 @@ function buildLoginForm() {
       const result = await apiRequest('/api/auth/login', { method: 'POST', body: values });
       if (result.status === 200) {
         authState.user = result.body.user;
+        authState.csrf = result.body.csrf_token || '';
         renderAccountButton();
         closeLayer();
         toast(result.body.message || 'خوش آمدید!', 'success');
+        /* سبد مهمان با سبد ماندگار کاربر ادغام می‌شود. */
+        if (typeof syncCartAfterLogin === 'function') syncCartAfterLogin();
         return;
       }
       if (result.body.errors) showFieldErrors(form, result.body.errors);
@@ -292,9 +368,12 @@ function buildRegisterForm() {
       const result = await apiRequest('/api/auth/register', { method: 'POST', body: values });
       if (result.status === 201) {
         authState.user = result.body.user;
+        authState.csrf = result.body.csrf_token || '';
         renderAccountButton();
         closeLayer();
         toast(result.body.message || 'حساب شما ساخته شد.', 'success');
+        /* اگر مهمان چیزی در سبد داشت، به حساب تازه منتقل می‌شود. */
+        if (typeof syncCartAfterLogin === 'function') syncCartAfterLogin();
         return;
       }
       if (result.body.errors) showFieldErrors(form, result.body.errors);
@@ -333,7 +412,20 @@ function buildAccountPanel() {
     out.disabled = true;
     try {
       const result = await apiRequest('/api/auth/logout', { method: 'POST' });
+
+      /* فقط وقتی سرور واقعا خروج را انجام داده باشد وضعیت پاک می‌شود.
+         پیش‌تر پاسخ ناموفق (مثلا ۴۰۳) هم «موفق» نشان داده می‌شد: کاربر
+         فکر می‌کرد خارج شده، در حالی که نشست روی سرور زنده مانده بود. */
+      if (result.status !== 200) {
+        toast(result.body.message || 'خروج از حساب انجام نشد.', 'error');
+        return;
+      }
+
       authState.user = null;
+      authState.csrf = '';
+      /* نسخه مرورگرِ سبد پاک می‌شود تا نفر بعدی با همین مرورگر سبد این
+         کاربر را نبیند. سبد داخل پایگاه داده دست نمی‌خورد. */
+      if (typeof clearCartAfterLogout === 'function') clearCartAfterLogout();
       renderAccountButton();
       closeLayer();
       toast(result.body.message || 'از حساب خارج شدید.', 'success');

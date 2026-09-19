@@ -76,6 +76,24 @@ export async function readSession(token) {
   return row;
 }
 
+/**
+ * ساخت توکن CSRF تازه برای یک نشست موجود.
+ *
+ * چرا لازم است؟ الگوی double-submit فرض می‌کرد فرانت می‌تواند کوکی CSRF را
+ * بخواند. وقتی فرانت روی github.io و بک‌اند روی دامنه دیگری است، کوکی
+ * host-only بک‌اند برای جاوااسکریپت صفحه نامرئی است. پس توکن باید در بدنه
+ * پاسخ هم برگردد. چون فقط هشِ توکن ذخیره می‌شود، توکن قبلی قابل بازخوانی
+ * نیست و باید یکی تازه ساخته شود.
+ *
+ * فقط هش ذخیره می‌شود؛ خود توکن هیچ‌وقت در دیتابیس نمی‌نشیند.
+ * @returns {Promise<string>} توکن خام، برای فرستادن به فرانت
+ */
+export async function rotateCsrf(sessionId) {
+  const csrf = randomToken(24);
+  await query('UPDATE sessions SET csrf_hash = $1 WHERE id = $2', [sha256(csrf), sessionId]);
+  return csrf;
+}
+
 export async function revokeSession(token) {
   if (!token) return;
   await query(

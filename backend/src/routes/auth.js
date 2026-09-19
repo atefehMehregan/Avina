@@ -15,7 +15,7 @@ import { query, queryOne } from '../db/index.js';
 import { config } from '../config.js';
 import { hashPassword, verifyPassword } from '../lib/password.js';
 import { validateRegistration, validateLogin } from '../lib/validate.js';
-import { createSession, revokeSession, revokeAllForUser } from '../lib/session.js';
+import { createSession, revokeSession, revokeAllForUser, rotateCsrf } from '../lib/session.js';
 import {
   recordLoginAttempt, isLoginBlocked, registerLimiter, requireCsrf,
 } from '../middleware/security.js';
@@ -118,9 +118,12 @@ authRouter.post('/register', registerLimiter, async (req, res, next) => {
       throw err;
     }
 
-    await issueSession(res, created.id, req);
+    const csrf = await issueSession(res, created.id, req);
+    /* توکن خام در بدنه هم می‌آید: فرانت روی دامنه دیگری است و کوکی CSRF
+       را نمی‌تواند بخواند. کوکی برای حالت هم‌دامنه سر جایش می‌ماند. */
     return res.status(201).json({
       ok: true, message: 'حساب شما ساخته شد. خوش آمدید!', user: publicUser(created),
+      csrf_token: csrf,
     });
   } catch (err) {
     next(err);
@@ -166,8 +169,8 @@ authRouter.post('/login', async (req, res, next) => {
     }
 
     await recordLoginAttempt(identifier, ip, true);
-    await issueSession(res, row.id, req);
-    return res.json({ ok: true, message: 'خوش آمدید!', user: publicUser(row) });
+    const csrf = await issueSession(res, row.id, req);
+    return res.json({ ok: true, message: 'خوش آمدید!', user: publicUser(row), csrf_token: csrf });
   } catch (err) {
     next(err);
   }
@@ -208,7 +211,16 @@ authRouter.get('/me', async (req, res, next) => {
       clearSessionCookies(res);
       return res.status(401).json({ ok: false, message: 'وارد نشده‌اید.' });
     }
-    return res.json({ ok: true, user: publicUser(row) });
+
+    /* توکن CSRF تازه برای این نشست.
+       فقط هش توکن ذخیره می‌شود، پس توکن قبلی قابل بازخوانی نیست و باید
+       یکی تازه ساخته شود. فرانت بعد از هر بار باز شدن صفحه همین را
+       می‌گیرد. کوکی هم تازه می‌شود تا حالت هم‌دامنه از کار نیفتد.
+       هشِ ذخیره‌شده هرگز برنمی‌گردد. */
+    const csrf = await rotateCsrf(req.session.id);
+    res.cookie(config.cookie.csrfName, csrf, csrfCookieOptions());
+
+    return res.json({ ok: true, user: publicUser(row), csrf_token: csrf });
   } catch (err) {
     next(err);
   }
